@@ -94,7 +94,7 @@ const Index = () => {
               className="bg-blue-600 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-blue-800 transition-colors"
               onClick={handleServicesClick}
             >
-              Explore Services
+              Explore Our Services
             </button>
             <button 
               className="border-2 border-blue-600 text-blue-600 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-blue-600 hover:text-white transition-colors"
