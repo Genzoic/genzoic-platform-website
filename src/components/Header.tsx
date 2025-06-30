@@ -23,7 +23,7 @@ const Header = () => {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
             <img 
-              src="/lovable-uploads/71ab56ff-2b1d-404f-a100-f7823bd0c4f3.png" 
+              src="/lovable-uploads/genzoic-02.png" 
               alt="Genzoic" 
               className="h-8 cursor-pointer"
               onClick={() => handleNavigation('/')}
