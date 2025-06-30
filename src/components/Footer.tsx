@@ -43,7 +43,7 @@ const Footer = ({ showMarketplaceSection = true }: FooterProps) => {
         <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
           <div className="space-y-4">
             <img 
-              src="/lovable-uploads/71ab56ff-2b1d-404f-a100-f7823bd0c4f3.png" 
+              src="/lovable-uploads/genzoic-02.png" 
               alt="Genzoic" 
               className="h-8 brightness-0 invert"
             />
