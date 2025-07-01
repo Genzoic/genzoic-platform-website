@@ -86,7 +86,7 @@ const Header = () => {
               }`}
               onClick={() => handleNavigation('/contact')}
             >
-              Contact
+              Contact Us
             </span>
           </nav>
           <div></div>
