@@ -160,7 +160,7 @@ const Services = () => {
                 highlightedService === 'analytics-bi'
                   ? 'text-blue-700' 
                   : 'text-gray-600'
-              }`}>Create interactive dashboards, enable self-service analytics, and em power data-driven decision making across your organization.</p>
+              }`}>Create interactive dashboards, enable self-service analytics, and empower data-driven decision making across your organization.</p>
             </div>
 
             <div className={getServiceCardClasses('devops-dataops')}>
