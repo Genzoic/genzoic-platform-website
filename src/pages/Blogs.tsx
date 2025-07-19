@@ -78,6 +78,7 @@ const Blogs = () => {
       description: 'How small errors at scale are silently eroding margins, customer trust, and your brand — and what you can do about it.',
       image: getRandomImage(0),
       readTime: '8 min read',
+      popularity: 80,
       contentSections: [
         {
           title: 'Hidden Time Costs',
@@ -106,6 +107,7 @@ const Blogs = () => {
       description: 'Why lab inventory and procurement workflows are broken — and how a purpose-built AI agent can fix them.',
       image: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=400&h=300&fit=crop&auto=format',
       readTime: '6 min read',
+      popularity: 95,
       contentSections: [
         {
           title: 'Revolutionary AI Solution',
@@ -134,6 +136,7 @@ const Blogs = () => {
       description: 'Imagine a future where your doctor doesn\'t just treat the disease, but treats you, the individual, with all your unique biological quirks.',
       image: getRandomImage(2),
       readTime: '12 min read',
+      popularity: 50,
       contentSections: [
         {
           title: 'Personalized Treatment Planning',
@@ -162,6 +165,7 @@ const Blogs = () => {
       description: 'Ever feel like your business is on autopilot, handling the routine stuff efficiently, but lacking that spark of genuine intelligence?',
       image: getRandomImage(3),
       readTime: '9 min read',
+      popularity: 79,
       contentSections: [
         {
           title: 'Autonomous Decision-Making',
@@ -190,6 +194,7 @@ const Blogs = () => {
       description: 'What if the next generation of farmhands weren\'t human, but highly intelligent, tireless AI agents?',
       image: getRandomImage(4),
       readTime: '11 min read',
+      popularity: 35,
       contentSections: [
         {
           title: 'Smart Farming Applications',
@@ -218,6 +223,7 @@ const Blogs = () => {
       description: 'Beyond RPA: The Cognitive Leap of Agentic AI in Automating Complex Business Processes',
       image: getRandomImage(5),
       readTime: '12 min read',
+      popularity: 60,
       contentSections: [
         {
           title: 'End-to-End Processing',
@@ -247,6 +253,7 @@ const Blogs = () => {
       description: 'Quantifying the financial impact and measurable returns of AI agent implementation.',
       image: getRandomImage(6),
       readTime: '10 min read',
+      popularity: 55,
       contentSections: [
         {
           title: 'Measurable Returns',
@@ -275,6 +282,7 @@ const Blogs = () => {
       description: 'Agentic AI for Hyper-Personalized Marketing and Customer Retention in D2C.',
       image: getRandomImage(7),
       readTime: '14 min read',
+      popularity: 44,
       contentSections: [
         {
           title: 'Personalization at Scale',
@@ -303,6 +311,7 @@ const Blogs = () => {
       description: 'How Agentic AI is Revolutionizing Individual Tax Preparation and Optimization.',
       image: getRandomImage(8),
       readTime: '9 min read',
+      popularity: 80,
       contentSections: [
         {
           title: 'Automated Tax Preparation',
@@ -331,6 +340,7 @@ const Blogs = () => {
       description: 'Navigating Big Data: Strategies for Effective Data Management and Analysis.',
       image: getRandomImage(9),
       readTime: '13 min read',
+      popularity: 15,
       contentSections: [
         {
           title: 'Data Strategy',
@@ -359,6 +369,7 @@ const Blogs = () => {
       description: 'Personal Productivity: How AI Agents Transform Individual Workflows.',
       image: getRandomImage(10),
       readTime: '8 min read',
+      popularity: 48,
       contentSections: [
         {
           title: 'Personal Productivity',
@@ -387,6 +398,7 @@ const Blogs = () => {
       description: 'Transforming online retail with intelligent customer service and personalization.',
       image: getRandomImage(11),
       readTime: '10 min read',
+      popularity: 40,
       contentSections: [
         {
           title: 'Customer Service Automation',
@@ -410,20 +422,15 @@ const Blogs = () => {
   // Sort blogs based on selected option
   const getSortedBlogs = () => {
     if (sortBy === 'recent') {
-      return allBlogPosts;
+      // For "Most Recent", sort by date (newest first)
+      return [...allBlogPosts].sort((a, b) => {
+        const dateA = new Date(a.date);
+        const dateB = new Date(b.date);
+        return dateB.getTime() - dateA.getTime();
+      });
     } else {
-      // For "Most Popular", put lab automation and quick commerce first
-      const popularFirst = [
-        allBlogPosts.find(blog => blog.slug === 'laboratory-automation'),
-        allBlogPosts.find(blog => blog.slug === 'quick-commerce-insights'),
-      ].filter(Boolean);
-      
-      // Then add the rest, excluding the ones already added
-      const remaining = allBlogPosts.filter(blog => 
-        blog.slug !== 'quick-commerce-insights' && blog.slug !== 'laboratory-automation'
-      );
-      
-      return [...popularFirst, ...remaining];
+      // For "Most Popular", sort all blogs by popularity score (highest first)
+      return [...allBlogPosts].sort((a, b) => (b.popularity || 0) - (a.popularity || 0));
     }
   };
 
