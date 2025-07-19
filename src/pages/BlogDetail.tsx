@@ -62,7 +62,7 @@ const BlogDetail = () => {
       description: 'Why lab inventory and procurement workflows are broken — and how a purpose-built AI agent can fix them.',
       image: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=800&h=400&fit=crop&auto=format',
       readTime: '6 min read',
-      author: 'Dr. Sarah Chen',
+      author: 'Genzoic Research Team',
       sections: blog2AdditionalSections,
       relatedAgent: 'lab-supply-management-agent',
       relatedAgentTitle: 'Lab Supply Management Agent',
@@ -78,7 +78,7 @@ const BlogDetail = () => {
       description: 'Imagine a future where your doctor doesn\'t just treat the disease, but treats you, the individual, with all your unique biological quirks.',
       image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&h=400&fit=crop&auto=format',
       readTime: '12 min read',
-      author: 'Dr. Michael Rodriguez',
+      author: 'Genzoic Research Team',
       sections: blog3AdditionalSections,
       relatedAgent: 'healthcare-operations',
       relatedAgentTitle: 'Healthcare AI Agents',
@@ -94,7 +94,7 @@ const BlogDetail = () => {
       description: 'Ever feel like your business is on autopilot, handling the routine stuff efficiently, but lacking that spark of genuine intelligence?',
       image: 'https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=800&h=400&fit=crop&auto=format',
       readTime: '9 min read',
-      author: 'Alex Thompson',
+      author: 'Genzoic Research Team',
       sections: blog4AdditionalSections,
       relatedAgent: 'omnichannel-support-agent',
       relatedAgentTitle: 'Omnichannel Support Agent',
@@ -110,7 +110,7 @@ const BlogDetail = () => {
       description: 'What if the next generation of farmhands weren\'t human, but highly intelligent, tireless AI agents?',
       image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&h=400&fit=crop&auto=format',
       readTime: '11 min read',
-      author: 'Emma Johnson',
+      author: 'Genzoic Research Team',
       sections: blog5AdditionalSections,
       relatedAgent: 'agriculture-farming',
       relatedAgentTitle: 'Agriculture AI Agents',
@@ -126,7 +126,7 @@ const BlogDetail = () => {
       description: 'Beyond RPA: The Cognitive Leap of Agentic AI in Automating Complex Business Processes',
       image: 'https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=800&h=400&fit=crop&auto=format',
       readTime: '12 min read',
-      author: 'Jennifer Miller',
+      author: 'Genzoic Research Team',
       sections: [
         {
           title: 'The Evolution Beyond RPA: From Automation to Intelligence',
@@ -175,7 +175,7 @@ const BlogDetail = () => {
       description: 'Quantifying the financial impact and measurable returns of AI agent implementation.',
       image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=400&fit=crop&auto=format',
       readTime: '10 min read',
-      author: 'David Kim',
+      author: 'Genzoic Research Team',
       sections: [
         {
           title: 'Measuring the True ROI of AI Agent Implementation',
@@ -224,7 +224,7 @@ const BlogDetail = () => {
       description: 'Agentic AI for Hyper-Personalized Marketing and Customer Retention in D2C.',
       image: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&h=400&fit=crop&auto=format',
       readTime: '14 min read',
-      author: 'Sarah Williams',
+      author: 'Genzoic Research Team',
       sections: [
         {
           title: 'The Evolution of D2C Marketing: From Mass to Micro',
@@ -273,7 +273,7 @@ const BlogDetail = () => {
       description: 'How Agentic AI is Revolutionizing Individual Tax Preparation and Optimization.',
       image: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&h=400&fit=crop&auto=format',
       readTime: '9 min read',
-      author: 'Robert Chen',
+      author: 'Genzoic Research Team',
       sections: [
         {
           title: 'The Complex World of Tax Optimization Made Simple',
@@ -322,7 +322,7 @@ const BlogDetail = () => {
       description: 'Navigating Big Data: Strategies for Effective Data Management and Analysis.',
       image: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&h=400&fit=crop&auto=format',
       readTime: '13 min read',
-      author: 'Lisa Anderson',
+      author: 'Genzoic Research Team',
       sections: [
         {
           title: 'The Foundation of Modern Data Strategy',
@@ -371,7 +371,7 @@ const BlogDetail = () => {
       description: 'Personal Productivity: How AI Agents Transform Individual Workflows.',
       image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800&h=400&fit=crop&auto=format',
       readTime: '8 min read',
-      author: 'Michael Thompson',
+      author: 'Genzoic Research Team',
       sections: [
         {
           title: 'The Evolution of Personal Productivity',
@@ -420,7 +420,7 @@ const BlogDetail = () => {
       description: 'Transforming online retail with intelligent customer service and personalization.',
       image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=400&fit=crop&auto=format',
       readTime: '10 min read',
-      author: 'Amanda Rodriguez',
+      author: 'Genzoic Research Team',
       sections: [
         {
           title: 'Revolutionizing Online Shopping Experiences',
