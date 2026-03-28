@@ -1,131 +1,106 @@
+import { Link } from "react-router-dom";
+import { useTheme } from "@/contexts/ThemeContext";
 
-import { Building, Store, Wrench, ChartLine, Cloud, Target, CircleCheck, Headphones, Package, ArrowUp, ShoppingCart, Users, FlaskConical, Linkedin } from "lucide-react";
-import { useNavigate, useLocation } from "react-router-dom";
+import logoLight from "/logos-and-favicons/genzoic-logo-light.png";
+import logoDark from "/logos-and-favicons/genzoic-logo-dark.png";
 
-interface FooterProps {
-  showMarketplaceSection?: boolean;
-}
-
-const Footer = ({ showMarketplaceSection = true }: FooterProps) => {
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const handleNavigation = (path: string) => {
-    navigate(path);
-    window.scrollTo(0, 0);
-  };
-
-  const handleServiceNavigation = (service: string) => {
-    // Navigate to services page without highlighting
-    if (location.pathname === '/services') {
-      // Just scroll to the core services section
-      setTimeout(() => {
-        const coreServicesSection = document.getElementById('core-services');
-        if (coreServicesSection) {
-          coreServicesSection.scrollIntoView({ behavior: 'smooth' });
-        }
-      }, 100);
-    } else {
-      // Navigate to services page and scroll to core services section
-      navigate('/services');
-      setTimeout(() => {
-        const coreServicesSection = document.getElementById('core-services');
-        if (coreServicesSection) {
-          coreServicesSection.scrollIntoView({ behavior: 'smooth' });
-        }
-      }, 100);
-    }
-  };
+export default function Footer() {
+  const { theme } = useTheme();
 
   return (
-    <footer className="bg-gray-900 text-white py-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
-          <div className="space-y-4">
-            <img 
-              src="/lovable-uploads/genzoic-02.png" 
-              alt="Genzoic" 
-              className="h-8 brightness-0 invert"
+    <footer className="border-t border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950">
+      <div className="mx-auto max-w-6xl px-4 md:px-6 py-12 md:py-16">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
+          {/* Brand */}
+          <div className="md:col-span-1">
+            <img
+              src={theme === "dark" ? logoDark : logoLight}
+              alt="Genzoic"
+              className="h-7 mb-3"
             />
-            <p className="text-gray-400 leading-relaxed">
-              Data & AI Services + Vertical AI Agents for Real Business Impact.
+            <p className="text-sm text-slate-500 dark:text-slate-400">
+              AI that understands how your business works.
             </p>
           </div>
-          
-          <div>
-            <div className="flex items-center mb-4">
-              <Building className="text-blue-400 w-5 h-5 mr-2" />
-              <h3 className="text-lg font-semibold">Services</h3>
-            </div>
-            <ul className="space-y-3 text-gray-400">
-              <li><span className="hover:text-white transition-colors cursor-pointer" onClick={() => handleServiceNavigation('data-engineering')}>Data Engineering</span></li>
-              <li><span className="hover:text-white transition-colors cursor-pointer" onClick={() => handleServiceNavigation('data-governance')}>Data Governance</span></li>
-              <li><span className="hover:text-white transition-colors cursor-pointer" onClick={() => handleServiceNavigation('analytics-bi')}>Analytics & BI</span></li>
-              <li><span className="hover:text-white transition-colors cursor-pointer" onClick={() => handleServiceNavigation('devops-dataops')}>DevOps & DataOps</span></li>
-              <li><span className="hover:text-white transition-colors cursor-pointer" onClick={() => handleServiceNavigation('ai-ml-solutions')}>AI/ML Solutions</span></li>
-            </ul>
-          </div>
-          
-          {showMarketplaceSection && (
-            <div>
-              <div className="flex items-center mb-4">
-                <Store className="text-blue-400 w-5 h-5 mr-2" />
-                <h3 className="text-lg font-semibold">Marketplace</h3>
-              </div>
-              <ul className="space-y-3 text-gray-400">
-                <li><span className="hover:text-white transition-colors cursor-pointer" onClick={() => handleNavigation('/marketplace')}>Browse Agents</span></li>
-              </ul>
-            </div>
-          )}
 
+          {/* Product */}
           <div>
-            <div className="flex items-center mb-4">
-              <Building className="text-blue-400 w-5 h-5 mr-2" />
-              <h3 className="text-lg font-semibold">Company</h3>
-            </div>
-            <ul className="space-y-3 text-gray-400">
-              <li><span className="hover:text-white transition-colors cursor-pointer" onClick={() => handleNavigation('/about')}>About</span></li>
-              <li><span className="hover:text-white transition-colors cursor-pointer" onClick={() => handleNavigation('/contact')}>Contact</span></li>
-              <li><span className="hover:text-white transition-colors cursor-pointer" onClick={() => handleNavigation('/blogs')}>Blogs</span></li>
+            <h4 className="text-sm font-semibold text-slate-900 dark:text-white mb-4">
+              Product
+            </h4>
+            <ul className="space-y-2.5 text-sm text-slate-600 dark:text-slate-300">
+              <li>
+                <Link to="/#platform" className="hover:text-slate-900 dark:hover:text-white transition-colors">
+                  Platform
+                </Link>
+              </li>
+              <li>
+                <Link to="/solutions" className="hover:text-slate-900 dark:hover:text-white transition-colors">
+                  Solutions
+                </Link>
+              </li>
+              <li>
+                <Link to="/#how-it-works" className="hover:text-slate-900 dark:hover:text-white transition-colors">
+                  How It Works
+                </Link>
+              </li>
             </ul>
           </div>
 
+          {/* Company */}
           <div>
-            <div className="flex items-center mb-4">
-              <Headphones className="text-blue-400 w-5 h-5 mr-2" />
-              <h3 className="text-lg font-semibold">Connect</h3>
-            </div>
-            <div className="flex space-x-4">
-              <a 
-                href="https://linkedin.com/company/genzoic" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-white transition-colors"
-              >
-                <Linkedin className="w-6 h-6" />
-              </a>
-              <a 
-                href="https://x.com/genzoic" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-white transition-colors"
-              >
-                <svg className="w-5 h-6" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                </svg>
-              </a>
-            </div>
+            <h4 className="text-sm font-semibold text-slate-900 dark:text-white mb-4">
+              Company
+            </h4>
+            <ul className="space-y-2.5 text-sm text-slate-600 dark:text-slate-300">
+              <li>
+                <Link to="/contact" className="hover:text-slate-900 dark:hover:text-white transition-colors">
+                  Contact
+                </Link>
+              </li>
+              <li>
+                <span className="text-slate-400 dark:text-slate-500">Privacy Policy</span>
+              </li>
+              <li>
+                <span className="text-slate-400 dark:text-slate-500">Terms of Service</span>
+              </li>
+            </ul>
+          </div>
+
+          {/* Connect */}
+          <div>
+            <h4 className="text-sm font-semibold text-slate-900 dark:text-white mb-4">
+              Connect
+            </h4>
+            <ul className="space-y-2.5 text-sm text-slate-600 dark:text-slate-300">
+              <li>
+                <a
+                  href="https://linkedin.com/company/genzoic"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-slate-900 dark:hover:text-white transition-colors"
+                >
+                  LinkedIn
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://x.com/genzoic"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-slate-900 dark:hover:text-white transition-colors"
+                >
+                  X (Twitter)
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
-        
-        <div className="border-t border-gray-800 pt-8 mt-8 text-center">
-          <p className="text-gray-400 text-sm">
-            © 2025 Genzoic. All rights reserved.
-          </p>
+
+        <div className="mt-12 pt-6 border-t border-slate-200 dark:border-slate-700 text-center text-sm text-slate-500 dark:text-slate-400">
+          &copy; {new Date().getFullYear()} Genzoic Inc. All rights reserved.
         </div>
       </div>
     </footer>
   );
-};
-
-export default Footer;
+}
