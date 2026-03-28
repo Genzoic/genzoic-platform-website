@@ -121,8 +121,8 @@ export default function Contact() {
 
           {/* Contact info */}
           <div className="mt-10 text-center text-sm text-slate-500 dark:text-slate-400 space-x-4">
-            <a href="mailto:hello@genzoic.com" className="hover:underline">
-              hello@genzoic.com
+            <a href="mailto:info@genzoic.com" className="hover:underline">
+              info@genzoic.com
             </a>
             <span>&middot;</span>
             <a
