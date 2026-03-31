@@ -11,6 +11,7 @@ export interface Solution {
   exampleQuestions: string[];
   keyCapabilities: string[];
   businessImpact: string[];
+  graphFile?: string;
 }
 
 export const industries = [
@@ -50,6 +51,7 @@ export const solutionsData: Solution[] = [
       "Decrease stock-outs by 20-30% while lowering total inventory",
       "Improve markdown effectiveness with AI-driven timing and pricing",
     ],
+    graphFile: "inventory-optimization-expiry",
   },
   {
     id: 2,
@@ -78,6 +80,7 @@ export const solutionsData: Solution[] = [
       "Reduce negative review volume by addressing root causes faster",
       "Inform product development with structured feedback-to-SKU insights",
     ],
+    graphFile: "customer-feedback-intelligence",
   },
   {
     id: 3,
@@ -106,6 +109,7 @@ export const solutionsData: Solution[] = [
       "Improve shelf compliance scores by 20-30%",
       "Reduce missed delivery windows and out-of-stock incidents",
     ],
+    graphFile: "dsd-copilot",
   },
   {
     id: 4,
@@ -134,6 +138,7 @@ export const solutionsData: Solution[] = [
       "Improve promotional ROI by 15-20% through better targeting",
       "Eliminate surprise supplier shortfalls with pre-launch capacity checks",
     ],
+    graphFile: "promotion-demand-planning",
   },
   {
     id: 5,
@@ -162,6 +167,7 @@ export const solutionsData: Solution[] = [
       "Identify single-source risks before they become crises",
       "Save 5-10% on material costs through proactive sourcing strategies",
     ],
+    graphFile: "supply-chain-risk-monitor",
   },
   {
     id: 6,
@@ -190,6 +196,7 @@ export const solutionsData: Solution[] = [
       "Reduce scrap rates by identifying process deviations faster",
       "Increase effective capacity 10-15% without capital investment",
     ],
+    graphFile: "production-planning-yield",
   },
   {
     id: 7,
@@ -218,6 +225,7 @@ export const solutionsData: Solution[] = [
       "Reduce compliance preparation costs by 20-30% through proactive gap identification",
       "Gain competitive advantage by achieving compliance ahead of deadlines",
     ],
+    graphFile: "regulatory-esg-compliance",
   },
   {
     id: 8,
@@ -246,6 +254,7 @@ export const solutionsData: Solution[] = [
       "Avoid production stoppages from unexpected supplier changes",
       "Maintain regulatory compliance during ingredient transitions",
     ],
+    graphFile: "formulation-recipe-management",
   },
   {
     id: 9,
@@ -274,6 +283,7 @@ export const solutionsData: Solution[] = [
       "Avoid permit violations and associated fines",
       "Enable production scaling decisions with built-in regulatory awareness",
     ],
+    graphFile: "safety-environmental-compliance",
   },
   {
     id: 10,
@@ -302,6 +312,7 @@ export const solutionsData: Solution[] = [
       "Optimize turnaround duration, saving 2-5 days per major event",
       "Extend equipment life through better-timed maintenance interventions",
     ],
+    graphFile: "plant-maintenance-reliability",
   },
   {
     id: 11,
@@ -330,6 +341,7 @@ export const solutionsData: Solution[] = [
       "Identify and mitigate single-source supply risks before disruption",
       "Accelerate regulatory response with complete traceability data",
     ],
+    graphFile: "drug-supply-chain-integrity",
   },
   {
     id: 12,
@@ -358,6 +370,7 @@ export const solutionsData: Solution[] = [
       "Prevent undeclared allergen incidents with proactive cross-contact monitoring",
       "Accelerate allergen-related reformulations from months to weeks",
     ],
+    graphFile: "allergen-ingredient-compliance",
   },
   {
     id: 13,
@@ -386,5 +399,6 @@ export const solutionsData: Solution[] = [
       "Avoid grid commitment penalties through better outage planning",
       "Extend asset life by 3-5 years through optimized maintenance timing",
     ],
+    graphFile: "asset-performance-management",
   },
 ];

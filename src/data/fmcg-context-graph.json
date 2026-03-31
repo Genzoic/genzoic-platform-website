@@ -39,7 +39,6 @@
     { "id": "plant-east", "label": "East Coast Production Facility", "type": "Plant", "description": "Primary condiment and sauce production. 4 production lines." },
     { "id": "plant-midwest", "label": "Midwest Processing Plant", "type": "Plant", "description": "Sauce and vinegar processing. 2 production lines." },
     { "id": "plant-west", "label": "West Coast Bottling", "type": "Plant", "description": "Bottling and packaging facility. Sauces and vinegars." },
-    { "id": "plant-south", "label": "Southern Distribution Hub", "type": "Plant", "description": "Distribution and light processing. Regional fulfillment." },
     { "id": "plant-pnw", "label": "Pacific Northwest Mill", "type": "Plant", "description": "Grain milling and bakery production. 3 ovens." },
 
     { "id": "chan-retail", "label": "Retail Stores", "type": "Channel", "description": "Traditional retail channel. 60% of revenue." },

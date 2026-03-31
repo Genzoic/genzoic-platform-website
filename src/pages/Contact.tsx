@@ -76,6 +76,7 @@ export default function Contact() {
                     </label>
                     <input
                       type="text"
+                      placeholder="John Doe"
                       required
                       className="w-full px-3 py-2.5 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
@@ -86,6 +87,7 @@ export default function Contact() {
                     </label>
                     <input
                       type="email"
+                      placeholder="your.email@company.com"
                       required
                       className="w-full px-3 py-2.5 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
@@ -96,6 +98,7 @@ export default function Contact() {
                     </label>
                     <input
                       type="text"
+                      placeholder="Your company name"
                       className="w-full px-3 py-2.5 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
@@ -105,6 +108,7 @@ export default function Contact() {
                     </label>
                     <textarea
                       rows={3}
+                      placeholder="Tell us about your project..."
                       className="w-full px-3 py-2.5 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
                     />
                   </div>
