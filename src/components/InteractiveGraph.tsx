@@ -433,7 +433,6 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
       clearTimeout(fitTimer);
       sim.stop();
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [nodes, edges]);
 
   // ── Highlight effect ──────────────────────────────────────────────────────
@@ -490,7 +489,7 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
   const toggleType = (type: string) => {
     setVisibleTypes(prev => {
       const next = new Set(prev);
-      next.has(type) ? next.delete(type) : next.add(type);
+      if (next.has(type)) next.delete(type); else next.add(type);
       return next;
     });
   };
