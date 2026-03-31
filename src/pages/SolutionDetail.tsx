@@ -1,12 +1,29 @@
 import { useParams, Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { ArrowLeft, HelpCircle, Check, TrendingUp } from "lucide-react";
 import { solutionsData } from "@/data/solutions";
+import InteractiveGraph, { type GraphData } from "@/components/InteractiveGraph";
+
+const graphModules = import.meta.glob<{ default: GraphData }>("@/data/graphs/*.json", { eager: false });
 
 const DEMO_URL = "https://calendar.app.google/DezhnNr993pqnzhx5";
 
 export default function SolutionDetail() {
   const { slug } = useParams<{ slug: string }>();
   const solution = solutionsData.find((s) => s.slug === slug);
+  const [graphData, setGraphData] = useState<GraphData | null>(null);
+
+  useEffect(() => {
+    if (!solution?.graphFile) return;
+    const key = `/src/data/graphs/${solution.graphFile}.json`;
+    const loader = graphModules[key];
+    if (!loader) return;
+    let cancelled = false;
+    loader().then((mod) => {
+      if (!cancelled) setGraphData(mod.default);
+    });
+    return () => { cancelled = true; };
+  }, [solution?.graphFile]);
 
   if (!solution) {
     return (
@@ -84,11 +101,12 @@ export default function SolutionDetail() {
           <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900 dark:text-white mb-8">
             What the Context Graph maps
           </h2>
-          <div className="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-6 md:p-8 border-l-4 border-l-blue-800 dark:border-l-blue-400">
+          <div className="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-6 md:p-8 border-l-4 border-l-blue-800 dark:border-l-blue-400 mb-8">
             <p className="text-slate-600 dark:text-slate-300 leading-relaxed font-mono text-sm">
               {solution.contextGraphExample}
             </p>
           </div>
+          {graphData && <InteractiveGraph data={graphData} />}
         </div>
       </section>
 
