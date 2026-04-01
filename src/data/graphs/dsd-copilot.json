@@ -62,5 +62,66 @@
     { "source": "prod-2", "target": "ch-2", "relationship": "LOADED_ON" },
     { "source": "prod-3", "target": "ch-1", "relationship": "LOADED_ON" },
     { "source": "prod-6", "target": "ch-4", "relationship": "LOADED_ON" }
+  ],
+  "questions": [
+    {
+      "id": "q-times-square-restock",
+      "question": "7-Eleven Times Square is sending reorder signals. What products need restocking and which route handles it?",
+      "answer": "7-Eleven Times Square sends reorder signals to PepsiCo Distributor NE. Pepsi Cola 20oz and Red Bull 12oz are restocked at this store. Route A-14 Manhattan delivers to Times Square, dispatched from Cross-Dock Bronx. The driver should prioritize loading Pepsi and Red Bull for this high-traffic 24/7 location.",
+      "highlightNodes": ["store-1", "sup-1", "prod-1", "prod-3", "ch-1", "plant-2"],
+      "highlightEdges": ["store-1->sup-1", "prod-1->store-1", "prod-3->store-1", "ch-1->store-1", "plant-2->ch-1", "prod-1->ch-1", "prod-3->ch-1"],
+      "reasoningSteps": [
+        "7-Eleven Times Square sends reorder signal to PepsiCo Distributor NE",
+        "Pepsi Cola 20oz and Red Bull 12oz are restocked at this store",
+        "Route A-14 Manhattan delivers to Times Square",
+        "Route dispatched from Cross-Dock Bronx",
+        "Both products are loaded on Route A-14",
+        "Priority restock for highest-traffic convenience store"
+      ]
+    },
+    {
+      "id": "q-bread-shelf-life-route",
+      "question": "Wonder Bread has a 5-day shelf life. Is the current DSD path to Wawa Jersey City optimal?",
+      "answer": "Wonder Bread is distributed by Bimbo Bakeries USA, staged at Cold Storage Facility Secaucus. It feeds into Cross-Dock Bronx, but Route D-03 Jersey City is dispatched directly from Regional DC Edison NJ — not through the Bronx cross-dock. This means Wonder Bread may take an indirect path. Loading directly from Secaucus onto the Jersey City route would reduce transit time for this perishable item.",
+      "highlightNodes": ["prod-6", "sup-4", "plant-3", "plant-1", "ch-4", "store-4"],
+      "highlightEdges": ["sup-4->prod-6", "sup-4->plant-3", "plant-1->ch-4", "ch-4->store-4", "prod-6->store-4", "prod-6->ch-4"],
+      "reasoningSteps": [
+        "Wonder Bread has 5-day shelf life, distributed by Bimbo Bakeries",
+        "Staged at Cold Storage Facility Secaucus",
+        "Route D-03 Jersey City dispatches from Regional DC Edison NJ",
+        "Cold Storage feeds into Cross-Dock Bronx, not Edison directly",
+        "Current path may add unnecessary transit time",
+        "Direct staging to Edison DC would optimize freshness"
+      ]
+    },
+    {
+      "id": "q-energy-drink-route-optimization",
+      "question": "Red Bull is restocked at both Times Square and Chelsea. Can we consolidate deliveries?",
+      "answer": "Red Bull 12oz is distributed by RedBull Distribution Co and staged at Cold Storage Facility Secaucus. It's restocked at 7-Eleven Times Square and Shell Station Chelsea — both served by Route A-14 Manhattan via Cross-Dock Bronx. Since both stops are on the same route, the driver can consolidate Red Bull delivery in a single run, optimizing load efficiency.",
+      "highlightNodes": ["prod-3", "sup-3", "plant-3", "plant-2", "ch-1", "store-1", "store-5"],
+      "highlightEdges": ["sup-3->prod-3", "sup-3->plant-3", "plant-3->plant-2", "plant-2->ch-1", "ch-1->store-1", "ch-1->store-5", "prod-3->store-1", "prod-3->store-5"],
+      "reasoningSteps": [
+        "Red Bull distributed by RedBull Distribution Co",
+        "Staged at Cold Storage Facility Secaucus",
+        "Flows through Cross-Dock Bronx",
+        "Route A-14 Manhattan serves both Times Square and Chelsea",
+        "Both stores restock Red Bull",
+        "Single route handles both deliveries — consolidation is natural"
+      ]
+    },
+    {
+      "id": "q-brooklyn-route-coverage",
+      "question": "Route B-07 Brooklyn has 22 stops. Which products and suppliers depend on this route?",
+      "answer": "Route B-07 Brooklyn delivers to BP Gas Station #88 and FreshMart Deli Flatbush. Doritos are restocked at BP, and Mountain Dew at FreshMart. The route is dispatched from Cross-Dock Bronx. BP sends reorder signals to Frito-Lay Direct. If this route is disrupted, two suppliers and two stores are directly impacted.",
+      "highlightNodes": ["ch-2", "store-2", "store-6", "prod-2", "prod-5", "sup-2", "plant-2"],
+      "highlightEdges": ["plant-2->ch-2", "ch-2->store-2", "ch-2->store-6", "prod-2->store-2", "prod-5->store-6", "store-2->sup-2", "prod-2->ch-2"],
+      "reasoningSteps": [
+        "Route B-07 Brooklyn dispatched from Cross-Dock Bronx",
+        "Delivers to BP Gas Station and FreshMart Deli",
+        "Doritos restocked at BP, Mountain Dew at FreshMart",
+        "BP sends reorder signals to Frito-Lay Direct",
+        "Route disruption impacts two stores and two product lines"
+      ]
+    }
   ]
 }

@@ -56,5 +56,66 @@
     { "source": "sup-2", "target": "prod-2", "relationship": "QUALITY_IMPACTS" },
     { "source": "ch-2", "target": "store-2", "relationship": "SENTIMENT_TRACKED_FOR" },
     { "source": "ch-2", "target": "store-1", "relationship": "SENTIMENT_TRACKED_FOR" }
+  ],
+  "questions": [
+    {
+      "id": "q-oat-milk-complaints",
+      "question": "Almond Oat Milk complaints are spiking in Customer Support Tickets. What's the root cause?",
+      "answer": "Almond Oat Milk complaints are logged through Customer Support Tickets, which escalate quality issues to NutraHarvest Foods. NutraHarvest supplies Organic Rolled Oats, the key ingredient. The complaint pattern suggests an ingredient quality issue at the supplier level that should be investigated with NutraHarvest.",
+      "highlightNodes": ["prod-3", "ch-4", "sup-3", "ing-2"],
+      "highlightEdges": ["prod-3->ch-4", "ch-4->sup-3", "sup-3->ing-2", "ing-2->prod-3"],
+      "reasoningSteps": [
+        "Almond Oat Milk has complaints logged in Customer Support Tickets",
+        "Support Tickets escalate quality issues to NutraHarvest Foods",
+        "NutraHarvest supplies Organic Rolled Oats",
+        "Rolled Oats are used in Almond Oat Milk production",
+        "Root cause likely traces to ingredient quality from supplier"
+      ]
+    },
+    {
+      "id": "q-coffee-quality-sentiment",
+      "question": "Summit Roasters reported a bean quality issue. Which products and feedback channels will show impact?",
+      "answer": "Summit Roasters supplies Ethiopian Yirgacheffe Beans, which are used in both Premium Coffee Blend and Cold Brew Concentrate. Coffee Blend is reviewed on App Reviews and mentioned on Twitter/X. Cold Brew is reviewed on Google Reviews. Expect negative sentiment across these three channels, impacting Flagship Store and Williamsburg (App Reviews), Flagship and Williamsburg (Twitter/X), and Hoboken and Flagship (Google Reviews).",
+      "highlightNodes": ["sup-1", "ing-1", "prod-1", "prod-5", "ch-1", "ch-2", "ch-5", "store-1", "store-2", "store-4"],
+      "highlightEdges": ["sup-1->ing-1", "ing-1->prod-1", "ing-1->prod-5", "prod-1->ch-1", "prod-1->ch-2", "prod-5->ch-5", "ch-1->store-1", "ch-1->store-2", "ch-2->store-1", "ch-2->store-2", "ch-5->store-4", "ch-5->store-1"],
+      "reasoningSteps": [
+        "Summit Roasters supplies Ethiopian Yirgacheffe Beans",
+        "Beans are used in Premium Coffee Blend and Cold Brew Concentrate",
+        "Coffee Blend is reviewed on App Reviews and mentioned on Twitter/X",
+        "Cold Brew is reviewed on Google Reviews",
+        "App Reviews cover Flagship and Williamsburg stores",
+        "Twitter/X tracks sentiment for Flagship and Williamsburg",
+        "Google Reviews cover Hoboken and Flagship stores"
+      ]
+    },
+    {
+      "id": "q-williamsburg-top-product",
+      "question": "Organic Granola is the top-rated product at Williamsburg. What drives this and how do we track it?",
+      "answer": "Store #22 Williamsburg has Organic Granola as its top-rated product, tracked through App Reviews which provide feedback for this store. The granola uses Organic Rolled Oats supplied by NutraHarvest Foods. Understanding this strong regional preference can inform inventory allocation and promotional strategy for the Williamsburg location.",
+      "highlightNodes": ["store-2", "prod-4", "ch-1", "ing-2", "sup-3"],
+      "highlightEdges": ["store-2->prod-4", "prod-4->ch-1", "ch-1->store-2", "ing-2->prod-4", "sup-3->ing-2"],
+      "reasoningSteps": [
+        "Williamsburg lists Organic Granola as top-rated product",
+        "Granola is reviewed on App Reviews",
+        "App Reviews provide feedback for Williamsburg store",
+        "Granola uses Organic Rolled Oats from NutraHarvest",
+        "Strong regional preference can guide inventory planning"
+      ]
+    },
+    {
+      "id": "q-flagship-feedback-coverage",
+      "question": "Does the Flagship Store have complete feedback coverage across all channels?",
+      "answer": "Flagship Store Downtown receives feedback from App Reviews, In-Store Surveys, Google Reviews, and Twitter/X sentiment tracking — four of the five channels. Customer Support Tickets do not directly provide feedback for the Flagship but do escalate quality issues to suppliers. This gives the Flagship the most comprehensive feedback coverage of any location.",
+      "highlightNodes": ["store-1", "ch-1", "ch-3", "ch-5", "ch-2"],
+      "highlightEdges": ["ch-1->store-1", "ch-3->store-1", "ch-5->store-1", "ch-2->store-1"],
+      "reasoningSteps": [
+        "App Reviews provide feedback for Flagship Store",
+        "In-Store Surveys provide feedback for Flagship Store",
+        "Google Reviews provide feedback for Flagship Store",
+        "Twitter/X tracks sentiment for Flagship Store",
+        "Four of five channels cover the Flagship location",
+        "Most comprehensive feedback coverage of any store"
+      ]
+    }
   ]
 }

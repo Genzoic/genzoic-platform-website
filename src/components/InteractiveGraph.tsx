@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { useTheme } from "@/contexts/ThemeContext";
 import * as d3 from "d3";
-import { Search, RotateCcw, Layers, ChevronDown, Database } from "lucide-react";
+import { Search, RotateCcw, Layers, ChevronDown, Database, HelpCircle, X, Maximize2, Minimize2, Plus, Minus } from "lucide-react";
 import graphData from "@/data/fmcg-context-graph.json";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type NodeType = "supplier" | "ingredient" | "product" | "plant" | "channel" | "store";
+type NodeType = "supplier" | "ingredient" | "product" | "plant" | "channel" | "store" | "allergen" | "recipe" | "certification" | "cleaning_protocol" | "label_claim" | "lot";
 
 interface RawNode { id: string; type: NodeType; label: string; description?: string; }
 interface RawEdge { source: string; target: string; relation: string; }
@@ -76,23 +76,62 @@ const LIGHT_T = {
 // ─── Config ───────────────────────────────────────────────────────────────────
 
 const NODE_CFG: Record<string, { color: string; dim: string; size: number; label: string; emoji: string }> = {
-  supplier:   { color: "#f59e0b", dim: "#78350f", size: 18, label: "Supplier",   emoji: "🏭" },
-  ingredient: { color: "#22c55e", dim: "#14532d", size: 13, label: "Ingredient", emoji: "🌿" },
-  product:    { color: "#60a5fa", dim: "#1e3a5f", size: 22, label: "Product",    emoji: "📦" },
-  plant:      { color: "#c084fc", dim: "#3b0764", size: 20, label: "Plant",      emoji: "🏗️" },
-  channel:    { color: "#fb923c", dim: "#7c2d12", size: 18, label: "Channel",    emoji: "🔄" },
-  store:      { color: "#f87171", dim: "#7f1d1d", size: 16, label: "Store",      emoji: "🛒" },
+  supplier:          { color: "#f59e0b", dim: "#78350f", size: 18, label: "Supplier",          emoji: "🏭" },
+  ingredient:        { color: "#22c55e", dim: "#14532d", size: 13, label: "Ingredient",        emoji: "🌿" },
+  product:           { color: "#60a5fa", dim: "#1e3a5f", size: 22, label: "Product",           emoji: "📦" },
+  plant:             { color: "#c084fc", dim: "#3b0764", size: 20, label: "Plant",             emoji: "🏗️" },
+  channel:           { color: "#fb923c", dim: "#7c2d12", size: 18, label: "Channel",           emoji: "🔄" },
+  store:             { color: "#f87171", dim: "#7f1d1d", size: 16, label: "Store",             emoji: "🛒" },
+  allergen:          { color: "#ef4444", dim: "#7f1d1d", size: 17, label: "Allergen",          emoji: "⚠️" },
+  recipe:            { color: "#8b5cf6", dim: "#4c1d95", size: 16, label: "Recipe",            emoji: "📋" },
+  certification:     { color: "#14b8a6", dim: "#134e4a", size: 15, label: "Certification",     emoji: "✅" },
+  cleaning_protocol: { color: "#06b6d4", dim: "#164e63", size: 14, label: "Cleaning Protocol", emoji: "🧹" },
+  label_claim:       { color: "#eab308", dim: "#713f12", size: 14, label: "Label Claim",       emoji: "🏷️" },
+  lot:               { color: "#ec4899", dim: "#831843", size: 15, label: "Lot",               emoji: "📊" },
 };
 
 const DEFAULT_NODE_CFG = { color: "#9ca3af", dim: "#4b5563", size: 14, label: "Unknown", emoji: "◯" };
 
-const REL_COLOR: Record<string, string> = {
-  SUPPLIES:        "#f59e0b",
-  USED_IN:         "#22c55e",
-  MANUFACTURED_AT: "#a855f7",
-  SOLD_THROUGH:    "#f97316",
-  AVAILABLE_AT:    "#ef4444",
+const REL_COLOR_STATIC: Record<string, string> = {
+  SUPPLIES:                  "#f59e0b",
+  USED_IN:                   "#22c55e",
+  MANUFACTURED_AT:           "#a855f7",
+  SOLD_THROUGH:              "#f97316",
+  AVAILABLE_AT:              "#ef4444",
+  FEEDS_INTO:                "#60a5fa",
+  MANUFACTURED_BY:           "#a855f7",
+  CERTIFIES:                 "#34d399",
+  DEVELOPS:                  "#fb923c",
+  DELIVERS_TO:               "#f43f5e",
+  DISTRIBUTES:               "#06b6d4",
+  FULFILLS:                  "#84cc16",
+  CONTAINS:                  "#ef4444",
+  USES:                      "#22c55e",
+  PRODUCES:                  "#60a5fa",
+  HAS_CERTIFICATION:         "#14b8a6",
+  CROSS_CONTAMINATION_RISK:  "#f87171",
+  USES_PROTOCOL:             "#06b6d4",
+  HAS_LABEL:                 "#eab308",
+  PRODUCED_AS:               "#ec4899",
+  MADE_AT:                   "#a855f7",
+  DISTRIBUTED_TO:            "#f43f5e",
 };
+
+const REL_PALETTE = [
+  "#60a5fa", "#34d399", "#f97316", "#c084fc", "#fb923c",
+  "#f43f5e", "#06b6d4", "#84cc16", "#fbbf24", "#a78bfa",
+  "#22d3ee", "#e879f9",
+];
+
+function hashStr(s: string): number {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+  return h;
+}
+
+function getRelColor(rel: string): string {
+  return REL_COLOR_STATIC[rel] ?? REL_PALETTE[hashStr(rel) % REL_PALETTE.length];
+}
 
 // ─── Dummy data source mappings ──────────────────────────────────────────────
 
@@ -116,6 +155,24 @@ const DUMMY_DATA_SOURCES: Record<string, DataLinkage[]> = {
   ],
   store: [
     { metric_category: "volume", description: "Store-level sales data", source_system: "Snowflake", object_type: "table", object_name: "retail.stores.daily_sales", join_key: "store_id", refresh_frequency: "daily", example_fields: ["units_sold", "revenue", "foot_traffic"] },
+  ],
+  allergen: [
+    { metric_category: "compliance", description: "Allergen classification and thresholds", source_system: "BigQuery", object_type: "table", object_name: "analytics.compliance.allergen_registry", join_key: "allergen_id", refresh_frequency: "monthly", example_fields: ["allergen_name", "threshold_ppm", "regulation_ref"] },
+  ],
+  recipe: [
+    { metric_category: "quality", description: "Recipe formulation and version history", source_system: "BigQuery", object_type: "table", object_name: "analytics.formulation.recipes", join_key: "recipe_id", refresh_frequency: "daily", example_fields: ["version", "ingredients_list", "yield_pct"] },
+  ],
+  certification: [
+    { metric_category: "compliance", description: "Certification status and expiry tracking", source_system: "Snowflake", object_type: "view", object_name: "ops.compliance.certifications", join_key: "cert_id", refresh_frequency: "weekly", example_fields: ["cert_type", "issued_date", "expiry_date", "status"] },
+  ],
+  cleaning_protocol: [
+    { metric_category: "quality", description: "Cleaning protocol validation records", source_system: "BigQuery", object_type: "table", object_name: "analytics.quality.cleaning_logs", join_key: "protocol_id", refresh_frequency: "daily", example_fields: ["validated", "last_run", "efficacy_pct", "residue_ppm"] },
+  ],
+  label_claim: [
+    { metric_category: "compliance", description: "Label claim verification and audit trail", source_system: "BigQuery", object_type: "table", object_name: "analytics.compliance.label_claims", join_key: "claim_id", refresh_frequency: "weekly", example_fields: ["claim_text", "verified", "audit_date"] },
+  ],
+  lot: [
+    { metric_category: "logistics", description: "Lot traceability and distribution data", source_system: "Snowflake", object_type: "table", object_name: "ops.traceability.lot_tracking", join_key: "lot_id", refresh_frequency: "hourly", example_fields: ["batch_number", "production_date", "distribution_status", "recall_flag"] },
   ],
 };
 
@@ -171,7 +228,16 @@ const STATIC_EDGES: RawEdge[] = graphData.edges.map(e => ({
 
 export interface GraphNode { id: string; label: string; type: string; description?: string; }
 export interface GraphEdge { source: string; target: string; relationship: string; }
-export interface GraphData { nodes: GraphNode[]; edges: GraphEdge[]; }
+export interface GraphData { nodes: GraphNode[]; edges: GraphEdge[]; questions?: PredefinedQuestion[]; }
+
+interface PredefinedQuestion {
+  id: string;
+  question: string;
+  answer: string;
+  highlightNodes: string[];
+  highlightEdges: string[];
+  reasoningSteps: string[];
+}
 
 interface InteractiveGraphProps {
   data?: GraphData;
@@ -180,10 +246,11 @@ interface InteractiveGraphProps {
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
-  const svgRef      = useRef<SVGSVGElement>(null);
-  const containerRef= useRef<HTMLDivElement>(null);
-  const simRef      = useRef<d3.Simulation<SimNode, undefined> | null>(null);
-  const zoomRef     = useRef<d3.ZoomBehavior<SVGSVGElement, unknown> | null>(null);
+  const svgRef        = useRef<SVGSVGElement>(null);
+  const containerRef  = useRef<HTMLDivElement>(null);
+  const simRef        = useRef<d3.Simulation<SimNode, undefined> | null>(null);
+  const zoomRef       = useRef<d3.ZoomBehavior<SVGSVGElement, unknown> | null>(null);
+  const simNodeMapRef = useRef<Map<string, SimNode>>(new Map());
 
   const nodes: RawNode[] = useMemo(() => {
     if (!data) return STATIC_NODES;
@@ -196,12 +263,24 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
   }, [data]);
 
   // UI state
-  const [focusedId,   setFocusedId]   = useState<string | null>(null);
-  const [depth,       setDepth]       = useState(1);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [visibleTypes,setVisibleTypes]= useState<Set<string>>(new Set(Object.keys(NODE_CFG)));
-  const [contextMenu,      setContextMenu]      = useState<{ x: number; y: number; nodeId: string } | null>(null);
-  const [expandedLinkage,  setExpandedLinkage]  = useState<string | null>(null);
+  const [focusedId,       setFocusedId]       = useState<string | null>(null);
+  const [depth,           setDepth]           = useState(1);
+  const [searchQuery,     setSearchQuery]     = useState("");
+  const [visibleTypes,    setVisibleTypes]    = useState<Set<string>>(() => new Set(Object.keys(NODE_CFG)));
+  const [contextMenu,     setContextMenu]     = useState<{ x: number; y: number; nodeId: string } | null>(null);
+  const [expandedLinkage, setExpandedLinkage] = useState<string | null>(null);
+  const [activeQuestion,  setActiveQuestion]  = useState<PredefinedQuestion | null>(null);
+  const [isFullscreen,    setIsFullscreen]    = useState(false);
+
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsFullscreen(false);
+    };
+    window.addEventListener("keydown", handleEsc);
+    return () => window.removeEventListener("keydown", handleEsc);
+  }, []);
+
+  const questions: PredefinedQuestion[] = data?.questions ?? (!data ? (graphData as { nodes: unknown[]; edges: unknown[]; questions: PredefinedQuestion[] }).questions ?? [] : []);
 
   const { theme } = useTheme();
   const T = theme === "dark" ? DARK_T : LIGHT_T;
@@ -210,14 +289,22 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
 
   const nodeMap = useMemo(() => new Map(nodes.map(n => [n.id, n])), [nodes]);
 
-  const allEntityTypes = [...new Set(nodes.map(n => n.type))];
-  const ALL_TYPES = allEntityTypes.length > 0 ? allEntityTypes : Object.keys(NODE_CFG);
+  const ALL_TYPES = useMemo(() => [...new Set(nodes.map(n => n.type))], [nodes]);
+
+  // Sync visible types to only types present in the current graph
+  useEffect(() => {
+    setVisibleTypes(new Set(ALL_TYPES));
+  }, [ALL_TYPES]);
 
   const visibleNodes = nodes.filter(n => visibleTypes.has(n.type));
   const visibleNodeIds = new Set(visibleNodes.map(n => n.id));
   const visibleEdges = edges.filter(e => visibleNodeIds.has(e.source) && visibleNodeIds.has(e.target));
 
-  const highlightedIds = focusedId ? getNeighborIds(focusedId, visibleEdges, depth) : null;
+  const highlightedIds = useMemo(() => {
+    if (focusedId) return getNeighborIds(focusedId, visibleEdges, depth);
+    if (activeQuestion) return new Set(activeQuestion.highlightNodes);
+    return null;
+  }, [focusedId, visibleEdges, depth, activeQuestion]);
 
   const focusedNode  = focusedId ? nodeMap.get(focusedId) ?? null : null;
   const focusedConns = focusedId ? getNeighborsByRelation(focusedId, visibleEdges) : null;
@@ -237,8 +324,9 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
     // ── Defs ──────────────────────────────────────────────────────────────────
     const defs = svg.append("defs");
 
-    // Arrow marker per relationship
-    Object.entries(REL_COLOR).forEach(([rel, color]) => {
+    // Arrow marker for every unique relationship in this dataset
+    const allRelTypes = new Set(edges.map(e => e.relation));
+    allRelTypes.forEach(rel => {
       defs.append("marker")
         .attr("id", `arr-${rel}`)
         .attr("viewBox", "0 -4 8 8")
@@ -246,22 +334,7 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
         .attr("markerWidth", 5).attr("markerHeight", 5)
         .attr("orient", "auto")
         .append("path")
-        .attr("d", "M0,-4L8,0L0,4").attr("fill", color).attr("fill-opacity", 0.75);
-    });
-
-    // Also add markers for any relationship types not in REL_COLOR
-    const allRelTypes = new Set(edges.map(e => e.relation));
-    allRelTypes.forEach(rel => {
-      if (!REL_COLOR[rel]) {
-        defs.append("marker")
-          .attr("id", `arr-${rel}`)
-          .attr("viewBox", "0 -4 8 8")
-          .attr("refX", 8).attr("refY", 0)
-          .attr("markerWidth", 5).attr("markerHeight", 5)
-          .attr("orient", "auto")
-          .append("path")
-          .attr("d", "M0,-4L8,0L0,4").attr("fill", "#4B5563").attr("fill-opacity", 0.75);
-      }
+        .attr("d", "M0,-4L8,0L0,4").attr("fill", getRelColor(rel)).attr("fill-opacity", 0.75);
     });
 
     // Glow filter
@@ -285,6 +358,7 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
     // ── Build simulation nodes/edges (copies so D3 can mutate) ───────────────
     const simNodes: SimNode[] = nodes.map(n => ({ ...n, x: W/2 + (Math.random()-0.5)*80, y: H/2 + (Math.random()-0.5)*80 }));
     const simNodeMap = new Map(simNodes.map(n => [n.id, n]));
+    simNodeMapRef.current = simNodeMap;
 
     interface SimEdge extends d3.SimulationLinkDatum<SimNode> {
       id: string; relation: string;
@@ -319,7 +393,7 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
       .data(simEdges, d => d.id)
       .enter().append("path")
       .attr("fill", "none")
-      .attr("stroke", d => REL_COLOR[d.relation] ?? "#4B5563")
+      .attr("stroke", d => getRelColor(d.relation))
       .attr("stroke-width", 1.2)
       .attr("stroke-opacity", 0.45)
       .attr("marker-end", d => `url(#arr-${d.relation})`);
@@ -376,7 +450,7 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
       .attr("dy", d => getNodeCfg(d.type).size + 11)
       .attr("font-size", "9px")
       .attr("fill", d => getNodeCfg(d.type).color)
-      .attr("font-family", "'JetBrains Mono', 'Courier New', monospace")
+      .attr("font-family", "'Inter', sans-serif")
       .style("pointer-events", "none")
       .text(d => d.label.length > 16 ? d.label.slice(0, 15) + "…" : d.label);
 
@@ -386,6 +460,7 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
     nodeSel.on("click.focus", function(ev, d) {
       ev.stopPropagation();
       setContextMenu(null);
+      setActiveQuestion(null);
       setFocusedId(prev => prev === d.id ? null : d.id);
     });
 
@@ -418,19 +493,29 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
     });
 
     // ── Auto-fit after stabilisation ─────────────────────────────────────────
-    const fitTimer = setTimeout(() => {
+    const doFit = (animated = true) => {
+      const cw = el.clientWidth  || W;
+      const ch = el.clientHeight || H;
       const gbbox = (g.node() as SVGGElement | null)?.getBBox();
-      if (gbbox && gbbox.width > 0) {
-        const pad = 40;
-        const scale = Math.min((W - pad*2) / gbbox.width, (H - pad*2) / gbbox.height, 1.5) * 0.85;
-        const tx = W/2 - (gbbox.x + gbbox.width/2)  * scale;
-        const ty = H/2 - (gbbox.y + gbbox.height/2) * scale;
-        svg.transition().duration(800).call(zoom.transform, d3.zoomIdentity.translate(tx, ty).scale(scale));
-      }
-    }, 2200);
+      if (!gbbox || gbbox.width === 0) return;
+      const pad = 40;
+      const scale = Math.min((cw - pad*2) / gbbox.width, (ch - pad*2) / gbbox.height, 1.5) * 0.85;
+      const tx = cw/2 - (gbbox.x + gbbox.width/2)  * scale;
+      const ty = ch/2 - (gbbox.y + gbbox.height/2) * scale;
+      const t = d3.zoomIdentity.translate(tx, ty).scale(scale);
+      if (animated) svg.transition().duration(800).call(zoom.transform, t);
+      else svg.call(zoom.transform, t);
+    };
+
+    const fitTimer = setTimeout(() => doFit(true), 2200);
+
+    // Re-fit whenever the container is resized (e.g. orientation change, panel open)
+    const ro = new ResizeObserver(() => doFit(false));
+    if (containerRef.current) ro.observe(containerRef.current);
 
     return () => {
       clearTimeout(fitTimer);
+      ro.disconnect();
       sim.stop();
     };
   }, [nodes, edges]);
@@ -477,6 +562,22 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
       });
   }, [focusedId, depth, searchQuery, highlightedIds, visibleTypes, nodeMap]);
 
+  // ── Zoom-to-node on focus ─────────────────────────────────────────────────
+
+  useEffect(() => {
+    if (!focusedId || !svgRef.current || !zoomRef.current) return;
+    const simNode = simNodeMapRef.current.get(focusedId);
+    if (!simNode || simNode.x == null || simNode.y == null) return;
+    const el = svgRef.current;
+    const W = el.clientWidth || 900;
+    const H = el.clientHeight || 580;
+    const scale = 1.8;
+    const tx = W / 2 - simNode.x * scale;
+    const ty = H / 2 - simNode.y * scale;
+    const t = d3.zoomIdentity.translate(tx, ty).scale(scale);
+    d3.select(el).transition().duration(600).call(zoomRef.current.transform, t);
+  }, [focusedId]);
+
   // ── Controls ───────────────────────────────────────────────────────────────
 
   const resetView = useCallback(() => {
@@ -486,12 +587,31 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
       .call(zoomRef.current.transform, d3.zoomIdentity);
   }, []);
 
+  const zoomIn = useCallback(() => {
+    if (!svgRef.current || !zoomRef.current) return;
+    d3.select(svgRef.current).transition().duration(300).call(zoomRef.current.scaleBy, 1.4);
+  }, []);
+
+  const zoomOut = useCallback(() => {
+    if (!svgRef.current || !zoomRef.current) return;
+    d3.select(svgRef.current).transition().duration(300).call(zoomRef.current.scaleBy, 1 / 1.4);
+  }, []);
+
   const toggleType = (type: string) => {
     setVisibleTypes(prev => {
       const next = new Set(prev);
       if (next.has(type)) next.delete(type); else next.add(type);
       return next;
     });
+  };
+
+  const handleQuestionClick = (q: PredefinedQuestion) => {
+    if (activeQuestion?.id === q.id) {
+      setActiveQuestion(null);
+    } else {
+      setActiveQuestion(q);
+      setFocusedId(null);
+    }
   };
 
   const handleContextAction = (action: string) => {
@@ -521,22 +641,27 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
   const dataSources = focusedNode ? (DUMMY_DATA_SOURCES[focusedNode.type] || []) : [];
 
   return (
-    <div style={{ background: T.bg, borderRadius: 16, overflow: "hidden", fontFamily: "'DM Sans', sans-serif" }} className="border border-slate-200 dark:border-slate-800">
+    <div
+      style={{ background: T.bg, fontFamily: "'Inter', sans-serif" }}
+      className={`border border-slate-200 dark:border-slate-800 ${isFullscreen ? "fixed inset-0 z-50 rounded-none w-screen h-screen flex flex-col m-0" : "rounded-2xl overflow-hidden flex flex-col w-full"}`}
+    >
 
       {/* ── Toolbar ──────────────────────────────────────────────────────── */}
-      <div style={{ background: T.chrome, borderBottom: `1px solid ${T.border}` }} className="px-4 py-3">
-        <div className="flex items-center gap-2">
-          <div className="relative flex-1 max-w-xs">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5" style={{ color: T.textMut }} />
-            <input
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              placeholder="Search nodes…"
-              style={{ background: T.inputBg, border: `1px solid ${T.borderAlt}`, color: T.textPri, fontFamily: "'JetBrains Mono', monospace", outline: "none" }}
-              className="w-full pl-8 pr-3 py-1.5 rounded-lg text-xs focus:border-blue-500 transition-colors"
-            />
-          </div>
+      <div style={{ background: T.chrome, borderBottom: `1px solid ${T.border}` }} className="px-4 py-3 flex flex-col lg:flex-row lg:items-center gap-2">
+        {/* Row 1: Search (hidden on lg, shown inline) */}
+        <div className="relative flex-1">
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5" style={{ color: T.textMut }} />
+          <input
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            placeholder="Search nodes…"
+            style={{ background: T.inputBg, border: `1px solid ${T.borderAlt}`, color: T.textPri, fontFamily: "'Inter', sans-serif", outline: "none" }}
+            className="w-full pl-8 pr-3 py-1.5 rounded-lg text-xs focus:border-blue-500 transition-colors"
+          />
+        </div>
 
+        {/* Row 2: Depth + Reset + Zoom + Clear focus */}
+        <div className="flex items-center gap-2 flex-wrap lg:mx-auto">
           <div className="flex items-center gap-1.5" style={{ color: T.textSec }}>
             <span className="text-xs">Depth:</span>
             {[1,2,3].map(d => (
@@ -563,6 +688,25 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
             <RotateCcw className="h-3 w-3" /> Reset
           </button>
 
+          <div className="flex items-center" style={{ border: `1px solid ${T.borderAlt}`, borderRadius: 8, overflow: "hidden" }}>
+            <button
+              onClick={zoomOut}
+              style={{ background: T.chipBg, color: T.textSec, borderRight: `1px solid ${T.borderAlt}` }}
+              className="flex items-center justify-center w-7 h-7 text-xs hover:border-slate-400 transition-colors"
+              aria-label="Zoom out"
+            >
+              <Minus className="h-3 w-3" />
+            </button>
+            <button
+              onClick={zoomIn}
+              style={{ background: T.chipBg, color: T.textSec }}
+              className="flex items-center justify-center w-7 h-7 text-xs hover:border-slate-400 transition-colors"
+              aria-label="Zoom in"
+            >
+              <Plus className="h-3 w-3" />
+            </button>
+          </div>
+
           {focusedId && (
             <button
               onClick={() => setFocusedId(null)}
@@ -573,47 +717,78 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
             </button>
           )}
         </div>
+
+        <button
+          onClick={() => setIsFullscreen(prev => !prev)}
+          style={{ background: T.chipBg, border: `1px solid ${T.borderAlt}`, color: T.textSec }}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs hover:border-slate-400 transition-colors shrink-0 self-start lg:self-auto"
+          aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+        >
+          {isFullscreen ? <Minimize2 className="h-3 w-3" /> : <Maximize2 className="h-3 w-3" />}
+          <span className="hidden sm:inline">{isFullscreen ? "Exit" : "Expand"}</span>
+        </button>
       </div>
 
       {/* ── Main layout ──────────────────────────────────────────────────────── */}
-      <div className="flex" style={{ height: 580 }}>
+      <div className="flex flex-col md:flex-row md:h-[580px]">
 
-        {/* ── Left sidebar: Layer toggles ───────────────────────────────────── */}
-        <div style={{ background: T.panel, borderRight: `1px solid ${T.border}`, width: 148, flexShrink: 0 }} className="py-3 px-3 flex flex-col gap-2">
-          <p style={{ color: T.textMut, fontFamily: "'JetBrains Mono', monospace" }} className="text-xs uppercase tracking-widest mb-1 flex items-center gap-1.5">
+        {/* ── Left sidebar / top strip: Layer toggles + Legend ─────────────── */}
+        {/* Mobile: two stacked rows (layers scroll row + legend scroll row); Desktop: vertical sidebar */}
+        <div
+          style={{ background: T.panel }}
+          className="border-b border-slate-200 dark:border-slate-800 md:border-b-0 md:border-r md:w-[148px] md:flex-shrink-0 flex flex-col md:py-3 md:px-3 md:gap-2 md:overflow-y-auto"
+        >
+          {/* Desktop heading */}
+          <p style={{ color: T.textMut, fontFamily: "'Inter', sans-serif" }} className="hidden md:flex text-xs uppercase tracking-widest mb-1 items-center gap-1.5">
             <Layers className="h-3 w-3" /> Layers
           </p>
-          {ALL_TYPES.map(type => {
-            const cfg = getNodeCfg(type);
-            const active = visibleTypes.has(type);
-            return (
-              <button
-                key={type}
-                onClick={() => toggleType(type)}
-                className="flex items-center gap-2 text-left w-full rounded px-2 py-1.5 transition-colors"
-                style={{ background: active ? `${cfg.color}18` : "transparent", border: `1px solid ${active ? cfg.color + "60" : T.border}` }}
-              >
-                <span className="text-sm">{cfg.emoji}</span>
-                <span className="text-xs" style={{ color: active ? cfg.color : T.textMut, fontFamily: "'JetBrains Mono', monospace" }}>
-                  {cfg.label}
-                </span>
-              </button>
-            );
-          })}
 
-          <div style={{ borderTop: `1px solid ${T.border}` }} className="mt-2 pt-2">
-            <p style={{ color: T.textMut, fontFamily: "'JetBrains Mono', monospace" }} className="text-xs uppercase tracking-widest mb-2">Legend</p>
-            {Object.entries(REL_COLOR).map(([rel, color]) => (
+          {/* Layer toggle buttons */}
+          <div className="flex flex-row md:flex-col gap-2 overflow-x-auto px-3 py-2 md:p-0 md:overflow-x-visible">
+            {ALL_TYPES.map(type => {
+              const cfg = getNodeCfg(type);
+              const active = visibleTypes.has(type);
+              return (
+                <button
+                  key={type}
+                  onClick={() => toggleType(type)}
+                  className="flex items-center gap-2 text-left whitespace-nowrap shrink-0 md:w-full rounded px-2 py-1.5 transition-colors"
+                  style={{ background: active ? `${cfg.color}18` : "transparent", border: `1px solid ${active ? cfg.color + "60" : T.border}` }}
+                >
+                  <span className="text-sm">{cfg.emoji}</span>
+                  <span className="text-xs" style={{ color: active ? cfg.color : T.textMut, fontFamily: "'Inter', sans-serif" }}>
+                    {cfg.label}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Legend — desktop: vertical block; mobile: separate scrollable row */}
+          <div style={{ borderTop: `1px solid ${T.border}` }} className="hidden md:block mt-2 pt-2">
+            <p style={{ color: T.textMut, fontFamily: "'Inter', sans-serif" }} className="text-xs uppercase tracking-widest mb-2">Legend</p>
+            {[...new Set(edges.map(e => e.relation))].map(rel => (
               <div key={rel} className="flex items-center gap-1.5 mb-1">
-                <div className="h-0.5 w-4 rounded" style={{ background: color }} />
-                <span style={{ color: T.textMut, fontFamily: "'JetBrains Mono', monospace" }} className="text-[9px]">{rel}</span>
+                <div className="h-0.5 w-4 rounded" style={{ background: getRelColor(rel) }} />
+                <span style={{ color: T.textMut, fontFamily: "'Inter', sans-serif" }} className="text-[9px]">{rel}</span>
+              </div>
+            ))}
+          </div>
+          <div
+            style={{ borderTop: `1px solid ${T.border}` }}
+            className="md:hidden flex flex-row gap-x-4 gap-y-1 overflow-x-auto px-3 py-1.5 items-center"
+          >
+            {[...new Set(edges.map(e => e.relation))].map(rel => (
+              <div key={rel} className="flex items-center gap-1 shrink-0">
+                <div className="h-0.5 w-3 rounded" style={{ background: getRelColor(rel) }} />
+                <span style={{ color: T.textMut, fontFamily: "'Inter', sans-serif" }} className="text-[9px] whitespace-nowrap">{rel}</span>
               </div>
             ))}
           </div>
         </div>
 
         {/* ── Graph canvas ─────────────────────────────────────────────────── */}
-        <div ref={containerRef} className="flex-1 relative" onClick={() => setContextMenu(null)}>
+        <div ref={containerRef} className="flex-1 relative h-[500px] md:h-auto min-h-0" onClick={() => setContextMenu(null)}>
           <svg
             ref={svgRef}
             className="w-full h-full"
@@ -622,12 +797,12 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
 
           {/* Node count overlay */}
           <div className="absolute bottom-3 left-3 flex gap-3">
-            <span style={{ background: T.chrome + "cc", border: `1px solid ${T.border}`, color: T.textMut, fontFamily: "'JetBrains Mono', monospace" }}
+            <span style={{ background: T.chrome + "cc", border: `1px solid ${T.border}`, color: T.textMut, fontFamily: "'Inter', sans-serif" }}
               className="text-xs px-2 py-1 rounded-lg backdrop-blur-sm">
               {visibleNodes.length} nodes · {visibleEdges.length} edges
             </span>
             {focusedId && highlightedIds && (
-              <span style={{ background: "#1e3a5faa", border: "1px solid #3b82f680", color: "#93c5fd", fontFamily: "'JetBrains Mono', monospace" }}
+              <span style={{ background: "#1e3a5faa", border: "1px solid #3b82f680", color: "#93c5fd", fontFamily: "'Inter', sans-serif" }}
                 className="text-xs px-2 py-1 rounded-lg backdrop-blur-sm">
                 Focus: {highlightedIds.size} related nodes
               </span>
@@ -652,7 +827,7 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
                   key={item.action}
                   onClick={() => handleContextAction(item.action)}
                   className="block w-full text-left px-3 py-2 text-xs hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
-                  style={{ color: item.color, fontFamily: "'DM Sans', sans-serif" }}
+                  style={{ color: item.color, fontFamily: "'Inter', sans-serif" }}
                 >
                   {item.label}
                 </button>
@@ -661,11 +836,11 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
           )}
         </div>
 
-        {/* ── Right panel: node details ────────────────────────────────────── */}
+        {/* ── Right panel / bottom panel: node details ─────────────────────── */}
         {focusedNode && focusedConns && (
           <div
-            style={{ width: 260, background: T.panel, borderLeft: `1px solid ${T.border}`, overflowY: "auto" }}
-            className="py-4 px-4 flex flex-col gap-4 flex-shrink-0"
+            style={{ background: T.panel }}
+            className="border-t border-slate-200 dark:border-slate-800 md:border-t-0 md:border-l w-full md:w-[260px] md:flex-shrink-0 overflow-y-auto max-h-[260px] md:max-h-none py-4 px-4 flex flex-col gap-4"
           >
             {/* Node header */}
             <div>
@@ -677,7 +852,7 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
                   </p>
                   <span
                     className="text-xs px-2 py-0.5 rounded-full"
-                    style={{ background: getNodeCfg(focusedNode.type).color + "25", color: getNodeCfg(focusedNode.type).color, fontFamily: "'JetBrains Mono', monospace" }}
+                    style={{ background: getNodeCfg(focusedNode.type).color + "25", color: getNodeCfg(focusedNode.type).color, fontFamily: "'Inter', sans-serif" }}
                   >
                     {getNodeCfg(focusedNode.type).label}
                   </span>
@@ -686,7 +861,7 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
               {focusedNode.description && (
                 <p className="text-xs mt-1" style={{ color: T.textSec }}>{focusedNode.description}</p>
               )}
-              <div style={{ color: T.textMut, fontFamily: "'JetBrains Mono', monospace" }} className="text-[10px] mt-1">
+              <div style={{ color: T.textMut, fontFamily: "'Inter', sans-serif" }} className="text-[10px] mt-1">
                 ID: {focusedNode.id}
               </div>
             </div>
@@ -694,7 +869,7 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
             {/* Outgoing connections */}
             {Object.entries(focusedConns.outgoing).map(([rel, ids]) => (
               <div key={`out-${rel}`}>
-                <p className="text-xs mb-1.5" style={{ color: REL_COLOR[rel] ?? T.textSec, fontFamily: "'JetBrains Mono', monospace" }}>
+                <p className="text-xs mb-1.5" style={{ color: getRelColor(rel), fontFamily: "'Inter', sans-serif" }}>
                   → {rel}
                 </p>
                 <div className="flex flex-wrap gap-1">
@@ -710,7 +885,7 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
                           background: getNodeCfg(n.type).color + "20",
                           border: `1px solid ${getNodeCfg(n.type).color}50`,
                           color: getNodeCfg(n.type).color,
-                          fontFamily: "'JetBrains Mono', monospace",
+                          fontFamily: "'Inter', sans-serif",
                         }}
                       >
                         {n.label.length > 14 ? n.label.slice(0, 13) + "…" : n.label}
@@ -724,7 +899,7 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
             {/* Incoming connections */}
             {Object.entries(focusedConns.incoming).map(([rel, ids]) => (
               <div key={`in-${rel}`}>
-                <p className="text-xs mb-1.5" style={{ color: REL_COLOR[rel] ?? T.textSec, fontFamily: "'JetBrains Mono', monospace" }}>
+                <p className="text-xs mb-1.5" style={{ color: getRelColor(rel), fontFamily: "'Inter', sans-serif" }}>
                   ← {rel}
                 </p>
                 <div className="flex flex-wrap gap-1">
@@ -740,7 +915,7 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
                           background: getNodeCfg(n.type).color + "20",
                           border: `1px solid ${getNodeCfg(n.type).color}50`,
                           color: getNodeCfg(n.type).color,
-                          fontFamily: "'JetBrains Mono', monospace",
+                          fontFamily: "'Inter', sans-serif",
                         }}
                       >
                         {n.label.length > 14 ? n.label.slice(0, 13) + "…" : n.label}
@@ -758,7 +933,7 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
             {/* Data Sources */}
             <div>
               <div className="flex items-center justify-between mb-2">
-                <p className="text-xs flex items-center gap-1.5" style={{ color: T.textMut, fontFamily: "'JetBrains Mono', monospace", textTransform: "uppercase", letterSpacing: "0.1em" }}>
+                <p className="text-xs flex items-center gap-1.5" style={{ color: T.textMut, fontFamily: "'Inter', sans-serif", textTransform: "uppercase", letterSpacing: "0.1em" }}>
                   <Database className="h-3 w-3" /> Data Sources
                 </p>
               </div>
@@ -783,15 +958,15 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
                         {isOpen && (
                           <div className="px-2.5 pb-2.5 space-y-1.5">
                             <div className="flex flex-wrap gap-1">
-                              <span className="text-[9px] px-1.5 py-0.5 rounded" style={{ background: catColor + "22", color: catColor, fontFamily: "'JetBrains Mono', monospace" }}>{lnk.metric_category}</span>
-                              <span className="text-[9px] px-1.5 py-0.5 rounded" style={{ background: T.chipBg, color: T.textSec, fontFamily: "'JetBrains Mono', monospace" }}>{lnk.source_system}</span>
-                              <span className="text-[9px] px-1.5 py-0.5 rounded" style={{ background: T.chipBg, color: "#16a34a", fontFamily: "'JetBrains Mono', monospace" }}>{lnk.refresh_frequency}</span>
+                              <span className="text-[9px] px-1.5 py-0.5 rounded" style={{ background: catColor + "22", color: catColor, fontFamily: "'Inter', sans-serif" }}>{lnk.metric_category}</span>
+                              <span className="text-[9px] px-1.5 py-0.5 rounded" style={{ background: T.chipBg, color: T.textSec, fontFamily: "'Inter', sans-serif" }}>{lnk.source_system}</span>
+                              <span className="text-[9px] px-1.5 py-0.5 rounded" style={{ background: T.chipBg, color: "#16a34a", fontFamily: "'Inter', sans-serif" }}>{lnk.refresh_frequency}</span>
                             </div>
-                            <p className="text-[9px] break-all" style={{ color: "#2563eb", fontFamily: "'JetBrains Mono', monospace" }}>{lnk.object_name}</p>
-                            <p className="text-[9px]" style={{ color: T.textMut, fontFamily: "'JetBrains Mono', monospace" }}>join: {lnk.join_key}</p>
+                            <p className="text-[9px] break-all" style={{ color: "#2563eb", fontFamily: "'Inter', sans-serif" }}>{lnk.object_name}</p>
+                            <p className="text-[9px]" style={{ color: T.textMut, fontFamily: "'Inter', sans-serif" }}>join: {lnk.join_key}</p>
                             <div className="flex flex-wrap gap-1">
                               {lnk.example_fields.map(f => (
-                                <span key={f} className="text-[8px] px-1 py-0.5 rounded" style={{ background: T.fieldBg, border: `1px solid ${T.fieldBorder}`, color: T.textMut, fontFamily: "'JetBrains Mono', monospace" }}>{f}</span>
+                                <span key={f} className="text-[8px] px-1 py-0.5 rounded" style={{ background: T.fieldBg, border: `1px solid ${T.fieldBorder}`, color: T.textMut, fontFamily: "'Inter', sans-serif" }}>{f}</span>
                               ))}
                             </div>
                           </div>
@@ -805,6 +980,67 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
           </div>
         )}
       </div>
+
+      {/* ── Questions panel ──────────────────────────────────────────────────── */}
+      {questions.length > 0 && (
+        <div style={{ borderTop: `1px solid ${T.border}`, background: T.panel }} className="px-4 py-4">
+          <p style={{ color: T.textMut, fontFamily: "'Inter', sans-serif" }} className="text-xs uppercase tracking-widest mb-3 flex items-center gap-1.5">
+            <HelpCircle className="h-3.5 w-3.5" /> Ask the Context Graph
+          </p>
+          <div className="grid sm:grid-cols-2 gap-2">
+            {questions.map(q => (
+              <button
+                key={q.id}
+                onClick={() => handleQuestionClick(q)}
+                className="text-left px-3 py-2.5 rounded-xl transition-colors"
+                style={{
+                  border: activeQuestion?.id === q.id ? "1px solid #3b82f6" : `1px solid ${T.borderAlt}`,
+                  background: activeQuestion?.id === q.id ? "#3b82f615" : T.chrome,
+                }}
+              >
+                <div className="flex items-start gap-2">
+                  <HelpCircle
+                    className="h-4 w-4 shrink-0 mt-0.5"
+                    style={{ color: activeQuestion?.id === q.id ? "#3b82f6" : T.textMut }}
+                  />
+                  <span className="text-xs leading-snug" style={{ color: T.textPri }}>{q.question}</span>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ── Answer + reasoning panel ─────────────────────────────────────────── */}
+      {activeQuestion && (
+        <div style={{ borderTop: `1px solid ${T.border}`, background: T.chrome }} className="px-5 py-5">
+          <div className="flex items-start justify-between mb-4">
+            <h4 className="text-sm font-semibold pr-4" style={{ color: T.textPri }}>{activeQuestion.question}</h4>
+            <button onClick={() => setActiveQuestion(null)} style={{ color: T.textMut }} className="shrink-0 hover:opacity-70 transition-opacity">
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+
+          <ol className="space-y-2 mb-4">
+            {activeQuestion.reasoningSteps.map((step, i) => (
+              <li key={i} className="flex items-start gap-3 text-xs">
+                <span className="shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-white text-[10px] font-bold mt-0.5" style={{ background: "#3b82f6" }}>
+                  {i + 1}
+                </span>
+                <span style={{ color: T.textSec }}>{step}</span>
+              </li>
+            ))}
+          </ol>
+
+          <div className="rounded-lg p-3.5" style={{ borderLeft: "3px solid #3b82f6", background: T.panel }}>
+            <p className="text-xs leading-relaxed" style={{ color: T.textPri }}>{activeQuestion.answer}</p>
+          </div>
+
+          <p className="mt-2.5 text-[10px]" style={{ color: T.textMut, fontFamily: "'Inter', sans-serif" }}>
+            Generated by AI reasoning over the Context Graph
+          </p>
+        </div>
+      )}
     </div>
   );
 }

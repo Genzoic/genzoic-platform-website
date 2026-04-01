@@ -54,5 +54,55 @@
     { "source": "store-03", "target": "plant-02", "relationship": "MONITORS" },
     { "source": "chan-03", "target": "ing-01", "relationship": "PROCURES" },
     { "source": "chan-03", "target": "ing-04", "relationship": "PROCURES" }
+  ],
+  "questions": [
+    {
+      "id": "q-cobalt-disruption-impact",
+      "question": "If Cobalt Mining Corp in the DRC faces a 60-day production halt, which products and customers are affected?",
+      "answer": "Cobalt Mining Corp supplies Cobalt Sulfate, which feeds into the Cathode Precursor Plant in Finland. This plant also requires Lithium Carbonate and Nickel Sulfate — it's a critical dependency. The precursor plant feeds Cell Assembly in Nagoya, which manufactures NMC811 Pouch Cells. These cells feed Gigafactory Nevada, producing both EV Battery Pack (for Tesla and European Auto OEM) and Grid Storage Module (for Grid Operator X). The entire downstream product line is at risk.",
+      "highlightNodes": ["sup-02", "ing-02", "plant-03", "plant-02", "prod-03", "plant-01", "prod-01", "prod-02", "chan-01", "chan-02", "store-01", "store-03", "store-02"],
+      "highlightEdges": ["sup-02->ing-02", "ing-02->plant-03", "sup-02->plant-03", "plant-03->plant-02", "plant-02->prod-03", "prod-03->plant-01", "plant-01->prod-01", "plant-01->prod-02", "prod-01->chan-01", "prod-02->chan-02", "chan-01->store-01", "chan-01->store-03", "chan-02->store-02"],
+      "reasoningSteps": [
+        "Cobalt Mining Corp supplies Cobalt Sulfate",
+        "Cobalt Sulfate feeds Cathode Precursor Plant in Finland",
+        "Cobalt Mining has a critical dependency on this plant",
+        "Precursor Plant feeds Cell Assembly in Nagoya",
+        "Nagoya manufactures NMC811 Pouch Cells",
+        "Pouch Cells feed Gigafactory Nevada",
+        "Nevada produces EV Battery Packs and Grid Storage Modules",
+        "Tesla, European Auto OEM, and Grid Operator X all impacted"
+      ]
+    },
+    {
+      "id": "q-graphite-single-source-risk",
+      "question": "Graphite International is our only graphite supplier. What happens if they can't deliver?",
+      "answer": "Graphite International from China is flagged as a single-source risk for Cell Assembly in Nagoya. They supply Graphite Anode Material, which feeds directly into the Nagoya cell assembly line. Without graphite, NMC811 Pouch Cell production stops, cascading to Gigafactory Nevada and all downstream products. No alternative supplier exists in the current graph — this is a critical procurement gap.",
+      "highlightNodes": ["sup-03", "ing-03", "plant-02", "prod-03", "plant-01", "prod-01", "prod-02"],
+      "highlightEdges": ["sup-03->ing-03", "ing-03->plant-02", "sup-03->plant-02", "plant-02->prod-03", "prod-03->plant-01", "plant-01->prod-01", "plant-01->prod-02"],
+      "reasoningSteps": [
+        "Graphite International is flagged as single-source risk for Nagoya",
+        "Supplies Graphite Anode Material",
+        "Anode material feeds directly into Cell Assembly Nagoya",
+        "No alternative supplier exists in the system",
+        "Production halt cascades to NMC811 cells, then Gigafactory",
+        "Both EV Battery Packs and Grid Storage Modules affected"
+      ]
+    },
+    {
+      "id": "q-lithium-price-spot-market",
+      "question": "Lithium carbonate prices spike 30% on the spot market. What's the portfolio impact?",
+      "answer": "Lithium Carbonate is supplied by Lithium Supplier A (Chile) and also procured through the Spot Market. It co-requires Nickel Sulfate for cathode synthesis. Both materials feed Cathode Precursor Plant Finland. A 30% lithium price increase impacts NMC811 cell costs, flowing through to EV Battery Packs (OEM contracts with Tesla and European OEM) and Grid Storage Modules. OEM contract price adjustment clauses should be reviewed.",
+      "highlightNodes": ["ing-01", "sup-01", "chan-03", "ing-04", "plant-03", "prod-01", "prod-02", "store-01", "store-03"],
+      "highlightEdges": ["sup-01->ing-01", "sup-01->chan-03", "chan-03->ing-01", "chan-03->ing-04", "ing-01->plant-03", "ing-04->plant-03", "ing-01->ing-04", "plant-01->prod-01", "plant-01->prod-02", "prod-01->chan-01", "chan-01->store-01", "chan-01->store-03"],
+      "reasoningSteps": [
+        "Lithium Carbonate from Chile and procured on Spot Market",
+        "Co-required with Nickel Sulfate for cathode synthesis",
+        "Both feed Cathode Precursor Plant Finland",
+        "30% price increase flows through to NMC811 cells",
+        "EV Battery Packs sold through OEM contracts to Tesla and European OEM",
+        "Grid Storage Modules sold to Grid Operator X",
+        "Contract price adjustment clauses need review"
+      ]
+    }
   ]
 }

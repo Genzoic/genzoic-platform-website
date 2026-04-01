@@ -61,5 +61,52 @@
     { "source": "store-02", "target": "plant-04", "relationship": "TRACKS" },
     { "source": "store-01", "target": "plant-01", "relationship": "MONITORS" },
     { "source": "chan-02", "target": "plant-01", "relationship": "TRACKS" }
+  ],
+  "questions": [
+    {
+      "id": "q-coating-line-yield-drop",
+      "question": "Electrode Coating Line A shows a 4% yield drop this week. Is it a material or process issue?",
+      "answer": "Line A uses NMC811 Cathode Powder, Graphite Anode Slurry, Aluminum Foil, and Copper Foil. In-Process QC Gate checks electrode weight, thickness, and adhesion per batch, and the Metrology Lab monitors Line A via SEM/XRD analysis. Check if incoming QC flagged any material batch issues — NMC811 Cathode Powder from Umicore and separator films from Celgard both pass through Incoming QC Gate before release to Line A.",
+      "highlightNodes": ["plant-01", "ing-01", "ing-02", "ing-05", "ing-06", "chan-02", "chan-01", "store-01", "sup-01"],
+      "highlightEdges": ["ing-01->plant-01", "ing-02->plant-01", "ing-05->plant-01", "ing-06->plant-01", "plant-01->chan-02", "chan-02->store-01", "store-01->plant-01", "sup-01->ing-01", "ing-01->chan-01", "chan-01->plant-01"],
+      "reasoningSteps": [
+        "Electrode Coating Line A uses 4 key materials",
+        "In-Process QC checks electrode parameters per batch",
+        "Metrology Lab monitors Line A with SEM/XRD",
+        "NMC811 Cathode Powder from Umicore passes Incoming QC",
+        "Check if incoming material inspections flagged deviations",
+        "Correlate yield drop timing with material batch changes"
+      ]
+    },
+    {
+      "id": "q-formation-quality-prediction",
+      "question": "Based on electrode data from the last 8 hours, which cells in formation are likely to fail final QC?",
+      "answer": "Electrode Coating Line A feeds into Cell Assembly Line B, which then feeds Formation & Aging Chamber. Cells produced in the last 8 hours are now in the 14-day aging rack. In-Process QC at Line A tracks electrode weight and thickness — any batches flagged there are at risk of failing Final QC Gate capacity grading. The Cycle Life Testing Lab also tracks formation performance to detect early degradation patterns.",
+      "highlightNodes": ["plant-01", "plant-02", "plant-04", "chan-02", "chan-03", "store-02"],
+      "highlightEdges": ["plant-01->plant-02", "plant-02->plant-04", "plant-01->chan-02", "chan-02->plant-01", "plant-04->prod-01", "plant-04->prod-02", "prod-01->chan-03", "prod-02->chan-03", "store-02->plant-04"],
+      "reasoningSteps": [
+        "Coating Line A feeds Cell Assembly Line B",
+        "Cell Assembly feeds Formation & Aging Chamber",
+        "In-Process QC tracks electrode parameters at Line A",
+        "Flagged batches in formation are at risk of failing Final QC",
+        "Cycle Life Testing Lab monitors formation cycling data",
+        "Cross-reference in-process flags with formation chamber data"
+      ]
+    },
+    {
+      "id": "q-prismatic-cell-capacity-increase",
+      "question": "We need to increase Prismatic Cell 100Ah production by 20%. Where are the bottlenecks?",
+      "answer": "Prismatic Cells are produced at Formation & Aging Chamber (14-day aging cycle) and assembled at Module Assembly Line C. The aging chamber is the likely bottleneck — it's a time-based constraint. Both Cylindrical and Prismatic cells share this chamber. Upstream, Cell Assembly Line B handles electrolyte fill from Showa Denko and separator films from Celgard. Incoming QC Gate must handle increased material inspection throughput.",
+      "highlightNodes": ["prod-02", "plant-04", "plant-02", "plant-03", "chan-03", "chan-01", "ing-03", "ing-04", "sup-02", "sup-03"],
+      "highlightEdges": ["plant-04->prod-02", "plant-02->plant-04", "prod-02->chan-03", "chan-03->plant-03", "prod-02->plant-03", "ing-03->plant-02", "ing-04->plant-02", "sup-02->ing-03", "sup-03->ing-04", "ing-03->chan-01", "ing-04->chan-01"],
+      "reasoningSteps": [
+        "Prismatic Cells produced at Formation & Aging Chamber",
+        "14-day aging cycle is a time-based bottleneck",
+        "Both Cylindrical and Prismatic cells share this chamber",
+        "Cell Assembly Line B is upstream — handles electrolyte and separator",
+        "Incoming QC must handle increased material inspection volume",
+        "Module Assembly Line C downstream needs capacity validation"
+      ]
+    }
   ]
 }

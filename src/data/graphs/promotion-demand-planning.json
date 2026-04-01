@@ -63,5 +63,53 @@
     { "source": "ch-4", "target": "store-4", "relationship": "PLACED_AT" },
     { "source": "store-1", "target": "plant-2", "relationship": "REPLENISHMENT_REQUEST" },
     { "source": "store-4", "target": "plant-3", "relationship": "REPLENISHMENT_REQUEST" }
+  ],
+  "questions": [
+    {
+      "id": "q-pumpkin-spice-promo-capacity",
+      "question": "We want to run a Loyalty + Social Media + Endcap blitz for Pumpkin Spice Latte Mix. Can SeasonBest Foods handle the demand surge?",
+      "answer": "Pumpkin Spice Latte Mix is promoted through Loyalty Program, Social Media Ads, and Endcap Displays — three simultaneous channels. It's supplied by SeasonBest Foods and staged at Fulfillment Center East. Endcap displays are placed at Superstore #1 Atlanta and Superstore #8 Nashville. A reorder trigger already exists back to SeasonBest, but triple-channel promotion will require pre-positioning extra inventory at the fulfillment center.",
+      "highlightNodes": ["prod-1", "ch-1", "ch-5", "ch-4", "sup-1", "plant-1", "store-1", "store-4"],
+      "highlightEdges": ["ch-1->prod-1", "ch-5->prod-1", "ch-4->prod-1", "sup-1->prod-1", "prod-1->plant-1", "plant-1->store-1", "plant-1->store-2", "ch-4->store-1", "ch-4->store-4", "prod-1->sup-1"],
+      "reasoningSteps": [
+        "Pumpkin Spice promoted via Loyalty, Social Media, and Endcap — 3 channels",
+        "Supplied by SeasonBest Foods (seasonal item, limited run)",
+        "Staged at Fulfillment Center East",
+        "Endcap displays placed at Atlanta and Nashville superstores",
+        "Reorder trigger exists back to SeasonBest",
+        "Triple-channel blitz requires pre-positioned surge inventory"
+      ]
+    },
+    {
+      "id": "q-thanksgiving-turkey-surge",
+      "question": "Thanksgiving is 4 weeks away. Can HarvestPrime Meats meet the Organic Turkey demand across stores?",
+      "answer": "Organic Turkey Breast is supplied by HarvestPrime Meats with a surge forecast signal. It's staged at Overflow Warehouse Midwest, which fulfills Superstore #8 Nashville and Market #41 Raleigh. Promoted through Circular Ads reaching 1.8M households. Nashville is already sending replenishment requests to the Overflow Warehouse — demand is building and HarvestPrime's surge capacity must be confirmed now.",
+      "highlightNodes": ["prod-5", "sup-2", "plant-3", "ch-2", "store-4", "store-5"],
+      "highlightEdges": ["sup-2->prod-5", "prod-5->sup-2", "prod-5->plant-3", "plant-3->store-4", "plant-3->store-5", "ch-2->prod-5", "store-4->plant-3"],
+      "reasoningSteps": [
+        "Organic Turkey has a 4-week demand spike for Thanksgiving",
+        "Supplied by HarvestPrime Meats with surge forecast",
+        "Staged at Overflow Warehouse Midwest",
+        "Fulfills Nashville and Raleigh stores",
+        "Promoted through Circular Ads to 1.8M households",
+        "Nashville already sending replenishment requests",
+        "Surge capacity confirmation needed immediately"
+      ]
+    },
+    {
+      "id": "q-digital-coupon-water-raleigh",
+      "question": "Digital Coupons are driving Spring Water demand at Market #41 Raleigh. Is the supply chain keeping up?",
+      "answer": "Spring Water 24-Pack is promoted through Digital Coupons, which generate a demand signal for Market #41 Raleigh. Water is supplied by ClearSpring Beverages with a surge forecast connection. It's staged at Regional DC Southeast, which fulfills both Express #29 Miami and Superstore #1 Atlanta but not Raleigh directly — Raleigh is served by Overflow Warehouse Midwest. This creates a fulfillment gap for coupon-driven demand at Raleigh.",
+      "highlightNodes": ["ch-3", "prod-4", "sup-3", "store-5", "plant-2", "plant-3", "store-3"],
+      "highlightEdges": ["ch-3->prod-4", "ch-3->store-5", "sup-3->prod-4", "prod-4->sup-3", "prod-4->plant-2", "plant-2->store-3", "plant-3->store-5"],
+      "reasoningSteps": [
+        "Digital Coupons promote Spring Water and signal demand for Raleigh",
+        "Spring Water supplied by ClearSpring Beverages",
+        "Staged at Regional DC Southeast",
+        "Southeast DC fulfills Miami and Atlanta, not Raleigh",
+        "Raleigh is served by Overflow Warehouse Midwest",
+        "Fulfillment gap exists for coupon-driven demand at Raleigh"
+      ]
+    }
   ]
 }

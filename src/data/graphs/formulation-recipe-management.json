@@ -69,5 +69,65 @@
     { "source": "prod-04", "target": "store-01", "relationship": "TESTED_AT" },
     { "source": "prod-03", "target": "store-02", "relationship": "TESTED_AT" },
     { "source": "chan-01", "target": "store-02", "relationship": "VALIDATES_AT" }
+  ],
+  "questions": [
+    {
+      "id": "q-hexion-discontinues-resin",
+      "question": "If Hexion Specialty Resins discontinues Epoxy Resin DGEBA, which products are affected and what alternatives exist?",
+      "answer": "Hexion supplies both Epoxy Resin DGEBA and Polyamine Hardener. DGEBA is formulated into Epoxy Floor Coating and Anti-Corrosion Primer — both manufactured at the Resin Blending Facility in Ohio. Losing DGEBA affects two of our four products. No alternative supplier for epoxy resin exists in the current system — this is a critical single-source dependency that needs immediate procurement action.",
+      "highlightNodes": ["sup-01", "ing-01", "ing-02", "prod-01", "prod-02", "plant-01"],
+      "highlightEdges": ["sup-01->ing-01", "sup-01->ing-02", "ing-01->prod-01", "ing-02->prod-01", "ing-01->prod-02", "prod-01->plant-01", "prod-02->plant-01"],
+      "reasoningSteps": [
+        "Hexion supplies Epoxy Resin DGEBA and Polyamine Hardener",
+        "DGEBA is formulated in Epoxy Floor Coating and Anti-Corrosion Primer",
+        "Both products manufactured at Resin Blending Facility Ohio",
+        "No alternative epoxy resin supplier exists in the system",
+        "Two of four products affected — critical single-source risk"
+      ]
+    },
+    {
+      "id": "q-tio2-shared-ingredient",
+      "question": "Titanium Dioxide R-902 is used in multiple products. What's the full impact if Chemours has a supply issue?",
+      "answer": "Chemours Pigments supplies TiO2 R-902, which is ground at the Pigment Dispersion Mill and formulated into three products: Epoxy Floor Coating, Interior Latex Wall Paint, and (via the mill) feeds both the Ohio and Georgia plants. A Chemours disruption impacts products across both solvent-based and waterborne lines — affecting three of four product lines simultaneously.",
+      "highlightNodes": ["sup-02", "ing-03", "plant-03", "prod-01", "prod-03", "plant-01", "plant-02"],
+      "highlightEdges": ["sup-02->ing-03", "ing-03->plant-03", "plant-03->plant-01", "plant-03->plant-02", "ing-03->prod-01", "ing-03->prod-03"],
+      "reasoningSteps": [
+        "Chemours supplies Titanium Dioxide R-902",
+        "TiO2 is ground at Pigment Dispersion Mill",
+        "Mill feeds both Resin Blending Ohio and Latex Mixing Georgia",
+        "TiO2 formulated in Epoxy Floor Coating and Interior Latex Wall Paint",
+        "Three of four products impacted across both plant lines"
+      ]
+    },
+    {
+      "id": "q-latex-reformulation-svhc",
+      "question": "We need to reformulate Interior Latex Wall Paint to reduce VOC. Which ingredients and suppliers are involved?",
+      "answer": "Interior Latex Wall Paint uses Acrylic Latex Emulsion, TiO2, Calcium Carbonate Filler, and Coalescent Agent. The Coalescent Agent (Texanol) is the primary VOC contributor. Both Latex Emulsion and Coalescent are supplied by BASF Dispersions. The R&D Formulation Lab develops this product and validates at the Application Testing Facility. A lower-VOC coalescent alternative would need qualification through this same development and testing pipeline.",
+      "highlightNodes": ["prod-03", "ing-08", "ing-09", "ing-03", "ing-04", "sup-05", "chan-01", "store-02", "plant-02"],
+      "highlightEdges": ["ing-08->prod-03", "ing-09->prod-03", "ing-03->prod-03", "ing-04->prod-03", "sup-05->ing-08", "sup-05->ing-09", "chan-01->prod-03", "prod-03->store-02", "prod-03->plant-02"],
+      "reasoningSteps": [
+        "Interior Latex uses Acrylic Latex, TiO2, CaCO3 Filler, and Coalescent",
+        "Coalescent Agent (Texanol) is the main VOC contributor",
+        "Both Latex Emulsion and Coalescent from BASF Dispersions",
+        "R&D Formulation Lab develops this product",
+        "Application Testing Facility validates formulation changes",
+        "Low-VOC coalescent needs qualification through same pipeline"
+      ]
+    },
+    {
+      "id": "q-anti-corrosion-weathering",
+      "question": "Anti-Corrosion Primer failed accelerated weathering tests. What's the investigation path?",
+      "answer": "Anti-Corrosion Primer is tested at the Accelerated Weathering Lab and certified through QC Batch Release. It contains Epoxy Resin DGEBA, Zinc Phosphate, and Xylene Solvent. Zinc Phosphate is ground at the Pigment Dispersion Mill. The failure could trace to a pigment grinding issue at the mill, a resin batch variation from Hexion, or a formulation ratio problem. QC Batch Release records and Weathering Lab test data should be cross-referenced.",
+      "highlightNodes": ["prod-02", "store-01", "chan-02", "ing-01", "ing-07", "ing-05", "plant-03", "plant-01", "sup-01"],
+      "highlightEdges": ["prod-02->store-01", "chan-02->prod-02", "ing-01->prod-02", "ing-07->prod-02", "ing-05->prod-02", "ing-07->plant-03", "prod-02->plant-01", "sup-01->ing-01"],
+      "reasoningSteps": [
+        "Anti-Corrosion Primer tested at Accelerated Weathering Lab",
+        "QC Batch Release certifies the product",
+        "Contains Epoxy Resin, Zinc Phosphate, and Xylene Solvent",
+        "Zinc Phosphate ground at Pigment Dispersion Mill",
+        "Failure could trace to mill, resin batch, or formulation ratio",
+        "Cross-reference QC records with weathering test data"
+      ]
+    }
   ]
 }
