@@ -59,5 +59,67 @@
     { "source": "prod-3", "target": "store-1", "relationship": "EXPIRY_TRACKED_AT" },
     { "source": "prod-4", "target": "store-4", "relationship": "EXPIRY_TRACKED_AT" },
     { "source": "prod-5", "target": "store-3", "relationship": "EXPIRY_TRACKED_AT" }
+  ],
+  "questions": [
+    {
+      "id": "q-croissant-expiry-risk",
+      "question": "Butter Croissants have a 5-day shelf life. Which stores are at risk of expiry, and can we reroute through faster channels?",
+      "answer": "Butter Croissants are manufactured at the Bakery Production Unit and distributed through the In-Store channel to Stores #42, #18, and #07. With only a 5-day shelf life, Store #42 Manhattan has the highest expiry tracking activity. Shifting some volume to the Quick Commerce channel via Cold Storage Hub Brooklyn could reach Dark Store #D3 for faster last-mile delivery.",
+      "highlightNodes": ["prod-3", "plant-3", "ch-2", "ch-3", "plant-2", "store-1", "store-2", "store-3", "store-4"],
+      "highlightEdges": ["prod-3->plant-3", "plant-3->ch-2", "ch-2->store-1", "ch-2->store-2", "ch-2->store-3", "plant-2->ch-3", "ch-3->store-4", "prod-3->store-1"],
+      "reasoningSteps": [
+        "Butter Croissant has 5-day shelf life",
+        "Manufactured at Bakery Production Unit",
+        "Currently distributed through In-Store channel",
+        "Reaches Stores #42, #18, and #07",
+        "Quick Commerce via Cold Storage Hub could reduce time-to-shelf",
+        "Dark Store #D3 enables 15-minute delivery for near-expiry stock"
+      ]
+    },
+    {
+      "id": "q-supplier-lead-time-impact",
+      "question": "If DairyFresh Co's lead time doubles, which products and stores are affected?",
+      "answer": "DairyFresh Co supplies Raw Milk and Culture Starter, which are used in Organic Milk, Greek Yogurt, and Strawberry Smoothie. These products are stored at Central Warehouse NJ and Cold Storage Hub Brooklyn, reaching all four stores. Store #42 Manhattan (flagship, highest volume) and Store #18 Brooklyn would be most impacted.",
+      "highlightNodes": ["sup-1", "ing-1", "ing-2", "prod-1", "prod-2", "prod-4", "plant-1", "plant-2", "store-1", "store-2"],
+      "highlightEdges": ["sup-1->ing-1", "sup-1->ing-2", "ing-1->prod-1", "ing-2->prod-2", "ing-1->prod-2", "ing-1->prod-4", "prod-1->plant-1", "prod-2->plant-1", "prod-4->plant-2", "prod-1->store-1", "prod-2->store-2"],
+      "reasoningSteps": [
+        "DairyFresh Co supplies Raw Milk and Culture Starter",
+        "Raw Milk is used in Organic Milk, Greek Yogurt, and Strawberry Smoothie",
+        "Culture Starter is used in Greek Yogurt",
+        "Products stored at Central Warehouse NJ and Cold Storage Hub Brooklyn",
+        "These feed In-Store, E-commerce, and Quick Commerce channels",
+        "All four stores are affected through these channels"
+      ]
+    },
+    {
+      "id": "q-quick-commerce-smoothie",
+      "question": "Strawberry Smoothie has 7-day shelf life and is tracked at Dark Store #D3. Is the current supply chain optimal?",
+      "answer": "Strawberry Smoothie uses Raw Milk from DairyFresh Co and Fruit Puree Mix from GreenFarm Organics. It is stored at Cold Storage Hub Brooklyn, which fulfills both E-commerce and Quick Commerce channels. Dark Store #D3 receives stock via Quick Commerce. The dedicated cold-chain path (Cold Storage Hub → Quick Commerce → Dark Store) is well-suited for its 7-day shelf life.",
+      "highlightNodes": ["prod-4", "ing-5", "ing-1", "sup-2", "sup-1", "plant-2", "ch-3", "store-4"],
+      "highlightEdges": ["sup-2->ing-5", "sup-1->ing-1", "ing-5->prod-4", "ing-1->prod-4", "prod-4->plant-2", "plant-2->ch-3", "ch-3->store-4", "prod-4->store-4"],
+      "reasoningSteps": [
+        "Strawberry Smoothie uses Raw Milk and Fruit Puree Mix",
+        "Stored at Cold Storage Hub Brooklyn (dedicated cold-chain)",
+        "Distributed through Quick Commerce channel",
+        "Quick Commerce delivers to Dark Store #D3 Midtown",
+        "Expiry tracked at Dark Store #D3",
+        "7-day shelf life is well served by 15-minute delivery model"
+      ]
+    },
+    {
+      "id": "q-cheddar-long-shelf-optimization",
+      "question": "Cheddar Cheese has a 60-day shelf life. Can we reduce safety stock at Store #07 Jersey City?",
+      "answer": "Cheddar Cheese Block uses Organic Cream from GreenFarm Organics, is stored at Central Warehouse NJ, and distributed through the In-Store channel to Store #07. With a 60-day shelf life, the expiry risk is low. Since Central Warehouse NJ also feeds Cold Storage Hub Brooklyn for E-commerce, excess stock at Store #07 could be redirected to online orders to reduce holding costs.",
+      "highlightNodes": ["prod-5", "ing-3", "sup-2", "plant-1", "ch-2", "ch-1", "store-3", "plant-2"],
+      "highlightEdges": ["sup-2->ing-3", "ing-3->prod-5", "prod-5->plant-1", "plant-1->ch-2", "ch-2->store-3", "plant-1->plant-2", "plant-2->ch-1", "prod-5->store-3"],
+      "reasoningSteps": [
+        "Cheddar Cheese has 60-day shelf life — low expiry risk",
+        "Uses Organic Cream from GreenFarm Organics",
+        "Stored at Central Warehouse NJ",
+        "Distributed to Store #07 via In-Store channel",
+        "Central Warehouse also feeds Cold Storage Hub for E-commerce",
+        "Excess store stock can be redirected to online fulfillment"
+      ]
+    }
   ]
 }

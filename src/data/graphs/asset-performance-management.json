@@ -64,5 +64,54 @@
     { "source": "plant-2", "target": "store-2", "relationship": "CHARGES" },
     { "source": "store-2", "target": "store-1", "relationship": "DISCHARGES_TO" },
     { "source": "prod-3", "target": "store-1", "relationship": "FEEDS_INTO" }
+  ],
+  "questions": [
+    {
+      "id": "q-wind-turbine-gearbox-failure",
+      "question": "IoT sensors detect gearbox vibration anomaly on Wind Turbine WT-500. What's the maintenance and generation impact?",
+      "answer": "WT-500 uses a Gearbox Assembly supplied by Vestas Components, along with Pitch Bearings and Yaw Drive. It's installed at Wind Farm Coastal (150 MW), which exports to Regional Grid Hub and charges the Battery Storage Facility. The IoT Sensor Network monitors the turbine, CMMS Platform tracks maintenance, and the Digital Twin simulates degradation. If WT-500 goes down, the battery storage can temporarily compensate for lost generation.",
+      "highlightNodes": ["prod-1", "ing-1", "ing-3", "ing-4", "sup-1", "plant-1", "store-1", "store-2", "ch-1", "ch-2", "ch-4"],
+      "highlightEdges": ["ing-1->prod-1", "ing-3->prod-1", "ing-4->prod-1", "sup-1->ing-1", "sup-1->ing-3", "sup-1->ing-4", "prod-1->plant-1", "plant-1->store-1", "plant-1->store-2", "ch-1->prod-1", "ch-2->prod-1", "ch-4->prod-1"],
+      "reasoningSteps": [
+        "IoT Sensor Network detects gearbox vibration on WT-500",
+        "Gearbox Assembly supplied by Vestas Components",
+        "WT-500 installed at Wind Farm Coastal (150 MW)",
+        "Farm exports to Regional Grid Hub",
+        "Farm also charges Battery Storage Facility",
+        "Digital Twin simulates degradation trajectory",
+        "Battery storage can compensate during maintenance window"
+      ]
+    },
+    {
+      "id": "q-offshore-maintenance-window",
+      "question": "What's the optimal maintenance window for WT-510 offshore, considering grid commitments?",
+      "answer": "WT-510 is installed at Offshore Wind Platform North Sea (200 MW), which exports to Regional Grid Hub. The CMMS Platform tracks its maintenance schedule, IoT sensors monitor condition, and the Digital Twin simulates failure probability. WT-510 uses the same Gearbox and Pitch Bearings as WT-500 from Vestas. The offshore platform also exports to the grid — scheduling maintenance during low-wind periods minimizes generation loss while the Battery Storage Facility covers shortfalls.",
+      "highlightNodes": ["prod-4", "plant-3", "store-1", "store-2", "ch-1", "ch-2", "ch-4", "ing-1", "ing-3", "sup-1"],
+      "highlightEdges": ["prod-4->plant-3", "plant-3->store-1", "ch-1->prod-4", "ch-2->prod-4", "ch-4->prod-4", "ing-1->prod-4", "ing-3->prod-4", "sup-1->ing-1", "sup-1->ing-3", "store-2->store-1"],
+      "reasoningSteps": [
+        "WT-510 installed at Offshore Wind Platform North Sea",
+        "Platform exports 200 MW to Regional Grid Hub",
+        "CMMS and IoT monitor turbine condition",
+        "Digital Twin simulates failure probability curves",
+        "Same Vestas components as WT-500 (shared parts inventory)",
+        "Schedule maintenance during low-wind periods",
+        "Battery Storage covers grid shortfalls during maintenance"
+      ]
+    },
+    {
+      "id": "q-solar-underperformance",
+      "question": "Solar Array SA-200 is underperforming this week. Can other assets cover the grid commitment?",
+      "answer": "SA-200 is installed at Solar Park Desert (80 MW), which exports to Regional Grid Hub and charges the Battery Storage Facility. The IoT Sensor Network and CMMS monitor the array. SA-200 uses Inverter Modules from SunPower Panels. If solar underperforms, Wind Farm Coastal (150 MW) and Offshore Wind Platform (200 MW) also export to the same grid hub. Battery Storage can discharge to the grid to cover peak shortfalls.",
+      "highlightNodes": ["prod-2", "plant-2", "store-1", "store-2", "ch-1", "ch-2", "ch-3", "ing-2", "sup-2", "plant-1", "plant-3"],
+      "highlightEdges": ["prod-2->plant-2", "plant-2->store-1", "plant-2->store-2", "ch-1->prod-2", "ch-2->prod-2", "ch-3->plant-2", "ing-2->prod-2", "sup-2->ing-2", "plant-1->store-1", "plant-3->store-1", "store-2->store-1"],
+      "reasoningSteps": [
+        "SA-200 installed at Solar Park Desert (80 MW)",
+        "Exports to Regional Grid Hub and charges Battery Storage",
+        "IoT and CMMS monitor array performance",
+        "Uses Inverter Modules from SunPower",
+        "Wind Farm Coastal and Offshore Platform also feed the grid",
+        "Battery Storage can discharge to cover solar shortfall"
+      ]
+    }
   ]
 }

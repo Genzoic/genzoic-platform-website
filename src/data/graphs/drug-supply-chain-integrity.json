@@ -64,5 +64,53 @@
     { "source": "prod-4", "target": "store-2", "relationship": "AVAILABLE_AT" },
     { "source": "sup-1", "target": "ch-3", "relationship": "REGISTERED_WITH" },
     { "source": "ch-1", "target": "plant-2", "relationship": "SERIALIZES_AT" }
+  ],
+  "questions": [
+    {
+      "id": "q-metformin-api-failure",
+      "question": "Metformin Hydrochloride API fails a stability test. Which downstream batches, plants, and pharmacies are affected?",
+      "answer": "Metformin HCl API from API Manufacturer India is used in Metformin 500mg Tablets, which are manufactured at FDA Facility NJ and packaged at Packaging Line TX. The tablets are available at Hospital Pharmacy Mass General and Retail Pharmacy CVS. Track & Trace (DSCSA) serializes at the packaging line and tracks the product. Quality Management System monitors both manufacturing and packaging plants for deviation handling.",
+      "highlightNodes": ["ing-1", "sup-1", "prod-1", "plant-1", "plant-2", "ch-1", "ch-4", "store-1", "store-2"],
+      "highlightEdges": ["sup-1->ing-1", "ing-1->prod-1", "prod-1->plant-1", "plant-1->plant-2", "ch-1->prod-1", "ch-1->plant-2", "ch-4->plant-1", "ch-4->plant-2", "prod-1->store-1", "prod-1->store-2"],
+      "reasoningSteps": [
+        "Metformin HCl API supplied by API Manufacturer India",
+        "Used in Metformin 500mg Tablets",
+        "Manufactured at FDA Facility NJ",
+        "Packaged and serialized at Packaging Line TX",
+        "DSCSA tracks product through distribution",
+        "Available at Mass General and CVS pharmacies",
+        "QMS monitors both plants for deviation handling"
+      ]
+    },
+    {
+      "id": "q-insulin-cold-chain-break",
+      "question": "If Cold Chain Logistics Inc reports a temperature excursion during Insulin Glargine transport, what's the impact?",
+      "answer": "Cold Chain Logistics transports Insulin Glargine 100U/mL, which is manufactured at Sterile Fill-Finish IN using Insulin Glargine Bulk from API Manufacturer India and Glass Vials from the vial supplier. The insulin is available at Specialty Pharmacy BioScript and Hospital Pharmacy Mass General. A temperature excursion may compromise the entire shipment — DSCSA tracking identifies affected serial numbers for targeted recall.",
+      "highlightNodes": ["sup-4", "prod-2", "plant-3", "ing-3", "sup-1", "sup-3", "ch-1", "store-3", "store-1"],
+      "highlightEdges": ["sup-4->prod-2", "prod-2->plant-3", "sup-1->ing-3", "ing-3->prod-2", "sup-3->plant-3", "ch-1->prod-2", "prod-2->store-3", "prod-2->store-1"],
+      "reasoningSteps": [
+        "Cold Chain Logistics transports Insulin Glargine",
+        "Insulin manufactured at Sterile Fill-Finish IN",
+        "Uses Insulin Glargine Bulk from API Manufacturer India",
+        "Glass vials supplied to the fill-finish facility",
+        "Available at BioScript Specialty and Mass General pharmacies",
+        "DSCSA serial numbers enable targeted recall of affected units"
+      ]
+    },
+    {
+      "id": "q-single-source-api-risk",
+      "question": "API Manufacturer India is our only API supplier. What products are at risk if they fail an FDA inspection?",
+      "answer": "API Manufacturer India supplies Metformin HCl API and Insulin Glargine Bulk — the active ingredients for two of our four products. They are registered with FDA CDER. If they fail inspection, Metformin Tablets (available at Mass General and CVS) and Insulin Glargine (available at BioScript and Mass General) are both at risk. No alternative API supplier exists in the current supply chain — this is a critical single-source vulnerability.",
+      "highlightNodes": ["sup-1", "ing-1", "ing-3", "prod-1", "prod-2", "ch-3", "store-1", "store-2", "store-3"],
+      "highlightEdges": ["sup-1->ing-1", "sup-1->ing-3", "ing-1->prod-1", "ing-3->prod-2", "sup-1->ch-3", "ch-3->plant-1", "ch-3->plant-3", "prod-1->store-1", "prod-1->store-2", "prod-2->store-3", "prod-2->store-1"],
+      "reasoningSteps": [
+        "API Manufacturer India supplies Metformin HCl and Insulin Glargine Bulk",
+        "Registered with FDA CDER submission portal",
+        "Metformin Tablets available at Mass General and CVS",
+        "Insulin Glargine available at BioScript and Mass General",
+        "No alternative API supplier in the system",
+        "FDA inspection failure would halt both product lines"
+      ]
+    }
   ]
 }
