@@ -61,5 +61,53 @@
     { "source": "store-2", "target": "plant-2", "relationship": "SERVICES" },
     { "source": "sup-2", "target": "store-2", "relationship": "DEPLOYS_TO" },
     { "source": "prod-5", "target": "prod-1", "relationship": "BACKS_UP" }
+  ],
+  "questions": [
+    {
+      "id": "q-turbine-maintenance-cascade",
+      "question": "If we take Gas Turbine Unit A offline for blade replacement, what's the downstream impact?",
+      "answer": "Gas Turbine Unit A feeds into Steam Generator B, which feeds Transformer T1. Taking the turbine offline stops steam generation and grid export through the transformer. Diesel Generator DG-1 backs up the gas turbine for black start capability. The Vibration Monitoring System and SCADA both monitor the turbine, and SAP PM tracks its maintenance. Turbine Blades, Journal Bearings, and Lube Oil Filters from Siemens Parts Supply are needed for the repair.",
+      "highlightNodes": ["prod-1", "prod-2", "prod-3", "prod-5", "plant-1", "plant-2", "ing-1", "ing-2", "ing-4", "sup-1", "ch-3", "ch-1", "ch-2"],
+      "highlightEdges": ["prod-1->prod-2", "prod-2->prod-3", "prod-1->plant-1", "prod-3->plant-2", "prod-5->prod-1", "ch-3->prod-1", "ch-1->plant-1", "ch-2->prod-1", "ing-1->prod-1", "ing-2->prod-1", "ing-4->prod-1", "sup-1->ing-1", "sup-1->ing-4"],
+      "reasoningSteps": [
+        "Gas Turbine Unit A feeds Steam Generator B",
+        "Steam Generator feeds Transformer T1 for grid export",
+        "Turbine offline stops entire generation chain",
+        "Diesel Generator DG-1 provides black start backup",
+        "Vibration Monitoring and SCADA track turbine health",
+        "Turbine Blades and Bearings from Siemens needed for repair",
+        "SAP PM manages work order and scheduling"
+      ]
+    },
+    {
+      "id": "q-bearing-vibration-prediction",
+      "question": "Vibration data shows bearing degradation on Gas Turbine Unit A. Do we have spare parts in stock?",
+      "answer": "The Vibration Monitoring System monitors the Gas Turbine, and Bearing Assembly Journals are stocked at the Parts Warehouse. SKF Bearing Division supplies these bearings. The bearings are also used in Cooling Tower CT-3. GE Turbine Services can deploy to Plant Alpha via the Field Service Unit for installation. Parts availability and service scheduling can be coordinated simultaneously.",
+      "highlightNodes": ["ch-3", "prod-1", "ing-2", "store-1", "sup-4", "prod-4", "sup-2", "store-2", "plant-1"],
+      "highlightEdges": ["ch-3->prod-1", "ing-2->prod-1", "ing-2->store-1", "sup-4->ing-2", "ing-2->prod-4", "sup-2->store-2", "store-2->plant-1"],
+      "reasoningSteps": [
+        "Vibration Monitoring detects bearing degradation on turbine",
+        "Bearing Assembly Journals stocked at Parts Warehouse",
+        "SKF Bearing Division is the supplier",
+        "Bearings also used in Cooling Tower CT-3",
+        "GE Turbine Services deploys via Field Service Unit",
+        "Parts and service can be coordinated together"
+      ]
+    },
+    {
+      "id": "q-cooling-tower-impact",
+      "question": "Cooling Tower CT-3 needs unplanned maintenance. How does this affect steam generation?",
+      "answer": "Cooling Tower CT-3 cools Steam Generator B, which is essential for the combined cycle operation. If the cooling tower goes down, Steam Generator B overheats and must reduce output or shut down, breaking the turbine-to-grid chain. The tower uses Bearing Assemblies from SKF and is tracked by SAP PM. Plant Alpha's Water Treatment Facility also feeds the steam generator — both cooling and water treatment must be operational for full plant output.",
+      "highlightNodes": ["prod-4", "prod-2", "prod-1", "prod-3", "plant-1", "plant-3", "ch-2", "ing-2", "sup-4"],
+      "highlightEdges": ["prod-4->prod-2", "prod-1->prod-2", "prod-2->prod-3", "prod-4->plant-1", "plant-3->prod-2", "ch-2->prod-4", "ing-2->prod-4", "sup-4->ing-2"],
+      "reasoningSteps": [
+        "Cooling Tower CT-3 cools Steam Generator B",
+        "Steam Generator is part of the combined cycle chain",
+        "Cooling tower down forces steam generator to reduce output",
+        "Water Treatment Facility also feeds the steam generator",
+        "Both cooling and water treatment needed for full output",
+        "SAP PM tracks cooling tower maintenance schedule"
+      ]
+    }
   ]
 }

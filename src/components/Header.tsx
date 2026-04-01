@@ -5,8 +5,7 @@ import { useTheme } from "@/contexts/ThemeContext";
 
 import logoLight from "/logos-and-favicons/genzoic-logo-light.png";
 import logoDark from "/logos-and-favicons/genzoic-logo-dark.png";
-
-const DEMO_URL = "https://calendar.app.google/DezhnNr993pqnzhx5";
+import { DEMO_URL } from "@/lib/constants";
 
 export default function Header() {
   const { theme, toggleTheme } = useTheme();
@@ -24,9 +23,9 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md">
-      <div className="mx-auto max-w-6xl flex items-center justify-between px-4 md:px-6 h-16">
-        <Link to="/" onClick={() => setMenuOpen(false)}>
+    <header className="sticky top-0 z-50 border-b border-slate-200/60 dark:border-white/[0.07] bg-white/60 dark:bg-[#07090f]/70 backdrop-blur-2xl backdrop-saturate-150 shadow-sm shadow-slate-200/50 dark:shadow-none">
+      <div className="mx-auto max-w-6xl flex items-center justify-between px-4 md:px-6 h-[64px]">
+        <Link to="/" onClick={() => setMenuOpen(false)} className="flex items-center">
           <img
             src={theme === "dark" ? logoDark : logoLight}
             alt="Genzoic"
@@ -35,48 +34,52 @@ export default function Header() {
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-8">
+        <nav className="hidden md:flex items-center gap-0.5 shrink-0" aria-label="Desktop navigation">
           <button
             onClick={handlePlatformClick}
-            className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors"
+            className="px-3 py-1.5 rounded-lg text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-black/[0.05] dark:hover:bg-white/[0.07] transition-all whitespace-nowrap"
           >
             Platform
           </button>
           <Link
             to="/solutions"
-            className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors"
+            className="px-3 py-1.5 rounded-lg text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-black/[0.05] dark:hover:bg-white/[0.07] transition-all whitespace-nowrap"
           >
             Solutions
           </Link>
+
+          <div className="w-px h-4 bg-slate-300/70 dark:bg-white/10 mx-2" />
+
           <button
             onClick={toggleTheme}
-            className="p-2 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors"
+            className="p-1.5 rounded-lg text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 hover:bg-black/[0.05] dark:hover:bg-white/[0.07] transition-all"
             aria-label="Toggle theme"
           >
-            {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+            {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
           </button>
+
           <a
             href={DEMO_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="px-6 py-2.5 rounded-lg font-semibold text-sm bg-blue-800 hover:bg-blue-900 text-white dark:bg-blue-600 dark:hover:bg-blue-700 transition-colors"
+            className="cta-btn ml-2 whitespace-nowrap"
           >
             Book a Demo
           </a>
         </nav>
 
-        {/* Mobile menu button */}
-        <div className="flex md:hidden items-center gap-2">
+        {/* Mobile controls */}
+        <div className="flex md:hidden items-center gap-1">
           <button
             onClick={toggleTheme}
-            className="p-2 text-slate-600 dark:text-slate-300"
+            className="p-2 rounded-lg text-slate-500 dark:text-slate-400"
             aria-label="Toggle theme"
           >
-            {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+            {theme === "dark" ? <Sun size={17} /> : <Moon size={17} />}
           </button>
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="p-2 text-slate-600 dark:text-slate-300"
+            className="p-2 rounded-lg text-slate-500 dark:text-slate-400"
             aria-label="Toggle menu"
           >
             {menuOpen ? <X size={20} /> : <Menu size={20} />}
@@ -86,29 +89,38 @@ export default function Header() {
 
       {/* Mobile menu */}
       {menuOpen && (
-        <div className="md:hidden border-t border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 px-4 py-4 space-y-4">
+        <nav className="md:hidden border-t border-slate-200/60 dark:border-white/[0.07] bg-white/80 dark:bg-[#07090f]/85 backdrop-blur-2xl px-4 py-5 space-y-1" aria-label="Mobile navigation">
           <button
             onClick={handlePlatformClick}
-            className="block w-full text-left text-sm font-medium text-slate-600 dark:text-slate-300"
+            className="block w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/[0.05]"
           >
             Platform
           </button>
           <Link
             to="/solutions"
             onClick={() => setMenuOpen(false)}
-            className="block text-sm font-medium text-slate-600 dark:text-slate-300"
+            className="block px-3 py-2.5 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/[0.05]"
           >
             Solutions
           </Link>
-          <a
-            href={DEMO_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block w-full text-center px-6 py-2.5 rounded-lg font-semibold text-sm bg-blue-800 hover:bg-blue-900 text-white dark:bg-blue-600 dark:hover:bg-blue-700 transition-colors"
+          <Link
+            to="/contact"
+            onClick={() => setMenuOpen(false)}
+            className="block px-3 py-2.5 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/[0.05]"
           >
-            Book a Demo
-          </a>
-        </div>
+            Contact
+          </Link>
+          <div className="pt-2">
+            <a
+              href={DEMO_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="cta-btn w-full justify-center"
+            >
+              Book a Demo
+            </a>
+          </div>
+        </nav>
       )}
     </header>
   );

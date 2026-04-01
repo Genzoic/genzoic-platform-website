@@ -60,5 +60,54 @@
     { "source": "prod-5", "target": "store-3", "relationship": "STORED_AT" },
     { "source": "ing-1", "target": "ch-4", "relationship": "REQUIRES_SAFETY_REVIEW" },
     { "source": "prod-4", "target": "ch-1", "relationship": "REQUIRES_SAFETY_REVIEW" }
+  ],
+  "questions": [
+    {
+      "id": "q-chlorine-incident-response",
+      "question": "A chlorine gas leak is detected at the Houston plant. What safety systems and response resources are involved?",
+      "answer": "Chlorine Gas is manufactured at Chlor-Alkali Facility Houston and stored at Hazmat Warehouse Zone C. The Environmental Monitors Network and Process Safety Management System both monitor this plant. Safety Equipment Depot equips the facility with PPE and SCBAs, while Spill Response Station provides containment resources. Chlorine Gas also requires OSHA incident reporting and safety review.",
+      "highlightNodes": ["prod-4", "plant-1", "store-3", "ch-2", "ch-4", "ch-1", "store-1", "store-2"],
+      "highlightEdges": ["prod-4->plant-1", "prod-4->store-3", "ch-2->plant-1", "ch-4->plant-1", "store-1->plant-1", "store-2->plant-1", "prod-4->ch-1", "ch-1->plant-1"],
+      "reasoningSteps": [
+        "Chlorine Gas manufactured at Chlor-Alkali Facility Houston",
+        "Stored at Hazmat Warehouse Zone C",
+        "Environmental Monitors Network tracks emissions at Houston",
+        "Process Safety Management System monitors the plant",
+        "Safety Equipment Depot provides PPE and SCBAs",
+        "Spill Response Station covers Houston plant",
+        "Chlorine requires OSHA incident reporting"
+      ]
+    },
+    {
+      "id": "q-ammonia-production-increase",
+      "question": "We plan to increase Ammonia production by 25%. Which environmental permits and safety systems need review?",
+      "answer": "Ammonia is manufactured at the Geismar plant using Hydrogen Gas and Natural Gas Feedstock. The plant is monitored by Environmental Monitors Network, Process Safety Management System, and tracked by OSHA Incident Reports. Ammonia is also tracked by EPA TRI and stored at Hazmat Warehouse Zone C. A 25% increase requires reviewing emission thresholds, PSM documentation, and hazmat storage capacity.",
+      "highlightNodes": ["prod-2", "plant-3", "ing-1", "ing-4", "ch-2", "ch-4", "ch-3", "ch-1", "store-3", "store-1"],
+      "highlightEdges": ["prod-2->plant-3", "ing-1->prod-2", "ing-4->prod-2", "ch-2->plant-3", "ch-4->plant-3", "ch-1->plant-3", "ch-3->prod-2", "prod-2->store-3", "store-1->plant-3"],
+      "reasoningSteps": [
+        "Ammonia manufactured at Geismar using Hydrogen and Natural Gas",
+        "Environmental Monitors Network tracks Geismar emissions",
+        "Process Safety Management monitors Geismar plant",
+        "OSHA Incident Reports track Geismar",
+        "Ammonia tracked by EPA TRI reporting",
+        "Stored at Hazmat Warehouse Zone C",
+        "25% increase requires permit threshold and PSM reviews"
+      ]
+    },
+    {
+      "id": "q-baton-rouge-spill-coverage",
+      "question": "Does the Baton Rouge acid plant have adequate spill response coverage?",
+      "answer": "Acid Production Unit Baton Rouge manufactures Hydrochloric Acid and Sulfuric Acid. The Environmental Monitors Network and Process Safety Management System both monitor this plant. Spill Response Station provides containment for Baton Rouge. However, Safety Equipment Depot also equips this plant. Both acids are stored at Hazmat Warehouse Zone C with secondary containment. The plant appears well-covered by safety infrastructure.",
+      "highlightNodes": ["plant-2", "prod-1", "prod-5", "ch-2", "ch-4", "store-2", "store-1", "store-3"],
+      "highlightEdges": ["prod-1->plant-2", "prod-5->plant-2", "ch-2->plant-2", "ch-4->plant-2", "store-2->plant-2", "store-1->plant-2", "prod-5->store-3"],
+      "reasoningSteps": [
+        "Baton Rouge produces Hydrochloric Acid and Sulfuric Acid",
+        "Environmental Monitors Network covers the plant",
+        "Process Safety Management System monitors the plant",
+        "Spill Response Station provides containment resources",
+        "Safety Equipment Depot equips the facility",
+        "Acids stored at Hazmat Warehouse with secondary containment"
+      ]
+    }
   ]
 }
