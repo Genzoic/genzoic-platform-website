@@ -50,7 +50,7 @@ export default function Contact() {
                 </h3>
                 <p className="text-slate-400 mb-8 flex-1 leading-relaxed text-sm">
                   30 minutes. We will map a slice of your business and show you
-                  what your AI has been missing. No slides — just your actual
+                  what your AI has been missing. No slides - just your actual
                   business on the graph.
                 </p>
                 <a

@@ -51,7 +51,24 @@
     { "id": "store-mango-saree", "label": "Mango Saree", "type": "Store", "description": "Specialty ethnic grocery chain. Niche but high-margin." },
     { "id": "store-white-vineyard", "label": "White Vineyard", "type": "Store", "description": "Gourmet and wine shop chain. Premium positioning." },
     { "id": "store-chicago-outlet", "label": "Chicago Outlet", "type": "Store", "description": "Regional grocery chain. Midwest presence." },
-    { "id": "store-regional-a", "label": "Regional Chain A", "type": "Store", "description": "Southeast regional grocery. 200+ locations." }
+    { "id": "store-regional-a", "label": "Regional Chain A", "type": "Store", "description": "Southeast regional grocery. 200+ locations." },
+
+    { "id": "proc-supplier-switch", "label": "Supplier Switch Rule", "type": "Process", "description": "Decision rule for evaluating and executing supplier switches when delivery SLAs are breached." },
+    { "id": "proc-wastage-protocol", "label": "Wastage Protocol", "type": "Process", "description": "Workflow for managing near-expiry and damaged inventory across retail locations." },
+    { "id": "proc-restock-trigger", "label": "Restock Trigger", "type": "Process", "description": "Automated workflow that triggers replenishment orders based on store inventory thresholds." },
+    { "id": "proc-liquidation", "label": "Liquidation Workflow", "type": "Process", "description": "End-of-life product liquidation process including markdown scheduling and channel routing." },
+
+    { "id": "skill-backup-supplier", "label": "Backup Supplier Playbook", "type": "Skill", "description": "Learned from 47 past procurement tickets. Recommends switching to FreshFarm Co. when TrueHarvest delivery exceeds 3 days late.", "priority": "Individual", "creator": "people-procurement", "mode": "Record Ingestion" },
+    { "id": "skill-liquidation-timing", "label": "Thursday Liquidation Timing", "type": "Skill", "description": "Observed pattern: Thursday markdowns at retail stores yield 23% higher sell-through than other days.", "priority": "Department", "creator": "people-ops-mgr", "mode": "Passive Observation" },
+    { "id": "skill-wf-restock", "label": "Whole Foods Restock Cadence", "type": "Skill", "description": "Learned from correction: Whole Foods requires Tuesday/Friday deliveries only. Other days rejected at dock.", "priority": "Department", "creator": "people-ops-mgr", "mode": "Conversational Learning" },
+    { "id": "skill-mango-season", "label": "Mango Season Demand Spike", "type": "Skill", "description": "CEO directive: During May-August, stockpile Mango Puree instead of switching suppliers. Demand spikes 3x.", "priority": "Executive", "creator": "people-ceo", "mode": "Active Teaching" },
+
+    { "id": "people-ceo", "label": "CEO", "type": "People", "description": "Executive level. Sets company-wide priorities and overrides department-level decisions." },
+    { "id": "people-ops-mgr", "label": "Ops Manager", "type": "People", "description": "Department level. Manages operations, store logistics, and inventory workflows." },
+    { "id": "people-procurement", "label": "Procurement Lead", "type": "People", "description": "Individual level. Handles supplier relationships, sourcing, and cost negotiations." },
+
+    { "id": "dept-leadership", "label": "Leadership", "type": "Department", "description": "Executive team. Sets strategic direction and resolves cross-department conflicts." },
+    { "id": "dept-operations", "label": "Operations", "type": "Department", "description": "Manages supply chain, logistics, procurement, and store operations." }
   ],
   "edges": [
     { "source": "ing-mango-puree", "target": "prod-mango-chutney", "relationship": "USED_IN" },
@@ -185,36 +202,149 @@
     { "source": "prod-pesto", "target": "store-mango-saree", "relationship": "AVAILABLE_AT" },
     { "source": "prod-thai-chili", "target": "store-target", "relationship": "AVAILABLE_AT" },
     { "source": "prod-thai-chili", "target": "store-mango-saree", "relationship": "AVAILABLE_AT" },
-    { "source": "prod-thai-chili", "target": "store-regional-a", "relationship": "AVAILABLE_AT" }
+    { "source": "prod-thai-chili", "target": "store-regional-a", "relationship": "AVAILABLE_AT" },
+
+    { "source": "proc-supplier-switch", "target": "sup-trueharvest", "relationship": "TRIGGERS" },
+    { "source": "proc-supplier-switch", "target": "sup-freshfarm", "relationship": "TRIGGERS" },
+    { "source": "proc-wastage-protocol", "target": "chan-retail", "relationship": "TRIGGERS" },
+    { "source": "proc-restock-trigger", "target": "store-wholefoods", "relationship": "TRIGGERS" },
+    { "source": "proc-restock-trigger", "target": "store-target", "relationship": "TRIGGERS" },
+    { "source": "proc-liquidation", "target": "chan-retail", "relationship": "TRIGGERS" },
+
+    { "source": "skill-backup-supplier", "target": "sup-trueharvest", "relationship": "ANCHORED_TO" },
+    { "source": "skill-backup-supplier", "target": "proc-supplier-switch", "relationship": "ANCHORED_TO" },
+    { "source": "skill-liquidation-timing", "target": "chan-retail", "relationship": "ANCHORED_TO" },
+    { "source": "skill-liquidation-timing", "target": "proc-liquidation", "relationship": "ANCHORED_TO" },
+    { "source": "skill-wf-restock", "target": "store-wholefoods", "relationship": "ANCHORED_TO" },
+    { "source": "skill-wf-restock", "target": "proc-restock-trigger", "relationship": "ANCHORED_TO" },
+    { "source": "skill-mango-season", "target": "prod-mango-chutney", "relationship": "ANCHORED_TO" },
+    { "source": "skill-mango-season", "target": "ing-mango-puree", "relationship": "ANCHORED_TO" },
+
+    { "source": "skill-backup-supplier", "target": "people-procurement", "relationship": "CREATED_BY" },
+    { "source": "skill-liquidation-timing", "target": "people-ops-mgr", "relationship": "CREATED_BY" },
+    { "source": "skill-wf-restock", "target": "people-ops-mgr", "relationship": "CREATED_BY" },
+    { "source": "skill-mango-season", "target": "people-ceo", "relationship": "CREATED_BY" },
+
+    { "source": "people-ceo", "target": "dept-leadership", "relationship": "BELONGS_TO" },
+    { "source": "people-ops-mgr", "target": "dept-operations", "relationship": "BELONGS_TO" },
+    { "source": "people-procurement", "target": "dept-operations", "relationship": "BELONGS_TO" },
+    { "source": "dept-operations", "target": "dept-leadership", "relationship": "REPORTS_TO" },
+
+    { "source": "people-ops-mgr", "target": "chan-retail", "relationship": "RESPONSIBLE_FOR" },
+    { "source": "people-ops-mgr", "target": "plant-east", "relationship": "RESPONSIBLE_FOR" },
+    { "source": "people-ops-mgr", "target": "plant-midwest", "relationship": "RESPONSIBLE_FOR" },
+    { "source": "people-procurement", "target": "sup-trueharvest", "relationship": "RESPONSIBLE_FOR" },
+    { "source": "people-procurement", "target": "sup-freshfarm", "relationship": "RESPONSIBLE_FOR" }
   ],
   "questions": [
     {
-      "id": "q-supplier-disruption",
-      "question": "TrueHarvest Co. can no longer supply ingredients. What is the impact?",
-      "answer": "TrueHarvest Co. supplies 3 key ingredients used in 4 products across 2 plants. Disruption would affect retail and DTC channels, impacting 3 major store accounts. Alternative sourcing should be prioritized for Mango Puree (single-source) and Fresh Tomatoes (FreshFarm Co. as backup).",
+      "id": "q-skill-conflict",
+      "question": "TrueHarvest Co. shipment is 3 days late. What happens?",
+      "answer": "TrueHarvest is 3 days late, affecting 3 ingredients and 4 products. The Backup Supplier Playbook recommends switching to FreshFarm Co., but the CEO's Mango Season skill overrides this for Mango Puree during peak season. The system applies the switch for Apple Puree and Fresh Tomatoes only, preserving Mango Puree supply continuity per executive directive. Both the Ops Manager and Procurement Lead receive the decision with full reasoning.",
       "highlightNodes": [
-        "sup-trueharvest",
+        "sup-trueharvest", "sup-freshfarm",
         "ing-mango-puree", "ing-apple-puree", "ing-fresh-tomatoes",
         "prod-mango-chutney", "prod-apple-cider-vinegar", "prod-tomato-ketchup", "prod-pesto",
-        "plant-east", "plant-midwest", "plant-west",
-        "chan-retail", "chan-ecom",
-        "store-wholefoods", "store-target", "store-mango-saree"
+        "proc-supplier-switch",
+        "skill-backup-supplier", "skill-mango-season",
+        "people-ceo", "people-ops-mgr", "people-procurement",
+        "dept-leadership", "dept-operations"
       ],
       "highlightEdges": [
         "sup-trueharvest->ing-mango-puree", "sup-trueharvest->ing-apple-puree", "sup-trueharvest->ing-fresh-tomatoes",
         "ing-mango-puree->prod-mango-chutney", "ing-apple-puree->prod-apple-cider-vinegar",
         "ing-fresh-tomatoes->prod-tomato-ketchup", "ing-fresh-tomatoes->prod-pesto",
-        "prod-mango-chutney->plant-east", "prod-tomato-ketchup->plant-east",
-        "prod-apple-cider-vinegar->plant-midwest", "prod-pesto->plant-west",
-        "prod-mango-chutney->chan-retail", "prod-mango-chutney->chan-ecom",
-        "prod-mango-chutney->store-wholefoods", "prod-mango-chutney->store-target", "prod-mango-chutney->store-mango-saree"
+        "proc-supplier-switch->sup-trueharvest", "proc-supplier-switch->sup-freshfarm",
+        "skill-backup-supplier->sup-trueharvest", "skill-backup-supplier->proc-supplier-switch",
+        "skill-mango-season->prod-mango-chutney", "skill-mango-season->ing-mango-puree",
+        "skill-backup-supplier->people-procurement", "skill-mango-season->people-ceo",
+        "people-ceo->dept-leadership", "people-ops-mgr->dept-operations", "people-procurement->dept-operations",
+        "dept-operations->dept-leadership"
       ],
       "reasoningSteps": [
-        "TrueHarvest Co. supplies: Mango Puree, Apple Puree, Fresh Tomatoes",
-        "Products affected: Mango Chutney, Apple Cider Vinegar, Tomato Ketchup, Pesto Basilico",
-        "Plants impacted: East Coast Production Facility, Midwest Processing Plant, West Coast Bottling",
-        "Channels at risk: Retail Stores, E-Commerce DTC",
-        "Stores affected: Whole Foods, Target, Mango Saree"
+        "TrueHarvest Co. flagged as 3 days late at supplier node.",
+        "Graph traversal: TrueHarvest supplies Mango Puree, Apple Puree, Fresh Tomatoes.",
+        "Products affected: Mango Chutney, Apple Cider Vinegar, Tomato Ketchup, Pesto Basilico.",
+        "Process node \"Supplier Switch Rule\" triggers on the late-shipment event.",
+        "Skill fires: \"Backup Supplier Playbook\" (Record Ingestion, Individual priority, created by Procurement Lead) recommends switching to FreshFarm Co. based on 47 past tickets.",
+        "Skill fires: \"Mango Season Demand Spike\" (Active Teaching, Executive priority, created by CEO) says to stockpile Mango Puree during peak season, not switch suppliers.",
+        "Conflict detected: two skills on the Mango Puree path disagree. System checks org hierarchy via Department nodes.",
+        "Resolution: CEO skill (Executive priority) overrides Procurement Lead skill (Individual priority). Stockpile recommendation wins for Mango Puree. FreshFarm Co. switch proceeds for Apple Puree and Fresh Tomatoes only.",
+        "People routed: Ops Manager and Procurement Lead both notified with resolution and full reasoning chain."
+      ]
+    },
+    {
+      "id": "q-plant-disruption",
+      "question": "East Coast Production Facility goes offline. What is affected?",
+      "answer": "The East Coast facility produces 4 products serving all major channels and 4 store accounts. Hot Sauce and Tomato Ketchup can reroute to Midwest Plant. Mango Chutney and Garlic Aioli face supply interruption - no alternative plant exists. The Wastage Protocol triggers perishable inventory checks. The Ops Manager's Thursday Liquidation skill recommends immediate markdowns at nearby stores to recover revenue from at-risk inventory. Whole Foods requires 48-hour advance notice per the Restock Cadence skill - notification deadline is flagged.",
+      "highlightNodes": [
+        "plant-east",
+        "prod-mango-chutney", "prod-tomato-ketchup", "prod-hot-sauce", "prod-garlic-aioli",
+        "plant-midwest",
+        "chan-retail", "chan-ecom", "chan-wholesale",
+        "store-wholefoods", "store-target", "store-mango-saree", "store-white-vineyard",
+        "proc-wastage-protocol",
+        "skill-liquidation-timing", "skill-wf-restock",
+        "people-ops-mgr", "people-procurement",
+        "dept-operations"
+      ],
+      "highlightEdges": [
+        "prod-mango-chutney->plant-east", "prod-tomato-ketchup->plant-east",
+        "prod-hot-sauce->plant-east", "prod-garlic-aioli->plant-east",
+        "prod-tomato-ketchup->plant-midwest", "prod-hot-sauce->plant-midwest",
+        "prod-mango-chutney->chan-retail", "prod-mango-chutney->chan-ecom",
+        "prod-tomato-ketchup->chan-retail", "prod-tomato-ketchup->chan-wholesale",
+        "prod-garlic-aioli->chan-retail", "prod-garlic-aioli->chan-ecom",
+        "prod-hot-sauce->chan-retail", "prod-hot-sauce->chan-ecom",
+        "proc-wastage-protocol->chan-retail",
+        "skill-liquidation-timing->chan-retail", "skill-liquidation-timing->proc-liquidation",
+        "skill-wf-restock->store-wholefoods", "skill-wf-restock->proc-restock-trigger",
+        "skill-liquidation-timing->people-ops-mgr", "skill-wf-restock->people-ops-mgr",
+        "people-ops-mgr->dept-operations"
+      ],
+      "reasoningSteps": [
+        "East Coast Production Facility marked offline.",
+        "Entity traversal: produces Mango Chutney, Tomato Ketchup, Hot Sauce 150ml, Garlic Aioli.",
+        "Channels affected: Retail Stores, E-Commerce DTC, Wholesale/B2B.",
+        "Stores affected: Whole Foods, Target, Mango Saree, White Vineyard.",
+        "Process node \"Wastage Protocol\" triggers - checks perishable inventory at the facility.",
+        "Skill fires: \"Thursday Liquidation Timing\" (Passive Observation, Department priority, created by Ops Manager) - markdowns on Thursdays at nearby retail stores recover 23% more revenue than weekend markdowns.",
+        "Skill fires: \"Whole Foods Restock Cadence\" (Conversational Learning, Department priority, created by Ops Manager) - Whole Foods requires 48-hour advance notice for schedule changes; system flags the notification deadline.",
+        "Midwest Processing Plant can absorb Hot Sauce and Tomato Ketchup. Mango Chutney and Garlic Aioli have NO alternative plant - production halts.",
+        "People routed: Ops Manager receives action plan; Procurement Lead receives supplier notification checklist."
+      ]
+    },
+    {
+      "id": "q-ops-manager-departure",
+      "question": "The Ops Manager just resigned. What knowledge is at risk?",
+      "answer": "The Ops Manager created 2 skills and was responsible for 2 production facilities. Both skills (Thursday Liquidation Timing and Whole Foods Restock Cadence) remain anchored to the graph and will continue to fire - no knowledge is lost. However, both skills carry Department-level priority, and with the Ops Manager's departure, Operations has no Department-level decision-maker. The system generates a handover report with full skill procedures, invocation history, and entity responsibilities for the incoming hire. The CEO is flagged about the org hierarchy gap.",
+      "highlightNodes": [
+        "people-ops-mgr",
+        "skill-liquidation-timing", "skill-wf-restock",
+        "chan-retail", "store-wholefoods",
+        "proc-liquidation", "proc-restock-trigger",
+        "plant-east", "plant-midwest",
+        "dept-operations", "dept-leadership",
+        "people-ceo", "people-procurement"
+      ],
+      "highlightEdges": [
+        "skill-liquidation-timing->people-ops-mgr", "skill-wf-restock->people-ops-mgr",
+        "skill-liquidation-timing->chan-retail", "skill-liquidation-timing->proc-liquidation",
+        "skill-wf-restock->store-wholefoods", "skill-wf-restock->proc-restock-trigger",
+        "people-ops-mgr->dept-operations",
+        "people-ops-mgr->plant-east", "people-ops-mgr->plant-midwest",
+        "people-procurement->dept-operations",
+        "dept-operations->dept-leadership",
+        "people-ceo->dept-leadership"
+      ],
+      "reasoningSteps": [
+        "Ops Manager People node flagged as departing.",
+        "System traces all skills created by Ops Manager: \"Thursday Liquidation Timing\" (Passive Observation, Department priority) anchored to Retail Stores + Liquidation Workflow. \"Whole Foods Restock Cadence\" (Conversational Learning, Department priority) anchored to Whole Foods + Restock Trigger.",
+        "System traces all entities the Ops Manager is RESPONSIBLE_FOR: East Coast Production Facility, Midwest Processing Plant.",
+        "Department node \"Operations\" checked - Procurement Lead also belongs to Operations but is Individual-level, not Department-level. No one inherits Department priority automatically.",
+        "Skills remain anchored to graph - they will continue to fire. But priority level may need reassignment.",
+        "System generates handover report: 2 skills created by Ops Manager (with full procedure, trigger conditions, invocation history), 2 facilities under their responsibility. Recommendation: incoming Operations lead should review and confirm both skills within 30 days.",
+        "CEO (via Leadership Department node) flagged for org hierarchy gap - Operations department now has no Department-level decision-maker."
       ]
     },
     {
@@ -266,37 +396,6 @@
         "Of these, Mango Chutney and Pesto Basilico have Whole Foods as their largest retail account",
         "Garlic Aioli and Honey Mustard are also in Target and Chicago Outlet",
         "Revenue concentration risk is highest for Mango Chutney (40% of retail volume through Whole Foods)"
-      ]
-    },
-    {
-      "id": "q-plant-disruption",
-      "question": "East Coast Production Facility goes offline. What is affected?",
-      "answer": "The East Coast facility produces 4 products serving all major channels and 4 store accounts. Hot Sauce and Tomato Ketchup can be rerouted to the Midwest Plant. Mango Chutney and Garlic Aioli have no alternative production facility - these would face supply interruption until the facility is restored.",
-      "highlightNodes": [
-        "plant-east",
-        "prod-mango-chutney", "prod-tomato-ketchup", "prod-hot-sauce", "prod-garlic-aioli",
-        "plant-midwest",
-        "chan-retail", "chan-ecom", "chan-wholesale", "chan-foodservice",
-        "store-wholefoods", "store-target", "store-mango-saree", "store-chicago-outlet"
-      ],
-      "highlightEdges": [
-        "prod-mango-chutney->plant-east", "prod-tomato-ketchup->plant-east",
-        "prod-hot-sauce->plant-east", "prod-garlic-aioli->plant-east",
-        "prod-tomato-ketchup->plant-midwest", "prod-hot-sauce->plant-midwest",
-        "prod-mango-chutney->chan-retail", "prod-mango-chutney->chan-ecom",
-        "prod-tomato-ketchup->chan-retail", "prod-tomato-ketchup->chan-wholesale",
-        "prod-garlic-aioli->chan-retail", "prod-garlic-aioli->chan-ecom",
-        "prod-hot-sauce->chan-retail", "prod-hot-sauce->chan-ecom",
-        "prod-mango-chutney->store-wholefoods", "prod-mango-chutney->store-target",
-        "prod-garlic-aioli->store-wholefoods", "prod-garlic-aioli->store-target",
-        "prod-hot-sauce->store-target", "prod-hot-sauce->store-chicago-outlet"
-      ],
-      "reasoningSteps": [
-        "East Coast produces: Mango Chutney, Tomato Ketchup, Hot Sauce 150ml, Garlic Aioli",
-        "These products are sold through: Retail Stores, E-Commerce DTC, Wholesale/B2B, Foodservice",
-        "Stores affected: Whole Foods, Target, Mango Saree, Chicago Outlet",
-        "Midwest Processing Plant could absorb Hot Sauce and Tomato Ketchup production",
-        "Mango Chutney and Garlic Aioli have no alternative plant - production would halt"
       ]
     }
   ]

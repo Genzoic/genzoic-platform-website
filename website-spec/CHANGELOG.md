@@ -1,61 +1,134 @@
 # Website Spec Changelog
 
 Use this file to implement incremental changes without re-reading the full spec files.
+For changes 001-005, see `CHANGELOG-001-005.md`.
+For change 006, see `CHANGELOG-006.md`.
+For changes 007-008, see `CHANGELOG-007-008.md`.
+For change 009, see `CHANGELOG-009.md`.
+For change 010, see `CHANGELOG-010.md`.
 
 ---
 
-## Change 001: Add "Implementation Partnership" section to Homepage
+## Change 011: Show All 9 Solutions on Homepage, Remove /solutions Listing Page
 
-**Date:** 2026-03-28
-**Files affected:** Homepage (Index.tsx or equivalent)
-**Spec reference:** `homepage.md` Section 6
+**Date:** 2026-04-02
+**Files affected:** `src/pages/Homepage.tsx`, `src/pages/Solutions.tsx` (DELETE), `src/App.tsx`, `src/components/Header.tsx`, `src/components/Footer.tsx`
+**Priority:** HIGH - Navigation and content structure change.
 
-### What to do
+### Context
 
-Add a NEW section between the existing **Platform** section (Section 5) and the **Industry Solutions** section (previously Section 6, now Section 7). The existing sections after Platform all shift down by one.
+With only 9 solutions remaining after Change 008, the separate `/solutions` listing page is unnecessary overhead. It adds a click between the visitor and the solution detail pages without adding value - there are only 9 cards to show, which fits perfectly in a 3x3 grid.
 
-### Section details
+Currently the homepage shows only 5 "featured" solutions (one per vertical) with a "View all 13 solutions" link to the listing page. This is stale (should say 9, not 13) and creates an incomplete picture. Showing all 9 directly on the homepage gives visitors the full picture immediately.
 
-**Background:** `bg-white dark:bg-slate-950` (matches the alternating pattern - Platform is bg-white, so this continues the pattern; Industry Solutions after this should be bg-slate-50)
+The `/solutions/:slug` detail pages remain unchanged.
 
-**Note on alternating backgrounds:** After inserting this section, verify that the alternating background pattern is still correct across all 8 sections:
-1. Hero: bg-white / dark:bg-slate-950
-2. Problem: bg-slate-50 / dark:bg-slate-900/50
-3. Context Graph: bg-white / dark:bg-slate-950
-4. How It Works: bg-slate-50 / dark:bg-slate-900/50
-5. Platform: bg-white / dark:bg-slate-950
-6. **Implementation Partnership: bg-slate-50 / dark:bg-slate-900/50** (alternating)
-7. Industry Solutions: bg-white / dark:bg-slate-950
-8. Final CTA: bg-slate-50 / dark:bg-slate-900/50
+---
 
-**Layout:** Max-width 5xl. Heading centered, then 3-column card grid (1 col mobile, 2 col tablet, 3 col desktop).
+### CHANGE 11A: Replace Featured Solutions With All Solutions on Homepage
 
-**Heading (H2):** Built with you, not just for you
+**File:** `src/pages/Homepage.tsx`
 
-**Subtext:** A Context Graph is not a plug-and-play product. It encodes how your specific business operates - and getting that right requires working alongside your team. We stay until AI is delivering measurable results.
+**What:** Show all 9 solutions in the Industry Solutions section instead of the 5 featured ones.
 
-**Three cards:**
+1. **Delete** the `FEATURED_SLUGS` array and the `featuredSolutions` filter (lines ~30-40).
 
-| # | Icon (Lucide) | Title | Description |
-|---|---------------|-------|-------------|
-| 1 | Map | Map your business | We work with your domain experts to map the entities, relationships, and decision logic that define how your business actually runs. Not a generic template - your business, your graph. |
-| 2 | Wrench (or Settings) | Deploy and validate | AI Assistants are configured with role-specific access, connected to your systems, and validated against real operational scenarios before anyone relies on them. |
-| 3 | TrendingUp | Stay until it works | We measure adoption, accuracy, and business impact. We iterate on the graph, refine assistant skills, and expand to new teams - until AI is part of how your company operates, not a side experiment. |
+2. **Replace** `featuredSolutions.map(...)` with `solutionsData.map(...)` in the grid.
 
-**Bottom line** (below cards, muted text, centered):
-Think of it as forward-deployed engineering for your AI transformation. We have skin in the game because your success is our success.
+3. **Delete** the "View all 13 solutions" link block below the grid (lines ~599-606):
+```tsx
+<div className="mt-10 text-center">
+  <Link
+    to="/solutions"
+    className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
+  >
+    View all 13 solutions <ArrowRight size={15} />
+  </Link>
+</div>
+```
 
-### Styling notes
+4. **Replace it** with the "Don't see your industry?" CTA from the old Solutions page:
+```tsx
+<div className="mt-12 text-center">
+  <p className="text-slate-500 dark:text-slate-400 mb-5 text-sm">
+    Don't see your industry? We build custom Context Graphs for any vertical.
+  </p>
+  <a
+    href={DEMO_URL}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="cta-btn"
+  >
+    Talk to us <ArrowRight size={14} />
+  </a>
+</div>
+```
 
-- Follow the same card component pattern used elsewhere on the site (solid bg, border, rounded-xl, hover state).
-- Subtle left-border accent on each card in brand-primary or brand-accent color.
-- NO GRADIENTS. Flat solid colors only.
-- The bottom line should be text-secondary/text-muted size, not a heading.
+5. **Update the subheading** text to incorporate the stronger copy from the Solutions page. Change:
+```
+Not generic AI. Purpose-built solutions powered by industry-specific Context Graphs.
+```
+To:
+```
+Purpose-built AI solutions powered by industry-specific Context Graphs. Each solution maps the relationships that matter for your vertical - so AI can reason about your business, not just your data.
+```
 
-### Verification
+The grid stays as `lg:grid-cols-3` which gives a clean 3x3 layout for 9 solutions.
 
-After implementing, scroll through the full homepage and confirm:
-1. The section appears between Platform and Industry Solutions
-2. Alternating background colors are still correct across all 8 sections
-3. Cards are responsive (1 col mobile, 3 col desktop)
-4. Dark mode and light mode both look correct
+---
+
+### CHANGE 11B: Delete Solutions Listing Page
+
+**File:** `src/pages/Solutions.tsx`
+
+**What:** Delete the entire file. It is no longer needed.
+
+---
+
+### CHANGE 11C: Remove /solutions Route
+
+**File:** `src/App.tsx`
+
+**What:**
+1. Remove the import: `import Solutions from "@/pages/Solutions";`
+2. Remove the route: `<Route path="/solutions" element={<Solutions />} />`
+3. Keep: `<Route path="/solutions/:slug" element={<SolutionDetail />} />` (detail pages stay)
+
+---
+
+### CHANGE 11D: Update Header Navigation
+
+**File:** `src/components/Header.tsx`
+
+**What:** The "Solutions" nav link currently points to `/solutions`. Update both the desktop and mobile nav links to scroll to the solutions section on the homepage instead.
+
+Change `to="/solutions"` to `to="/#solutions"` in both places (desktop nav link ~line 45 and mobile nav link ~line 100).
+
+Also add `id="solutions"` to the Industry Solutions section in `Homepage.tsx` if it does not already have one:
+```tsx
+<section id="solutions" className="section-soft py-20 md:py-28">
+```
+
+The existing `HashScroll` component in `App.tsx` already handles `/#hash` smooth-scrolling.
+
+---
+
+### CHANGE 11E: Update Footer Navigation
+
+**File:** `src/components/Footer.tsx`
+
+**What:** Update the "Solutions" footer link from `to="/solutions"` to `to="/#solutions"` to match the header change.
+
+---
+
+### Verification After All Changes (011)
+
+1. **Homepage shows all 9 solutions** in a 3x3 grid. No orphan row, no "View all" link.
+2. **"Don't see your industry?" CTA** appears below the grid with "Talk to us" button.
+3. **Navigating to `/solutions` directly** should show the 404 page (or redirect to homepage - either is fine).
+4. **`/solutions/:slug` detail pages still work** - all 9 solution slugs load correctly.
+5. **Header "Solutions" link** scrolls to the solutions section on the homepage from any page.
+6. **Footer "Solutions" link** does the same.
+7. **No references** to `Solutions.tsx`, `FEATURED_SLUGS`, or `View all 13` remain in the codebase.
+8. **No unused imports** - check that the Solutions page import is removed from App.tsx.
+9. **TypeScript compiles** - run `npm run build`.

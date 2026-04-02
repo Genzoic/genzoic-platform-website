@@ -13,12 +13,12 @@ export default function Header() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const handlePlatformClick = () => {
+  const handleHashClick = (id: string) => {
     setMenuOpen(false);
     if (location.pathname === "/") {
-      document.getElementById("platform")?.scrollIntoView({ behavior: "smooth" });
+      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
     } else {
-      navigate("/#platform");
+      navigate(`/#${id}`);
     }
   };
 
@@ -36,17 +36,17 @@ export default function Header() {
         {/* Desktop nav */}
         <nav className="hidden md:flex items-center gap-0.5 shrink-0" aria-label="Desktop navigation">
           <button
-            onClick={handlePlatformClick}
+            onClick={() => handleHashClick("platform")}
             className="px-3 py-1.5 rounded-lg text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-black/[0.05] dark:hover:bg-white/[0.07] transition-all whitespace-nowrap"
           >
             Platform
           </button>
-          <Link
-            to="/solutions"
+          <button
+            onClick={() => handleHashClick("solutions")}
             className="px-3 py-1.5 rounded-lg text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-black/[0.05] dark:hover:bg-white/[0.07] transition-all whitespace-nowrap"
           >
             Solutions
-          </Link>
+          </button>
 
           <div className="w-px h-4 bg-slate-300/70 dark:bg-white/10 mx-2" />
 
@@ -91,18 +91,17 @@ export default function Header() {
       {menuOpen && (
         <nav className="md:hidden border-t border-slate-200/60 dark:border-white/[0.07] bg-white/80 dark:bg-[#07090f]/85 backdrop-blur-2xl px-4 py-5 space-y-1" aria-label="Mobile navigation">
           <button
-            onClick={handlePlatformClick}
+            onClick={() => handleHashClick("platform")}
             className="block w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/[0.05]"
           >
             Platform
           </button>
-          <Link
-            to="/solutions"
-            onClick={() => setMenuOpen(false)}
-            className="block px-3 py-2.5 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/[0.05]"
+          <button
+            onClick={() => handleHashClick("solutions")}
+            className="block w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/[0.05]"
           >
             Solutions
-          </Link>
+          </button>
           <Link
             to="/contact"
             onClick={() => setMenuOpen(false)}

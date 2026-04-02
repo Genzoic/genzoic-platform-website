@@ -4,7 +4,6 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import Homepage from "@/pages/Homepage";
-import Solutions from "@/pages/Solutions";
 import SolutionDetail from "@/pages/SolutionDetail";
 import Contact from "@/pages/Contact";
 import NotFound from "@/pages/NotFound";
@@ -30,7 +29,6 @@ export default function App() {
       <main className="flex-1">
         <Routes>
           <Route path="/" element={<Homepage />} />
-          <Route path="/solutions" element={<Solutions />} />
           <Route path="/solutions/:slug" element={<SolutionDetail />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="*" element={<NotFound />} />
