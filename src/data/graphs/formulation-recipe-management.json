@@ -24,7 +24,17 @@
     { "id": "chan-01", "label": "R&D Formulation Lab", "type": "channel", "description": "New product development and recipe optimization laboratory" },
     { "id": "chan-02", "label": "QC Batch Release", "type": "channel", "description": "In-process and final batch testing against COA specifications" },
     { "id": "store-01", "label": "Accelerated Weathering Lab", "type": "store", "description": "QUV and xenon arc testing for coating durability prediction" },
-    { "id": "store-02", "label": "Application Testing Facility", "type": "store", "description": "Spray, brush, and roller application testing on standard panels" }
+    { "id": "store-02", "label": "Application Testing Facility", "type": "store", "description": "Spray, brush, and roller application testing on standard panels" },
+    { "id": "proc-substitution-approval", "label": "Ingredient Substitution Approval", "type": "Process", "description": "When an ingredient becomes unavailable, evaluate alternatives against formulation specs, customer requirements, and regulatory constraints before approving switch." },
+    { "id": "proc-formulation-change-control", "label": "Formulation Change Control", "type": "Process", "description": "Any change to a formulation requires lab validation, customer notification (if spec change), and regulatory re-check." },
+    { "id": "proc-supplier-qualification", "label": "Supplier Qualification Process", "type": "Process", "description": "New suppliers must pass quality testing, provide documentation, and get approved before first order." },
+    { "id": "skill-surfactant-matrix", "label": "Surfactant Substitution Matrix", "type": "Skill", "description": "Taught by R&D Chemist: For anionic surfactants in latex paints, SLES can substitute SLS at 0.85x concentration. For cationic surfactants, no direct substitution - requires full reformulation.", "mode": "Active Teaching", "creator": "people-rd-chemist", "priority": "Department" },
+    { "id": "skill-reach-svhc-check", "label": "REACH SVHC Quick Check", "type": "Skill", "description": "Mined from 200 formulation reviews: 15 of our ingredients appear on the REACH SVHC candidate list. Cross-reference any reformulation against this list before proceeding.", "mode": "Record Ingestion", "creator": "people-reg-specialist", "priority": "Individual" },
+    { "id": "skill-customer-spec-override", "label": "Customer Spec Override Rule", "type": "Skill", "description": "Learned from correction: Customer SprayMax has a tighter viscosity spec (200-400 cP) than our standard (200-600 cP). Any formulation change for products sold to SprayMax must hit the tighter band.", "mode": "Conversational Learning", "creator": "people-rd-chemist", "priority": "Department" },
+    { "id": "people-rd-chemist", "label": "R&D Chemist", "type": "People", "description": "Department level. Develops and optimizes chemical formulations." },
+    { "id": "people-reg-specialist", "label": "Regulatory Specialist", "type": "People", "description": "Individual level. Manages REACH, TSCA, and other regulatory compliance for chemical products." },
+    { "id": "dept-rd", "label": "R&D", "type": "Department", "description": "Develops new formulations, optimizes existing ones, and manages product specifications." },
+    { "id": "dept-reg-affairs", "label": "Regulatory Affairs", "type": "Department", "description": "Manages regulatory compliance, substance registrations, and safety documentation." }
   ],
   "edges": [
     { "source": "sup-01", "target": "ing-01", "relationship": "SUPPLIES" },
@@ -68,13 +78,53 @@
     { "source": "prod-03", "target": "store-01", "relationship": "TESTED_AT" },
     { "source": "prod-04", "target": "store-01", "relationship": "TESTED_AT" },
     { "source": "prod-03", "target": "store-02", "relationship": "TESTED_AT" },
-    { "source": "chan-01", "target": "store-02", "relationship": "VALIDATES_AT" }
+    { "source": "chan-01", "target": "store-02", "relationship": "VALIDATES_AT" },
+    { "source": "proc-substitution-approval", "target": "ing-01", "relationship": "TRIGGERS" },
+    { "source": "proc-substitution-approval", "target": "ing-08", "relationship": "TRIGGERS" },
+    { "source": "proc-formulation-change-control", "target": "prod-01", "relationship": "TRIGGERS" },
+    { "source": "proc-formulation-change-control", "target": "prod-02", "relationship": "TRIGGERS" },
+    { "source": "proc-formulation-change-control", "target": "chan-01", "relationship": "TRIGGERS" },
+    { "source": "proc-supplier-qualification", "target": "sup-01", "relationship": "TRIGGERS" },
+    { "source": "proc-supplier-qualification", "target": "sup-05", "relationship": "TRIGGERS" },
+    { "source": "skill-surfactant-matrix", "target": "ing-08", "relationship": "ANCHORED_TO" },
+    { "source": "skill-surfactant-matrix", "target": "prod-03", "relationship": "ANCHORED_TO" },
+    { "source": "skill-reach-svhc-check", "target": "proc-formulation-change-control", "relationship": "ANCHORED_TO" },
+    { "source": "skill-reach-svhc-check", "target": "ing-01", "relationship": "ANCHORED_TO" },
+    { "source": "skill-customer-spec-override", "target": "prod-01", "relationship": "ANCHORED_TO" },
+    { "source": "skill-customer-spec-override", "target": "prod-02", "relationship": "ANCHORED_TO" },
+    { "source": "skill-surfactant-matrix", "target": "people-rd-chemist", "relationship": "CREATED_BY" },
+    { "source": "skill-reach-svhc-check", "target": "people-reg-specialist", "relationship": "CREATED_BY" },
+    { "source": "skill-customer-spec-override", "target": "people-rd-chemist", "relationship": "CREATED_BY" },
+    { "source": "people-rd-chemist", "target": "dept-rd", "relationship": "BELONGS_TO" },
+    { "source": "people-reg-specialist", "target": "dept-reg-affairs", "relationship": "BELONGS_TO" },
+    { "source": "dept-reg-affairs", "target": "dept-rd", "relationship": "REPORTS_TO" },
+    { "source": "people-rd-chemist", "target": "prod-01", "relationship": "RESPONSIBLE_FOR" },
+    { "source": "people-rd-chemist", "target": "prod-02", "relationship": "RESPONSIBLE_FOR" },
+    { "source": "people-reg-specialist", "target": "ing-01", "relationship": "RESPONSIBLE_FOR" },
+    { "source": "people-reg-specialist", "target": "ing-05", "relationship": "RESPONSIBLE_FOR" }
   ],
   "questions": [
     {
+      "id": "q-intelligence-formulation",
+      "question": "Hexion discontinues Epoxy Resin DGEBA. What formulations are affected and what is the substitution plan?",
+      "answer": "3 formulations affected. Dow's Epoxy BADGE is qualified and SVHC-clear - can substitute in all 3 at 0.95x concentration. SprayMax customer requires notification due to spec-relevant change; their tighter viscosity band is met. Olin's Epoxy Novolac is an option for floor coat but needs 6-8 weeks qualification. R&D Chemist should prioritize SprayMax formulation validation. Regulatory Specialist updates REACH documentation.",
+      "highlightNodes": ["ing-01", "sup-01", "prod-01", "prod-02", "plant-01", "chan-01", "chan-02", "proc-substitution-approval", "proc-formulation-change-control", "proc-supplier-qualification", "skill-reach-svhc-check", "skill-customer-spec-override", "people-rd-chemist", "people-reg-specialist"],
+      "highlightEdges": ["sup-01->ing-01", "ing-01->prod-01", "ing-01->prod-02", "proc-substitution-approval->ing-01", "proc-formulation-change-control->prod-01", "proc-formulation-change-control->prod-02", "proc-formulation-change-control->chan-01", "skill-reach-svhc-check->ing-01", "skill-customer-spec-override->prod-01", "skill-customer-spec-override->prod-02", "people-rd-chemist->prod-01", "people-reg-specialist->ing-01", "proc-supplier-qualification->sup-01"],
+      "reasoningSteps": [
+        "Ingredient Substitution Approval triggers on Epoxy Resin DGEBA unavailability.",
+        "Entity traversal: Epoxy Resin DGEBA -> used in Epoxy Floor Coating and Anti-Corrosion Primer.",
+        "Alternative Sourcing: check other suppliers for equivalent materials.",
+        "Skill fires: \"REACH SVHC Quick Check\" - alternative materials checked against SVHC candidate list.",
+        "Skill fires: \"Customer Spec Override Rule\" - products sold to SprayMax have tighter viscosity spec.",
+        "Formulation Change Control triggers: Lab validation required. Customer notification required for SprayMax.",
+        "Supplier Qualification triggers for unqualified alternatives.",
+        "People routed: R&D Chemist gets reformulation priorities. Regulatory Specialist gets REACH documentation updates."
+      ]
+    },
+    {
       "id": "q-hexion-discontinues-resin",
       "question": "If Hexion Specialty Resins discontinues Epoxy Resin DGEBA, which products are affected and what alternatives exist?",
-      "answer": "Hexion supplies both Epoxy Resin DGEBA and Polyamine Hardener. DGEBA is formulated into Epoxy Floor Coating and Anti-Corrosion Primer — both manufactured at the Resin Blending Facility in Ohio. Losing DGEBA affects two of our four products. No alternative supplier for epoxy resin exists in the current system — this is a critical single-source dependency that needs immediate procurement action.",
+      "answer": "Hexion supplies both Epoxy Resin DGEBA and Polyamine Hardener. DGEBA is formulated into Epoxy Floor Coating and Anti-Corrosion Primer - both manufactured at the Resin Blending Facility in Ohio. Losing DGEBA affects two of our four products. No alternative supplier for epoxy resin exists in the current system - this is a critical single-source dependency that needs immediate procurement action.",
       "highlightNodes": ["sup-01", "ing-01", "ing-02", "prod-01", "prod-02", "plant-01"],
       "highlightEdges": ["sup-01->ing-01", "sup-01->ing-02", "ing-01->prod-01", "ing-02->prod-01", "ing-01->prod-02", "prod-01->plant-01", "prod-02->plant-01"],
       "reasoningSteps": [
@@ -82,13 +132,13 @@
         "DGEBA is formulated in Epoxy Floor Coating and Anti-Corrosion Primer",
         "Both products manufactured at Resin Blending Facility Ohio",
         "No alternative epoxy resin supplier exists in the system",
-        "Two of four products affected — critical single-source risk"
+        "Two of four products affected - critical single-source risk"
       ]
     },
     {
       "id": "q-tio2-shared-ingredient",
       "question": "Titanium Dioxide R-902 is used in multiple products. What's the full impact if Chemours has a supply issue?",
-      "answer": "Chemours Pigments supplies TiO2 R-902, which is ground at the Pigment Dispersion Mill and formulated into three products: Epoxy Floor Coating, Interior Latex Wall Paint, and (via the mill) feeds both the Ohio and Georgia plants. A Chemours disruption impacts products across both solvent-based and waterborne lines — affecting three of four product lines simultaneously.",
+      "answer": "Chemours Pigments supplies TiO2 R-902, which is ground at the Pigment Dispersion Mill and formulated into three products: Epoxy Floor Coating, Interior Latex Wall Paint, and (via the mill) feeds both the Ohio and Georgia plants. A Chemours disruption impacts products across both solvent-based and waterborne lines - affecting three of four product lines simultaneously.",
       "highlightNodes": ["sup-02", "ing-03", "plant-03", "prod-01", "prod-03", "plant-01", "plant-02"],
       "highlightEdges": ["sup-02->ing-03", "ing-03->plant-03", "plant-03->plant-01", "plant-03->plant-02", "ing-03->prod-01", "ing-03->prod-03"],
       "reasoningSteps": [

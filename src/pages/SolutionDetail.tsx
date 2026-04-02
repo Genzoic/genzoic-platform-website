@@ -1,6 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { ArrowLeft, HelpCircle, Check, TrendingUp, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, Network, Search, Lightbulb } from "lucide-react";
 import { solutionsData } from "@/data/solutions";
 import InteractiveGraph, { type GraphData } from "@/components/InteractiveGraph";
 import { DEMO_URL } from "@/lib/constants";
@@ -13,7 +13,6 @@ const INDUSTRY_BADGE: Record<string, string> = {
   "Chemical": "badge-chemical",
   "Pharmaceutical": "badge-pharma",
   "Food & Beverage": "badge-food",
-  "Energy & Utilities": "badge-energy",
 };
 
 export default function SolutionDetail() {
@@ -122,78 +121,67 @@ export default function SolutionDetail() {
         </div>
       </section>
 
-      {/* Example Questions */}
-      <section className="bg-white dark:bg-[#05080f] py-16 md:py-20">
-        <div className="mx-auto max-w-5xl px-4 md:px-6">
-          <p className="text-xs font-semibold tracking-widest uppercase text-blue-500 dark:text-blue-400 mb-3">
-            AI Reasoning
-          </p>
-          <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900 dark:text-white mb-8">
-            Questions your AI can now answer
-          </h2>
-          <div className="grid gap-3">
-            {solution.exampleQuestions.map((q, i) => (
-              <div
-                key={i}
-                className="feature-card bg-white dark:bg-[#0d1628] border border-slate-200 dark:border-white/[0.07] rounded-xl p-5 flex items-start gap-4"
-              >
-                <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mt-0.5" style={{ background: "rgba(37,99,235,0.1)" }}>
-                  <HelpCircle size={16} className="text-blue-600 dark:text-blue-400" />
-                </div>
-                <p className="text-slate-700 dark:text-slate-200 italic text-sm leading-relaxed">
-                  &ldquo;{q}&rdquo;
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Key Capabilities */}
+      {/* How It Works (Capabilities) */}
       <section className="section-soft py-16 md:py-20">
         <div className="mx-auto max-w-5xl px-4 md:px-6">
           <p className="text-xs font-semibold tracking-widest uppercase text-blue-500 dark:text-blue-400 mb-3">
             Capabilities
           </p>
           <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900 dark:text-white mb-8">
-            Key capabilities
+            How it works
           </h2>
-          <div className="grid md:grid-cols-2 gap-3">
-            {solution.keyCapabilities.map((cap, i) => (
-              <div
-                key={i}
-                className="bg-white dark:bg-[#0d1628] border border-slate-200 dark:border-white/[0.07] rounded-xl p-4 flex items-start gap-3"
-              >
-                <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5" style={{ background: "rgba(37,99,235,0.12)" }}>
-                  <Check size={11} className="text-blue-600 dark:text-blue-400" />
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              { title: "Connects", icon: Network, color: "#2563eb", items: solution.keyCapabilities.connects },
+              { title: "Analyzes", icon: Search, color: "#7c3aed", items: solution.keyCapabilities.analyzes },
+              { title: "Recommends", icon: Lightbulb, color: "#059669", items: solution.keyCapabilities.recommends },
+            ].map((col) => (
+              <div key={col.title}>
+                <div className="flex items-center gap-2 mb-4">
+                  <col.icon size={18} style={{ color: col.color }} />
+                  <h3 className="text-sm font-bold uppercase tracking-wide" style={{ color: col.color }}>
+                    {col.title}
+                  </h3>
                 </div>
-                <span className="text-sm text-slate-700 dark:text-slate-200 leading-relaxed">{cap}</span>
+                <div className="space-y-3">
+                  {col.items.map((item, i) => (
+                    <p key={i} className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed pl-3 border-l-2 border-slate-200 dark:border-slate-700">
+                      {item}
+                    </p>
+                  ))}
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Business Impact */}
+      {/* Measurable Results (Business Impact) */}
       <section className="bg-white dark:bg-[#05080f] py-16 md:py-20">
         <div className="mx-auto max-w-5xl px-4 md:px-6">
           <p className="text-xs font-semibold tracking-widest uppercase text-orange-500 dark:text-orange-400 mb-3">
             Business Impact
           </p>
-          <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900 dark:text-white mb-8">
-            Expected business impact
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900 dark:text-white">
+            Measurable results
           </h2>
-          <div className="grid gap-3">
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-2 mb-8">
+            Based on published industry benchmarks for AI and digital transformation implementations.
+          </p>
+          <div className="grid md:grid-cols-3 gap-4">
             {solution.businessImpact.map((impact, i) => (
               <div
                 key={i}
-                className="feature-card bg-white dark:bg-[#0d1628] border border-slate-200 dark:border-white/[0.07] rounded-xl p-5 flex items-start gap-4"
+                className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/[0.07] rounded-xl p-8 text-center"
               >
-                <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mt-0.5" style={{ background: "rgba(234,88,12,0.1)" }}>
-                  <TrendingUp size={16} className="text-orange-500 dark:text-orange-400" />
-                </div>
-                <p className="text-slate-700 dark:text-slate-200 font-medium text-sm leading-relaxed">
-                  {impact}
+                <p className="text-4xl md:text-5xl font-bold text-orange-500 dark:text-orange-400">
+                  {impact.metric}
+                </p>
+                <p className="mt-3 text-base font-semibold text-slate-900 dark:text-white">
+                  {impact.label}
+                </p>
+                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                  {impact.context}
                 </p>
               </div>
             ))}
@@ -210,8 +198,7 @@ export default function SolutionDetail() {
             See this in action
           </h2>
           <p className="mt-4 text-slate-500 dark:text-slate-400 leading-relaxed">
-            Book a 30-minute demo focused on {solution.industry}. We will show
-            you what the Context Graph looks like for your business.
+            Book a 30-minute call. We will walk you through a Context Graph built for {solution.industry} and identify where your team is losing critical knowledge today.
           </p>
           <div className="mt-8">
             <a href={DEMO_URL} target="_blank" rel="noopener noreferrer" className="cta-btn">

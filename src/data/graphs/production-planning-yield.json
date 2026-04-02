@@ -23,7 +23,17 @@
     { "id": "chan-03", "label": "Final QC Gate", "type": "channel", "description": "EOL capacity grading, impedance test, and leak detection" },
     { "id": "store-01", "label": "Metrology Lab", "type": "store", "description": "SEM, XRD, and DSC analysis for material characterization" },
     { "id": "store-02", "label": "Cycle Life Testing Lab", "type": "store", "description": "Long-term cycling at C/3 and 1C rates for degradation modeling" },
-    { "id": "store-03", "label": "Abuse Testing Facility", "type": "store", "description": "Nail penetration, crush, and thermal runaway propagation tests" }
+    { "id": "store-03", "label": "Abuse Testing Facility", "type": "store", "description": "Nail penetration, crush, and thermal runaway propagation tests" },
+    { "id": "proc-yield-deviation", "label": "Yield Deviation Investigation", "type": "Process", "description": "When yield drops more than 2% from rolling average, trigger root cause analysis correlating material batches, equipment parameters, and shift data." },
+    { "id": "proc-line-changeover", "label": "Line Changeover Protocol", "type": "Process", "description": "Decision rules for switching production between cell formats - minimum batch size, cleaning requirements, calibration sequence." },
+    { "id": "proc-quality-gate", "label": "Quality Gate Decision", "type": "Process", "description": "At each production stage, pass/fail criteria with escalation paths for borderline results." },
+    { "id": "skill-coating-correlation", "label": "Coating Thickness Failure Correlation", "type": "Skill", "description": "Observed pattern: when electrode coating variance exceeds 2.5 microns, formation failure rate jumps from 3% to 11%.", "mode": "Passive Observation", "creator": "people-quality-eng", "priority": "Individual" },
+    { "id": "skill-line3-calibration", "label": "Line 3 Calibration Sweet Spot", "type": "Skill", "description": "Taught by Production Manager: Line 3 calendering roller pressure works best at 142 bar, not the spec 145. 145 causes micro-cracking in NMC cathodes.", "mode": "Active Teaching", "creator": "people-prod-mgr", "priority": "Department" },
+    { "id": "skill-shift-pattern", "label": "Night Shift Yield Adjustment", "type": "Skill", "description": "Mined from 12 months of data: night shift yield averages 1.8% lower due to humidity fluctuation in the dry room. Compensate by reducing coating speed by 5%.", "mode": "Record Ingestion", "creator": "people-prod-mgr", "priority": "Department" },
+    { "id": "people-prod-mgr", "label": "Production Manager", "type": "People", "description": "Department level. Manages production lines, scheduling, and yield optimization." },
+    { "id": "people-quality-eng", "label": "Quality Engineer", "type": "People", "description": "Individual level. Monitors quality metrics, investigates deviations, and validates processes." },
+    { "id": "dept-manufacturing", "label": "Manufacturing", "type": "Department", "description": "Manages production operations, line scheduling, and output targets." },
+    { "id": "dept-quality", "label": "Quality", "type": "Department", "description": "Oversees quality standards, testing, and continuous improvement." }
   ],
   "edges": [
     { "source": "sup-01", "target": "ing-01", "relationship": "SUPPLIES" },
@@ -60,13 +70,54 @@
     { "source": "prod-03", "target": "store-03", "relationship": "TESTED_AT" },
     { "source": "store-02", "target": "plant-04", "relationship": "TRACKS" },
     { "source": "store-01", "target": "plant-01", "relationship": "MONITORS" },
-    { "source": "chan-02", "target": "plant-01", "relationship": "TRACKS" }
+    { "source": "chan-02", "target": "plant-01", "relationship": "TRACKS" },
+    { "source": "proc-yield-deviation", "target": "plant-01", "relationship": "TRIGGERS" },
+    { "source": "proc-yield-deviation", "target": "plant-02", "relationship": "TRIGGERS" },
+    { "source": "proc-yield-deviation", "target": "chan-02", "relationship": "TRIGGERS" },
+    { "source": "proc-line-changeover", "target": "plant-01", "relationship": "TRIGGERS" },
+    { "source": "proc-line-changeover", "target": "plant-02", "relationship": "TRIGGERS" },
+    { "source": "proc-quality-gate", "target": "chan-01", "relationship": "TRIGGERS" },
+    { "source": "proc-quality-gate", "target": "chan-02", "relationship": "TRIGGERS" },
+    { "source": "proc-quality-gate", "target": "chan-03", "relationship": "TRIGGERS" },
+    { "source": "skill-coating-correlation", "target": "plant-01", "relationship": "ANCHORED_TO" },
+    { "source": "skill-coating-correlation", "target": "plant-04", "relationship": "ANCHORED_TO" },
+    { "source": "skill-coating-correlation", "target": "proc-yield-deviation", "relationship": "ANCHORED_TO" },
+    { "source": "skill-line3-calibration", "target": "plant-01", "relationship": "ANCHORED_TO" },
+    { "source": "skill-line3-calibration", "target": "ing-01", "relationship": "ANCHORED_TO" },
+    { "source": "skill-shift-pattern", "target": "plant-01", "relationship": "ANCHORED_TO" },
+    { "source": "skill-shift-pattern", "target": "proc-yield-deviation", "relationship": "ANCHORED_TO" },
+    { "source": "skill-coating-correlation", "target": "people-quality-eng", "relationship": "CREATED_BY" },
+    { "source": "skill-line3-calibration", "target": "people-prod-mgr", "relationship": "CREATED_BY" },
+    { "source": "skill-shift-pattern", "target": "people-prod-mgr", "relationship": "CREATED_BY" },
+    { "source": "people-prod-mgr", "target": "dept-manufacturing", "relationship": "BELONGS_TO" },
+    { "source": "people-quality-eng", "target": "dept-quality", "relationship": "BELONGS_TO" },
+    { "source": "dept-quality", "target": "dept-manufacturing", "relationship": "REPORTS_TO" },
+    { "source": "people-prod-mgr", "target": "plant-01", "relationship": "RESPONSIBLE_FOR" },
+    { "source": "people-prod-mgr", "target": "plant-02", "relationship": "RESPONSIBLE_FOR" },
+    { "source": "people-quality-eng", "target": "chan-02", "relationship": "RESPONSIBLE_FOR" },
+    { "source": "people-quality-eng", "target": "chan-03", "relationship": "RESPONSIBLE_FOR" }
   ],
   "questions": [
     {
+      "id": "q-intelligence-yield",
+      "question": "Line 3 yield dropped 4% this week. Is it the new cathode batch or the calibration change from Tuesday?",
+      "answer": "The 4% yield drop correlates with Tuesday's calibration change (145 bar), not the cathode batch. The Line 3 Calibration skill identifies that 142 bar is optimal for NMC cathodes - 145 causes micro-cracking. Coating variance at 3.1 microns predicts 11% formation failure. Night shift humidity is ruled out (drop is uniform across shifts). Recommended action: revert to 142 bar immediately and monitor 50 cells.",
+      "highlightNodes": ["plant-01", "ing-01", "plant-02", "plant-04", "chan-02", "chan-03", "proc-yield-deviation", "proc-quality-gate", "skill-coating-correlation", "skill-line3-calibration", "skill-shift-pattern", "people-prod-mgr", "people-quality-eng"],
+      "highlightEdges": ["proc-yield-deviation->plant-01", "proc-yield-deviation->chan-02", "skill-line3-calibration->plant-01", "skill-line3-calibration->ing-01", "skill-coating-correlation->plant-01", "skill-coating-correlation->plant-04", "skill-shift-pattern->plant-01", "skill-shift-pattern->proc-yield-deviation", "proc-quality-gate->chan-02", "proc-quality-gate->chan-03", "skill-line3-calibration->people-prod-mgr", "skill-coating-correlation->people-quality-eng", "ing-01->plant-01", "plant-01->plant-02", "plant-02->plant-04"],
+      "reasoningSteps": [
+        "Yield Deviation Investigation triggers: Electrode Coating Line A yield below rolling average by 4%.",
+        "Entity traversal: Electrode Coating Line A -> NMC811 Cathode Powder -> current cathode batch.",
+        "Skill fires: \"Line 3 Calibration Sweet Spot\" (Department priority) - checks current roller pressure. Tuesday calibration set it to spec 145 bar. Skill says optimal is 142 bar for NMC cathodes.",
+        "Skill fires: \"Coating Thickness Failure Correlation\" - current coating variance at 3.1 microns (above 2.5 threshold), predicting 11% formation failure.",
+        "Skill fires: \"Night Shift Yield Adjustment\" - night shift contribution checked: yield drop is uniform across shifts, ruling out humidity as primary cause.",
+        "Quality Gate Decision triggers: recommend reverting to 142 bar and monitoring next 50 cells.",
+        "People routed: Production Manager gets calibration revert recommendation. Quality Engineer gets monitoring protocol."
+      ]
+    },
+    {
       "id": "q-coating-line-yield-drop",
       "question": "Electrode Coating Line A shows a 4% yield drop this week. Is it a material or process issue?",
-      "answer": "Line A uses NMC811 Cathode Powder, Graphite Anode Slurry, Aluminum Foil, and Copper Foil. In-Process QC Gate checks electrode weight, thickness, and adhesion per batch, and the Metrology Lab monitors Line A via SEM/XRD analysis. Check if incoming QC flagged any material batch issues — NMC811 Cathode Powder from Umicore and separator films from Celgard both pass through Incoming QC Gate before release to Line A.",
+      "answer": "Line A uses NMC811 Cathode Powder, Graphite Anode Slurry, Aluminum Foil, and Copper Foil. In-Process QC Gate checks electrode weight, thickness, and adhesion per batch, and the Metrology Lab monitors Line A via SEM/XRD analysis. Check if incoming QC flagged any material batch issues - NMC811 Cathode Powder from Umicore and separator films from Celgard both pass through Incoming QC Gate before release to Line A.",
       "highlightNodes": ["plant-01", "ing-01", "ing-02", "ing-05", "ing-06", "chan-02", "chan-01", "store-01", "sup-01"],
       "highlightEdges": ["ing-01->plant-01", "ing-02->plant-01", "ing-05->plant-01", "ing-06->plant-01", "plant-01->chan-02", "chan-02->store-01", "store-01->plant-01", "sup-01->ing-01", "ing-01->chan-01", "chan-01->plant-01"],
       "reasoningSteps": [
@@ -81,7 +132,7 @@
     {
       "id": "q-formation-quality-prediction",
       "question": "Based on electrode data from the last 8 hours, which cells in formation are likely to fail final QC?",
-      "answer": "Electrode Coating Line A feeds into Cell Assembly Line B, which then feeds Formation & Aging Chamber. Cells produced in the last 8 hours are now in the 14-day aging rack. In-Process QC at Line A tracks electrode weight and thickness — any batches flagged there are at risk of failing Final QC Gate capacity grading. The Cycle Life Testing Lab also tracks formation performance to detect early degradation patterns.",
+      "answer": "Electrode Coating Line A feeds into Cell Assembly Line B, which then feeds Formation & Aging Chamber. Cells produced in the last 8 hours are now in the 14-day aging rack. In-Process QC at Line A tracks electrode weight and thickness - any batches flagged there are at risk of failing Final QC Gate capacity grading. The Cycle Life Testing Lab also tracks formation performance to detect early degradation patterns.",
       "highlightNodes": ["plant-01", "plant-02", "plant-04", "chan-02", "chan-03", "store-02"],
       "highlightEdges": ["plant-01->plant-02", "plant-02->plant-04", "plant-01->chan-02", "chan-02->plant-01", "plant-04->prod-01", "plant-04->prod-02", "prod-01->chan-03", "prod-02->chan-03", "store-02->plant-04"],
       "reasoningSteps": [
@@ -96,14 +147,14 @@
     {
       "id": "q-prismatic-cell-capacity-increase",
       "question": "We need to increase Prismatic Cell 100Ah production by 20%. Where are the bottlenecks?",
-      "answer": "Prismatic Cells are produced at Formation & Aging Chamber (14-day aging cycle) and assembled at Module Assembly Line C. The aging chamber is the likely bottleneck — it's a time-based constraint. Both Cylindrical and Prismatic cells share this chamber. Upstream, Cell Assembly Line B handles electrolyte fill from Showa Denko and separator films from Celgard. Incoming QC Gate must handle increased material inspection throughput.",
+      "answer": "Prismatic Cells are produced at Formation & Aging Chamber (14-day aging cycle) and assembled at Module Assembly Line C. The aging chamber is the likely bottleneck - it's a time-based constraint. Both Cylindrical and Prismatic cells share this chamber. Upstream, Cell Assembly Line B handles electrolyte fill from Showa Denko and separator films from Celgard. Incoming QC Gate must handle increased material inspection throughput.",
       "highlightNodes": ["prod-02", "plant-04", "plant-02", "plant-03", "chan-03", "chan-01", "ing-03", "ing-04", "sup-02", "sup-03"],
       "highlightEdges": ["plant-04->prod-02", "plant-02->plant-04", "prod-02->chan-03", "chan-03->plant-03", "prod-02->plant-03", "ing-03->plant-02", "ing-04->plant-02", "sup-02->ing-03", "sup-03->ing-04", "ing-03->chan-01", "ing-04->chan-01"],
       "reasoningSteps": [
         "Prismatic Cells produced at Formation & Aging Chamber",
         "14-day aging cycle is a time-based bottleneck",
         "Both Cylindrical and Prismatic cells share this chamber",
-        "Cell Assembly Line B is upstream — handles electrolyte and separator",
+        "Cell Assembly Line B is upstream - handles electrolyte and separator",
         "Incoming QC must handle increased material inspection volume",
         "Module Assembly Line C downstream needs capacity validation"
       ]

@@ -4,12 +4,12 @@
     { "id": "sup-2", "label": "Frito-Lay Direct", "type": "supplier", "description": "Snack division handling direct store delivery routes" },
     { "id": "sup-3", "label": "RedBull Distribution Co", "type": "supplier", "description": "Energy drink DSD operation with dedicated fleet" },
     { "id": "sup-4", "label": "Bimbo Bakeries USA", "type": "supplier", "description": "Bread and baked goods DSD distributor" },
-    { "id": "prod-1", "label": "Pepsi Cola 20oz", "type": "product", "description": "SKU #30100 — Top-selling carbonated beverage, single-serve" },
-    { "id": "prod-2", "label": "Doritos Nacho Cheese 2.75oz", "type": "product", "description": "SKU #30245 — Grab-and-go snack bag, impulse buy leader" },
-    { "id": "prod-3", "label": "Red Bull 12oz", "type": "product", "description": "SKU #30310 — Energy drink, highest velocity in convenience" },
-    { "id": "prod-4", "label": "Lay's Classic Chips 1oz", "type": "product", "description": "SKU #30422 — Clip-strip and checkout display staple" },
-    { "id": "prod-5", "label": "Mountain Dew 20oz", "type": "product", "description": "SKU #30155 — Second-highest CSD velocity in channel" },
-    { "id": "prod-6", "label": "Wonder Bread White 20oz", "type": "product", "description": "SKU #30560 — High-turn staple bread, 5-day shelf life" },
+    { "id": "prod-1", "label": "Pepsi Cola 20oz", "type": "product", "description": "SKU #30100 - Top-selling carbonated beverage, single-serve" },
+    { "id": "prod-2", "label": "Doritos Nacho Cheese 2.75oz", "type": "product", "description": "SKU #30245 - Grab-and-go snack bag, impulse buy leader" },
+    { "id": "prod-3", "label": "Red Bull 12oz", "type": "product", "description": "SKU #30310 - Energy drink, highest velocity in convenience" },
+    { "id": "prod-4", "label": "Lay's Classic Chips 1oz", "type": "product", "description": "SKU #30422 - Clip-strip and checkout display staple" },
+    { "id": "prod-5", "label": "Mountain Dew 20oz", "type": "product", "description": "SKU #30155 - Second-highest CSD velocity in channel" },
+    { "id": "prod-6", "label": "Wonder Bread White 20oz", "type": "product", "description": "SKU #30560 - High-turn staple bread, 5-day shelf life" },
     { "id": "plant-1", "label": "Regional DC Edison NJ", "type": "plant", "description": "Primary distribution center, 200+ routes originate here" },
     { "id": "plant-2", "label": "Cross-Dock Bronx", "type": "plant", "description": "Transfer hub for NYC-bound DSD loads" },
     { "id": "plant-3", "label": "Cold Storage Facility Secaucus", "type": "plant", "description": "Temperature-controlled staging for perishable DSD items" },
@@ -22,7 +22,17 @@
     { "id": "store-3", "label": "QuickStop Deli Astoria", "type": "store", "description": "Independent bodega with high DSD product mix" },
     { "id": "store-4", "label": "Wawa #312 Jersey City", "type": "store", "description": "Large-format convenience with fuel, strong bread sales" },
     { "id": "store-5", "label": "Shell Station #19 Chelsea", "type": "store", "description": "Premium gas station c-store, energy drink hotspot" },
-    { "id": "store-6", "label": "FreshMart Deli Flatbush", "type": "store", "description": "Neighborhood deli with refrigerated beverage wall" }
+    { "id": "store-6", "label": "FreshMart Deli Flatbush", "type": "store", "description": "Neighborhood deli with refrigerated beverage wall" },
+    { "id": "proc-route-optimization", "label": "Route Optimization Rule", "type": "Process", "description": "Recalculate stop priority based on real-time sell-through, shelf compliance scores, and delivery constraints." },
+    { "id": "proc-shelf-reset", "label": "Shelf Reset Protocol", "type": "Process", "description": "When a store shelf compliance drops below 70%, trigger priority visit with planogram instructions." },
+    { "id": "proc-opportunistic-placement", "label": "Opportunistic Placement Decision", "type": "Process", "description": "When truck has surplus inventory, evaluate nearby stores for unplanned placement based on demand signals." },
+    { "id": "skill-back-door-delivery", "label": "Store 87 Back Door Delivery", "type": "Skill", "description": "Route manager taught: Store 87 only accepts deliveries through back entrance after 10am due to construction. Front entrance blocked Mon-Fri.", "mode": "Active Teaching", "creator": "people-route-mgr", "priority": "Department" },
+    { "id": "skill-rainy-day-route", "label": "Rainy Day Route Adjustment", "type": "Skill", "description": "Learned from correction: When it rains, skip outdoor display stores and prioritize covered-dock stores first. Outdoor displays get restocked last because product gets damaged.", "mode": "Conversational Learning", "creator": "people-field-rep", "priority": "Individual" },
+    { "id": "skill-promo-endcap-check", "label": "Promotional Endcap Compliance", "type": "Skill", "description": "Observed that stores with endcap promotions that are not restocked within 24 hours of sell-through lose 35% of promotional lift.", "mode": "Passive Observation", "creator": "people-route-mgr", "priority": "Department" },
+    { "id": "people-route-mgr", "label": "Route Manager", "type": "People", "description": "Department level. Manages delivery routes, driver assignments, and store delivery schedules." },
+    { "id": "people-field-rep", "label": "Field Rep Lead", "type": "People", "description": "Individual level. Leads field sales team, manages store relationships and shelf execution." },
+    { "id": "dept-field-ops", "label": "Field Operations", "type": "Department", "description": "Manages delivery logistics, route planning, and field execution." },
+    { "id": "dept-sales", "label": "Sales", "type": "Department", "description": "Manages customer accounts, sales targets, and revenue growth." }
   ],
   "edges": [
     { "source": "sup-1", "target": "prod-1", "relationship": "DISTRIBUTES" },
@@ -61,9 +71,55 @@
     { "source": "prod-1", "target": "ch-1", "relationship": "LOADED_ON" },
     { "source": "prod-2", "target": "ch-2", "relationship": "LOADED_ON" },
     { "source": "prod-3", "target": "ch-1", "relationship": "LOADED_ON" },
-    { "source": "prod-6", "target": "ch-4", "relationship": "LOADED_ON" }
+    { "source": "prod-6", "target": "ch-4", "relationship": "LOADED_ON" },
+    { "source": "proc-route-optimization", "target": "ch-1", "relationship": "TRIGGERS" },
+    { "source": "proc-route-optimization", "target": "ch-2", "relationship": "TRIGGERS" },
+    { "source": "proc-route-optimization", "target": "ch-3", "relationship": "TRIGGERS" },
+    { "source": "proc-route-optimization", "target": "ch-4", "relationship": "TRIGGERS" },
+    { "source": "proc-shelf-reset", "target": "store-1", "relationship": "TRIGGERS" },
+    { "source": "proc-shelf-reset", "target": "store-2", "relationship": "TRIGGERS" },
+    { "source": "proc-shelf-reset", "target": "store-3", "relationship": "TRIGGERS" },
+    { "source": "proc-shelf-reset", "target": "store-4", "relationship": "TRIGGERS" },
+    { "source": "proc-opportunistic-placement", "target": "store-5", "relationship": "TRIGGERS" },
+    { "source": "proc-opportunistic-placement", "target": "store-6", "relationship": "TRIGGERS" },
+    { "source": "skill-back-door-delivery", "target": "store-4", "relationship": "ANCHORED_TO" },
+    { "source": "skill-back-door-delivery", "target": "ch-4", "relationship": "ANCHORED_TO" },
+    { "source": "skill-rainy-day-route", "target": "ch-2", "relationship": "ANCHORED_TO" },
+    { "source": "skill-rainy-day-route", "target": "proc-route-optimization", "relationship": "ANCHORED_TO" },
+    { "source": "skill-promo-endcap-check", "target": "store-1", "relationship": "ANCHORED_TO" },
+    { "source": "skill-promo-endcap-check", "target": "store-2", "relationship": "ANCHORED_TO" },
+    { "source": "skill-promo-endcap-check", "target": "proc-shelf-reset", "relationship": "ANCHORED_TO" },
+    { "source": "skill-back-door-delivery", "target": "people-route-mgr", "relationship": "CREATED_BY" },
+    { "source": "skill-rainy-day-route", "target": "people-field-rep", "relationship": "CREATED_BY" },
+    { "source": "skill-promo-endcap-check", "target": "people-route-mgr", "relationship": "CREATED_BY" },
+    { "source": "people-route-mgr", "target": "dept-field-ops", "relationship": "BELONGS_TO" },
+    { "source": "people-field-rep", "target": "dept-sales", "relationship": "BELONGS_TO" },
+    { "source": "dept-sales", "target": "dept-field-ops", "relationship": "REPORTS_TO" },
+    { "source": "people-route-mgr", "target": "ch-1", "relationship": "RESPONSIBLE_FOR" },
+    { "source": "people-route-mgr", "target": "ch-2", "relationship": "RESPONSIBLE_FOR" },
+    { "source": "people-route-mgr", "target": "ch-3", "relationship": "RESPONSIBLE_FOR" },
+    { "source": "people-route-mgr", "target": "ch-4", "relationship": "RESPONSIBLE_FOR" },
+    { "source": "people-field-rep", "target": "store-1", "relationship": "RESPONSIBLE_FOR" },
+    { "source": "people-field-rep", "target": "store-2", "relationship": "RESPONSIBLE_FOR" },
+    { "source": "people-field-rep", "target": "store-3", "relationship": "RESPONSIBLE_FOR" }
   ],
   "questions": [
+    {
+      "id": "q-intelligence-dsd",
+      "question": "It is raining today and my Route B-07 has 22 stops. How should I reprioritize?",
+      "answer": "Reprioritized your 22 stops: 3 promo-endcap stores are top priority (expiring today, 35% lift at risk). Then Store 87 (compliance at 65%, use back entrance after 10am). Then 12 remaining covered-dock stores. 6 outdoor-display stores moved to end of route - product damage risk in rain. Estimated time savings: 45 minutes from skip-reorder.",
+      "highlightNodes": ["ch-2", "store-2", "store-6", "prod-2", "prod-5", "plant-2", "proc-route-optimization", "proc-shelf-reset", "skill-rainy-day-route", "skill-promo-endcap-check", "skill-back-door-delivery", "people-field-rep", "people-route-mgr", "dept-field-ops", "dept-sales"],
+      "highlightEdges": ["plant-2->ch-2", "ch-2->store-2", "ch-2->store-6", "proc-route-optimization->ch-2", "skill-rainy-day-route->ch-2", "skill-rainy-day-route->proc-route-optimization", "skill-rainy-day-route->people-field-rep", "skill-promo-endcap-check->store-2", "skill-promo-endcap-check->proc-shelf-reset", "skill-promo-endcap-check->people-route-mgr", "skill-back-door-delivery->store-4", "people-field-rep->dept-sales", "people-route-mgr->dept-field-ops", "people-field-rep->store-2"],
+      "reasoningSteps": [
+        "Route Optimization Rule triggers with weather context: rain detected for Route B-07 area.",
+        "Skill fires: \"Rainy Day Route Adjustment\" - skip outdoor display stores first, prioritize covered-dock stores.",
+        "Entity traversal: Route B-07 -> stores, some with outdoor-only receiving, others with covered docks.",
+        "Skill fires: \"Promotional Endcap Compliance\" - stores with active endcap promos expiring today get top priority regardless of weather.",
+        "Shelf Reset Protocol checks: Store 87 compliance is at 65% - below threshold. Add as priority stop.",
+        "Skill fires: \"Store 87 Back Door Delivery\" - reminder: back entrance only after 10am.",
+        "People routed: Field Rep Lead gets optimized route with promo-critical stops first, then covered-dock stores, then outdoor stores last."
+      ]
+    },
     {
       "id": "q-times-square-restock",
       "question": "7-Eleven Times Square is sending reorder signals. What products need restocking and which route handles it?",
@@ -82,7 +138,7 @@
     {
       "id": "q-bread-shelf-life-route",
       "question": "Wonder Bread has a 5-day shelf life. Is the current DSD path to Wawa Jersey City optimal?",
-      "answer": "Wonder Bread is distributed by Bimbo Bakeries USA, staged at Cold Storage Facility Secaucus. It feeds into Cross-Dock Bronx, but Route D-03 Jersey City is dispatched directly from Regional DC Edison NJ — not through the Bronx cross-dock. This means Wonder Bread may take an indirect path. Loading directly from Secaucus onto the Jersey City route would reduce transit time for this perishable item.",
+      "answer": "Wonder Bread is distributed by Bimbo Bakeries USA, staged at Cold Storage Facility Secaucus. It feeds into Cross-Dock Bronx, but Route D-03 Jersey City is dispatched directly from Regional DC Edison NJ - not through the Bronx cross-dock. This means Wonder Bread may take an indirect path. Loading directly from Secaucus onto the Jersey City route would reduce transit time for this perishable item.",
       "highlightNodes": ["prod-6", "sup-4", "plant-3", "plant-1", "ch-4", "store-4"],
       "highlightEdges": ["sup-4->prod-6", "sup-4->plant-3", "plant-1->ch-4", "ch-4->store-4", "prod-6->store-4", "prod-6->ch-4"],
       "reasoningSteps": [
@@ -97,7 +153,7 @@
     {
       "id": "q-energy-drink-route-optimization",
       "question": "Red Bull is restocked at both Times Square and Chelsea. Can we consolidate deliveries?",
-      "answer": "Red Bull 12oz is distributed by RedBull Distribution Co and staged at Cold Storage Facility Secaucus. It's restocked at 7-Eleven Times Square and Shell Station Chelsea — both served by Route A-14 Manhattan via Cross-Dock Bronx. Since both stops are on the same route, the driver can consolidate Red Bull delivery in a single run, optimizing load efficiency.",
+      "answer": "Red Bull 12oz is distributed by RedBull Distribution Co and staged at Cold Storage Facility Secaucus. It's restocked at 7-Eleven Times Square and Shell Station Chelsea - both served by Route A-14 Manhattan via Cross-Dock Bronx. Since both stops are on the same route, the driver can consolidate Red Bull delivery in a single run, optimizing load efficiency.",
       "highlightNodes": ["prod-3", "sup-3", "plant-3", "plant-2", "ch-1", "store-1", "store-5"],
       "highlightEdges": ["sup-3->prod-3", "sup-3->plant-3", "plant-3->plant-2", "plant-2->ch-1", "ch-1->store-1", "ch-1->store-5", "prod-3->store-1", "prod-3->store-5"],
       "reasoningSteps": [
@@ -106,7 +162,7 @@
         "Flows through Cross-Dock Bronx",
         "Route A-14 Manhattan serves both Times Square and Chelsea",
         "Both stores restock Red Bull",
-        "Single route handles both deliveries — consolidation is natural"
+        "Single route handles both deliveries - consolidation is natural"
       ]
     },
     {

@@ -6,7 +6,7 @@ import graphData from "@/data/fmcg-context-graph.json";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type NodeType = "supplier" | "ingredient" | "product" | "plant" | "channel" | "store" | "allergen" | "recipe" | "certification" | "cleaning_protocol" | "label_claim" | "lot";
+type NodeType = "supplier" | "ingredient" | "product" | "plant" | "channel" | "store" | "allergen" | "recipe" | "certification" | "cleaning_protocol" | "label_claim" | "lot" | "process" | "skill" | "people" | "department";
 
 interface RawNode { id: string; type: NodeType; label: string; description?: string; }
 interface RawEdge { source: string; target: string; relation: string; }
@@ -88,6 +88,10 @@ const NODE_CFG: Record<string, { color: string; dim: string; size: number; label
   cleaning_protocol: { color: "#06b6d4", dim: "#164e63", size: 14, label: "Cleaning Protocol", emoji: "🧹" },
   label_claim:       { color: "#eab308", dim: "#713f12", size: 14, label: "Label Claim",       emoji: "🏷️" },
   lot:               { color: "#ec4899", dim: "#831843", size: 15, label: "Lot",               emoji: "📊" },
+  process:           { color: "#7c3aed", dim: "#4c1d95", size: 17, label: "Process",           emoji: "⚙️" },
+  skill:             { color: "#059669", dim: "#064e3b", size: 16, label: "Skill",             emoji: "✨" },
+  people:            { color: "#e11d48", dim: "#881337", size: 17, label: "People",            emoji: "👤" },
+  department:        { color: "#d946ef", dim: "#86198f", size: 18, label: "Department",        emoji: "🏢" },
 };
 
 const DEFAULT_NODE_CFG = { color: "#9ca3af", dim: "#4b5563", size: 14, label: "Unknown", emoji: "◯" };
@@ -115,6 +119,12 @@ const REL_COLOR_STATIC: Record<string, string> = {
   PRODUCED_AS:               "#ec4899",
   MADE_AT:                   "#a855f7",
   DISTRIBUTED_TO:            "#f43f5e",
+  TRIGGERS:                  "#7c3aed",
+  ANCHORED_TO:               "#059669",
+  CREATED_BY:                "#e11d48",
+  BELONGS_TO:                "#d946ef",
+  REPORTS_TO:                "#a855f7",
+  RESPONSIBLE_FOR:           "#f59e0b",
 };
 
 const REL_PALETTE = [
@@ -173,6 +183,18 @@ const DUMMY_DATA_SOURCES: Record<string, DataLinkage[]> = {
   ],
   lot: [
     { metric_category: "logistics", description: "Lot traceability and distribution data", source_system: "Snowflake", object_type: "table", object_name: "ops.traceability.lot_tracking", join_key: "lot_id", refresh_frequency: "hourly", example_fields: ["batch_number", "production_date", "distribution_status", "recall_flag"] },
+  ],
+  process: [
+    { metric_category: "performance", description: "Process execution logs and outcomes", source_system: "BigQuery", object_type: "table", object_name: "analytics.workflows.execution_log", join_key: "process_id", refresh_frequency: "daily", example_fields: ["trigger_event", "execution_time", "outcome", "escalated"] },
+  ],
+  skill: [
+    { metric_category: "performance", description: "Skill invocation history and accuracy", source_system: "BigQuery", object_type: "table", object_name: "analytics.skills.invocation_log", join_key: "skill_id", refresh_frequency: "daily", example_fields: ["invocation_count", "override_rate", "accuracy_pct", "last_invoked"] },
+  ],
+  people: [
+    { metric_category: "performance", description: "Employee skill contributions and activity", source_system: "BigQuery", object_type: "view", object_name: "analytics.people.skill_contributions", join_key: "employee_id", refresh_frequency: "weekly", example_fields: ["skills_created", "skills_active", "department", "role_level"] },
+  ],
+  department: [
+    { metric_category: "performance", description: "Department skill coverage and conflict resolution", source_system: "BigQuery", object_type: "view", object_name: "analytics.departments.skill_coverage", join_key: "dept_id", refresh_frequency: "weekly", example_fields: ["total_skills", "conflict_count", "resolution_rate", "coverage_pct"] },
   ],
 };
 
@@ -743,28 +765,49 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
             <Layers className="h-3 w-3" /> Layers
           </p>
 
-          {/* Layer toggle buttons */}
+          {/* Layer toggle buttons - grouped */}
           <div className="flex flex-row md:flex-col gap-2 overflow-x-auto px-3 py-2 md:p-0 md:overflow-x-visible">
-            {ALL_TYPES.map(type => {
-              const cfg = getNodeCfg(type);
-              const active = visibleTypes.has(type);
+            {(() => {
+              const INTELLIGENCE_TYPES = new Set(["process", "skill", "people", "department"]);
+              const entityTypes = ALL_TYPES.filter(t => !INTELLIGENCE_TYPES.has(t));
+              const intelTypes  = ALL_TYPES.filter(t => INTELLIGENCE_TYPES.has(t));
+              const renderBtn = (type: string) => {
+                const cfg = getNodeCfg(type);
+                const active = visibleTypes.has(type);
+                return (
+                  <button
+                    key={type}
+                    onClick={() => toggleType(type)}
+                    className="flex items-center gap-2 text-left whitespace-nowrap shrink-0 md:w-full rounded px-2 py-1.5 transition-colors"
+                    style={{ background: active ? `${cfg.color}18` : "transparent", border: `1px solid ${active ? cfg.color + "60" : T.border}` }}
+                  >
+                    <span className="text-sm">{cfg.emoji}</span>
+                    <span className="text-xs" style={{ color: active ? cfg.color : T.textMut, fontFamily: "'Inter', sans-serif" }}>
+                      {cfg.label}
+                    </span>
+                  </button>
+                );
+              };
               return (
-                <button
-                  key={type}
-                  onClick={() => toggleType(type)}
-                  className="flex items-center gap-2 text-left whitespace-nowrap shrink-0 md:w-full rounded px-2 py-1.5 transition-colors"
-                  style={{ background: active ? `${cfg.color}18` : "transparent", border: `1px solid ${active ? cfg.color + "60" : T.border}` }}
-                >
-                  <span className="text-sm">{cfg.emoji}</span>
-                  <span className="text-xs" style={{ color: active ? cfg.color : T.textMut, fontFamily: "'Inter', sans-serif" }}>
-                    {cfg.label}
-                  </span>
-                </button>
+                <>
+                  {entityTypes.length > 0 && (
+                    <>
+                      <p style={{ color: T.textMut, fontFamily: "'Inter', sans-serif" }} className="hidden md:block text-[9px] uppercase tracking-widest mt-1">Entities</p>
+                      {entityTypes.map(renderBtn)}
+                    </>
+                  )}
+                  {intelTypes.length > 0 && (
+                    <>
+                      <p style={{ color: T.textMut, fontFamily: "'Inter', sans-serif" }} className="hidden md:block text-[9px] uppercase tracking-widest mt-2">Intelligence</p>
+                      {intelTypes.map(renderBtn)}
+                    </>
+                  )}
+                </>
               );
-            })}
+            })()}
           </div>
 
-          {/* Legend — desktop: vertical block; mobile: separate scrollable row */}
+          {/* Legend - desktop: vertical block; mobile: separate scrollable row */}
           <div style={{ borderTop: `1px solid ${T.border}` }} className="hidden md:block mt-2 pt-2">
             <p style={{ color: T.textMut, fontFamily: "'Inter', sans-serif" }} className="text-xs uppercase tracking-widest mb-2">Legend</p>
             {[...new Set(edges.map(e => e.relation))].map(rel => (

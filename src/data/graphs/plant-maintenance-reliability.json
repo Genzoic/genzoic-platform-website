@@ -21,7 +21,17 @@
     { "id": "ing-4", "label": "Lube Oil Filter Element", "type": "ingredient", "description": "10-micron duplex lube oil filter for turbine lubrication system" },
     { "id": "ing-5", "label": "Generator Stator Winding", "type": "ingredient", "description": "Hydrogen-cooled generator stator rewind copper bar set" },
     { "id": "store-1", "label": "Parts Warehouse", "type": "store", "description": "Central spare parts warehouse with climate-controlled storage" },
-    { "id": "store-2", "label": "Field Service Unit", "type": "store", "description": "Mobile field service unit with tools, cranes, and test equipment" }
+    { "id": "store-2", "label": "Field Service Unit", "type": "store", "description": "Mobile field service unit with tools, cranes, and test equipment" },
+    { "id": "proc-maintenance-scheduling", "label": "Maintenance Scheduling Rule", "type": "Process", "description": "Balance maintenance need against production schedules - never schedule two critical-path assets simultaneously." },
+    { "id": "proc-failure-analysis", "label": "Failure Mode Analysis", "type": "Process", "description": "When an equipment alarm triggers, correlate with vibration data, temperature trends, and maintenance history to identify likely failure mode." },
+    { "id": "proc-turnaround-planning", "label": "Turnaround Planning Process", "type": "Process", "description": "Major maintenance events require sequencing all dependent work, contractor scheduling, spare parts verification, and production impact modeling." },
+    { "id": "skill-reactor-vibration", "label": "Reactor 4 Vibration Pattern", "type": "Skill", "description": "Observed: when Gas Turbine Unit A bearing vibration exceeds 4.2 mm/s, failure occurs within 14 days. Standard threshold is 5.0 mm/s - too late.", "mode": "Passive Observation", "creator": "people-reliability-eng", "priority": "Individual" },
+    { "id": "skill-turnaround-sequence", "label": "Optimal Turnaround Sequence", "type": "Skill", "description": "Mined from 8 past turnarounds: start with Cooling Tower (3 days), then Heat Exchanger (2 days), then Gas Turbine (5 days). Parallel paths save 4 days.", "mode": "Record Ingestion", "creator": "people-maint-mgr", "priority": "Department" },
+    { "id": "skill-spare-parts-lead", "label": "Critical Spare Parts Lead Time", "type": "Skill", "description": "Taught: Gas turbine blades from Siemens have 12-week lead time. Always keep 2 spare sets. Bearings from SKF are 4 weeks. Order at first sign of vibration anomaly.", "mode": "Active Teaching", "creator": "people-maint-mgr", "priority": "Department" },
+    { "id": "people-maint-mgr", "label": "Maintenance Manager", "type": "People", "description": "Department level. Plans and executes maintenance strategy, turnarounds, and spare parts management." },
+    { "id": "people-reliability-eng", "label": "Reliability Engineer", "type": "People", "description": "Individual level. Monitors equipment health, analyzes failure patterns, and recommends maintenance actions." },
+    { "id": "dept-maintenance", "label": "Maintenance", "type": "Department", "description": "Manages equipment maintenance, turnarounds, and spare parts inventory." },
+    { "id": "dept-engineering", "label": "Engineering", "type": "Department", "description": "Provides engineering support, reliability analysis, and process optimization." }
   ],
   "edges": [
     { "source": "sup-1", "target": "ing-1", "relationship": "SUPPLIES" },
@@ -60,9 +70,53 @@
     { "source": "store-2", "target": "plant-1", "relationship": "SERVICES" },
     { "source": "store-2", "target": "plant-2", "relationship": "SERVICES" },
     { "source": "sup-2", "target": "store-2", "relationship": "DEPLOYS_TO" },
-    { "source": "prod-5", "target": "prod-1", "relationship": "BACKS_UP" }
+    { "source": "prod-5", "target": "prod-1", "relationship": "BACKS_UP" },
+    { "source": "proc-maintenance-scheduling", "target": "prod-1", "relationship": "TRIGGERS" },
+    { "source": "proc-maintenance-scheduling", "target": "prod-4", "relationship": "TRIGGERS" },
+    { "source": "proc-maintenance-scheduling", "target": "ch-2", "relationship": "TRIGGERS" },
+    { "source": "proc-failure-analysis", "target": "ch-3", "relationship": "TRIGGERS" },
+    { "source": "proc-failure-analysis", "target": "prod-1", "relationship": "TRIGGERS" },
+    { "source": "proc-turnaround-planning", "target": "plant-1", "relationship": "TRIGGERS" },
+    { "source": "proc-turnaround-planning", "target": "store-1", "relationship": "TRIGGERS" },
+    { "source": "proc-turnaround-planning", "target": "store-2", "relationship": "TRIGGERS" },
+    { "source": "skill-reactor-vibration", "target": "prod-1", "relationship": "ANCHORED_TO" },
+    { "source": "skill-reactor-vibration", "target": "ing-2", "relationship": "ANCHORED_TO" },
+    { "source": "skill-reactor-vibration", "target": "ch-3", "relationship": "ANCHORED_TO" },
+    { "source": "skill-turnaround-sequence", "target": "prod-4", "relationship": "ANCHORED_TO" },
+    { "source": "skill-turnaround-sequence", "target": "prod-1", "relationship": "ANCHORED_TO" },
+    { "source": "skill-turnaround-sequence", "target": "proc-turnaround-planning", "relationship": "ANCHORED_TO" },
+    { "source": "skill-spare-parts-lead", "target": "ing-1", "relationship": "ANCHORED_TO" },
+    { "source": "skill-spare-parts-lead", "target": "ing-2", "relationship": "ANCHORED_TO" },
+    { "source": "skill-spare-parts-lead", "target": "sup-1", "relationship": "ANCHORED_TO" },
+    { "source": "skill-spare-parts-lead", "target": "sup-4", "relationship": "ANCHORED_TO" },
+    { "source": "skill-reactor-vibration", "target": "people-reliability-eng", "relationship": "CREATED_BY" },
+    { "source": "skill-turnaround-sequence", "target": "people-maint-mgr", "relationship": "CREATED_BY" },
+    { "source": "skill-spare-parts-lead", "target": "people-maint-mgr", "relationship": "CREATED_BY" },
+    { "source": "people-maint-mgr", "target": "dept-maintenance", "relationship": "BELONGS_TO" },
+    { "source": "people-reliability-eng", "target": "dept-engineering", "relationship": "BELONGS_TO" },
+    { "source": "dept-maintenance", "target": "dept-engineering", "relationship": "REPORTS_TO" },
+    { "source": "people-maint-mgr", "target": "store-1", "relationship": "RESPONSIBLE_FOR" },
+    { "source": "people-maint-mgr", "target": "prod-1", "relationship": "RESPONSIBLE_FOR" },
+    { "source": "people-reliability-eng", "target": "ch-3", "relationship": "RESPONSIBLE_FOR" },
+    { "source": "people-reliability-eng", "target": "prod-1", "relationship": "RESPONSIBLE_FOR" }
   ],
   "questions": [
+    {
+      "id": "q-intelligence-maintenance",
+      "question": "Gas Turbine Unit A vibration data shows 4.3 mm/s. Standard threshold is 5.0. Should we act?",
+      "answer": "Act now. The learned vibration threshold (4.2 mm/s) is stricter than the standard (5.0) for good reason - 3 past failures occurred within 14 days of this level. Check bearing inventory (4-week lead if not in stock). Propose bundled maintenance: Gas Turbine Unit A + overdue Heat Exchanger. Reschedule Cooling Tower to avoid overlap. Downstream impact: Steam Generator and Distillation Column will be offline for 5 days, affecting 3 product lines.",
+      "highlightNodes": ["prod-1", "prod-2", "prod-4", "ing-1", "ing-2", "sup-1", "sup-4", "ch-3", "ch-2", "store-1", "plant-1", "proc-failure-analysis", "proc-maintenance-scheduling", "proc-turnaround-planning", "skill-reactor-vibration", "skill-turnaround-sequence", "skill-spare-parts-lead", "people-maint-mgr", "people-reliability-eng"],
+      "highlightEdges": ["ch-3->prod-1", "ing-2->prod-1", "ing-2->store-1", "sup-4->ing-2", "sup-1->ing-1", "prod-1->prod-2", "prod-4->prod-2", "proc-failure-analysis->ch-3", "proc-failure-analysis->prod-1", "skill-reactor-vibration->prod-1", "skill-reactor-vibration->ing-2", "skill-spare-parts-lead->ing-2", "skill-spare-parts-lead->sup-4", "skill-turnaround-sequence->prod-4", "skill-turnaround-sequence->prod-1", "proc-maintenance-scheduling->prod-1", "proc-maintenance-scheduling->prod-4", "people-reliability-eng->ch-3", "people-maint-mgr->store-1"],
+      "reasoningSteps": [
+        "Failure Mode Analysis triggers: vibration data anomaly on Gas Turbine Unit A.",
+        "Skill fires: \"Reactor 4 Vibration Pattern\" (Individual priority) - 4.3 mm/s exceeds the learned threshold of 4.2 mm/s. Failure within 14 days based on 3 past occurrences.",
+        "Skill fires: \"Critical Spare Parts Lead Time\" (Department priority) - check bearing inventory. SKF bearings have 4-week lead time.",
+        "Entity traversal: Gas Turbine Unit A -> Steam Generator B -> Step-Up Transformer T1 -> downstream production lines affected.",
+        "Maintenance Scheduling Rule: check production calendar for conflicts with other maintenance.",
+        "Skill fires: \"Optimal Turnaround Sequence\" - if taking Unit A down, consider bundling other overdue maintenance.",
+        "People routed: Reliability Engineer gets monitoring escalation. Maintenance Manager gets bundled maintenance proposal + spare parts status."
+      ]
+    },
     {
       "id": "q-turbine-maintenance-cascade",
       "question": "If we take Gas Turbine Unit A offline for blade replacement, what's the downstream impact?",
@@ -97,7 +151,7 @@
     {
       "id": "q-cooling-tower-impact",
       "question": "Cooling Tower CT-3 needs unplanned maintenance. How does this affect steam generation?",
-      "answer": "Cooling Tower CT-3 cools Steam Generator B, which is essential for the combined cycle operation. If the cooling tower goes down, Steam Generator B overheats and must reduce output or shut down, breaking the turbine-to-grid chain. The tower uses Bearing Assemblies from SKF and is tracked by SAP PM. Plant Alpha's Water Treatment Facility also feeds the steam generator — both cooling and water treatment must be operational for full plant output.",
+      "answer": "Cooling Tower CT-3 cools Steam Generator B, which is essential for the combined cycle operation. If the cooling tower goes down, Steam Generator B overheats and must reduce output or shut down, breaking the turbine-to-grid chain. The tower uses Bearing Assemblies from SKF and is tracked by SAP PM. Plant Alpha's Water Treatment Facility also feeds the steam generator - both cooling and water treatment must be operational for full plant output.",
       "highlightNodes": ["prod-4", "prod-2", "prod-1", "prod-3", "plant-1", "plant-3", "ch-2", "ing-2", "sup-4"],
       "highlightEdges": ["prod-4->prod-2", "prod-1->prod-2", "prod-2->prod-3", "prod-4->plant-1", "plant-3->prod-2", "ch-2->prod-4", "ing-2->prod-4", "sup-4->ing-2"],
       "reasoningSteps": [

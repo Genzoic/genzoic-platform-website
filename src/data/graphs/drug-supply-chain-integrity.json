@@ -22,7 +22,17 @@
     { "id": "ing-5", "label": "Enteric Coating Polymer", "type": "ingredient", "description": "Methacrylic acid copolymer for delayed-release capsule coating" },
     { "id": "store-1", "label": "Hospital Pharmacy Mass General", "type": "store", "description": "Inpatient hospital pharmacy with 340B program and formulary management" },
     { "id": "store-2", "label": "Retail Pharmacy CVS", "type": "store", "description": "Retail community pharmacy chain dispensing prescription medications" },
-    { "id": "store-3", "label": "Specialty Pharmacy BioScript", "type": "store", "description": "Specialty pharmacy for biologics and cold-chain injectable medications" }
+    { "id": "store-3", "label": "Specialty Pharmacy BioScript", "type": "store", "description": "Specialty pharmacy for biologics and cold-chain injectable medications" },
+    { "id": "proc-quality-deviation", "label": "Quality Deviation Investigation", "type": "Process", "description": "When a batch fails any quality test, trace the deviation back through the manufacturing chain to identify root cause and scope of impact." },
+    { "id": "proc-lot-recall", "label": "Lot Recall Execution Workflow", "type": "Process", "description": "When a recall is initiated, trace affected lots through the distribution chain, identify current locations, and generate recall notifications." },
+    { "id": "proc-supplier-audit", "label": "Supplier Audit Trigger", "type": "Process", "description": "When a supplier quality score drops below threshold or an FDA warning letter is issued, trigger on-site audit within 30 days." },
+    { "id": "skill-stability-batch-trace", "label": "API Stability Failure Batch Trace", "type": "Skill", "description": "Taught by Quality Director: When an API fails stability at month 18, immediately check all downstream batches within 60 days of the API lot date. Do not wait for month 24 data.", "mode": "Active Teaching", "creator": "people-quality-dir", "priority": "Executive" },
+    { "id": "skill-cold-chain-excursion", "label": "Cold Chain Excursion Response", "type": "Skill", "description": "Mined from 45 excursion events: 78% of excursions exceeding 2 hours but under 4 hours have no product impact. Above 4 hours, quarantine immediately.", "mode": "Record Ingestion", "creator": "people-sc-manager", "priority": "Department" },
+    { "id": "skill-fda-inspection-prep", "label": "FDA Inspection Preparation", "type": "Skill", "description": "Learned from correction: When preparing for FDA inspection, always have the last 3 CAPA closures for each product line ready. Inspectors always ask for them.", "mode": "Conversational Learning", "creator": "people-quality-dir", "priority": "Executive" },
+    { "id": "people-quality-dir", "label": "Quality Director", "type": "People", "description": "Executive level. Oversees quality assurance, regulatory compliance, and batch release decisions." },
+    { "id": "people-sc-manager", "label": "Supply Chain Manager", "type": "People", "description": "Department level. Manages supplier relationships, logistics, and cold chain operations." },
+    { "id": "dept-quality-assurance", "label": "Quality Assurance", "type": "Department", "description": "Manages quality standards, batch testing, CAPA, and regulatory inspections." },
+    { "id": "dept-supply-chain", "label": "Supply Chain", "type": "Department", "description": "Manages supplier logistics, cold chain, and distribution operations." }
   ],
   "edges": [
     { "source": "sup-1", "target": "ing-1", "relationship": "SUPPLIES" },
@@ -63,9 +73,48 @@
     { "source": "prod-3", "target": "store-2", "relationship": "AVAILABLE_AT" },
     { "source": "prod-4", "target": "store-2", "relationship": "AVAILABLE_AT" },
     { "source": "sup-1", "target": "ch-3", "relationship": "REGISTERED_WITH" },
-    { "source": "ch-1", "target": "plant-2", "relationship": "SERIALIZES_AT" }
+    { "source": "ch-1", "target": "plant-2", "relationship": "SERIALIZES_AT" },
+    { "source": "proc-quality-deviation", "target": "ing-1", "relationship": "TRIGGERS" },
+    { "source": "proc-quality-deviation", "target": "ch-4", "relationship": "TRIGGERS" },
+    { "source": "proc-lot-recall", "target": "prod-1", "relationship": "TRIGGERS" },
+    { "source": "proc-lot-recall", "target": "prod-2", "relationship": "TRIGGERS" },
+    { "source": "proc-lot-recall", "target": "ch-1", "relationship": "TRIGGERS" },
+    { "source": "proc-supplier-audit", "target": "sup-1", "relationship": "TRIGGERS" },
+    { "source": "proc-supplier-audit", "target": "sup-2", "relationship": "TRIGGERS" },
+    { "source": "skill-stability-batch-trace", "target": "ing-1", "relationship": "ANCHORED_TO" },
+    { "source": "skill-stability-batch-trace", "target": "proc-quality-deviation", "relationship": "ANCHORED_TO" },
+    { "source": "skill-cold-chain-excursion", "target": "sup-4", "relationship": "ANCHORED_TO" },
+    { "source": "skill-cold-chain-excursion", "target": "prod-2", "relationship": "ANCHORED_TO" },
+    { "source": "skill-fda-inspection-prep", "target": "ch-3", "relationship": "ANCHORED_TO" },
+    { "source": "skill-fda-inspection-prep", "target": "ch-4", "relationship": "ANCHORED_TO" },
+    { "source": "skill-stability-batch-trace", "target": "people-quality-dir", "relationship": "CREATED_BY" },
+    { "source": "skill-cold-chain-excursion", "target": "people-sc-manager", "relationship": "CREATED_BY" },
+    { "source": "skill-fda-inspection-prep", "target": "people-quality-dir", "relationship": "CREATED_BY" },
+    { "source": "people-quality-dir", "target": "dept-quality-assurance", "relationship": "BELONGS_TO" },
+    { "source": "people-sc-manager", "target": "dept-supply-chain", "relationship": "BELONGS_TO" },
+    { "source": "dept-supply-chain", "target": "dept-quality-assurance", "relationship": "REPORTS_TO" },
+    { "source": "people-quality-dir", "target": "plant-1", "relationship": "RESPONSIBLE_FOR" },
+    { "source": "people-quality-dir", "target": "plant-3", "relationship": "RESPONSIBLE_FOR" },
+    { "source": "people-sc-manager", "target": "sup-1", "relationship": "RESPONSIBLE_FOR" },
+    { "source": "people-sc-manager", "target": "sup-4", "relationship": "RESPONSIBLE_FOR" }
   ],
   "questions": [
+    {
+      "id": "q-intelligence-pharma",
+      "question": "Metformin API fails stability test at month 18. What is the exposure?",
+      "answer": "API lot #M-7823 failure affects 3 downstream tablet batches. Lot #T-903 is still at the plant - hold immediately. Lots #T-901 and #T-902 are in distribution (hospital network and retail pharmacy chain). Quality Director should initiate the Batch Trace protocol immediately per the 60-day rule. Cold chain is not a factor. API Manufacturer India's quality score is borderline - flag for next audit cycle.",
+      "highlightNodes": ["ing-1", "sup-1", "prod-1", "plant-1", "plant-2", "store-1", "store-2", "proc-quality-deviation", "proc-lot-recall", "proc-supplier-audit", "skill-stability-batch-trace", "skill-cold-chain-excursion", "people-quality-dir", "people-sc-manager"],
+      "highlightEdges": ["sup-1->ing-1", "ing-1->prod-1", "prod-1->plant-1", "plant-1->plant-2", "prod-1->store-1", "prod-1->store-2", "proc-quality-deviation->ing-1", "skill-stability-batch-trace->ing-1", "skill-stability-batch-trace->proc-quality-deviation", "proc-lot-recall->prod-1", "proc-lot-recall->ch-1", "proc-supplier-audit->sup-1", "skill-stability-batch-trace->people-quality-dir", "skill-cold-chain-excursion->sup-4"],
+      "reasoningSteps": [
+        "Quality Deviation Investigation triggers on Metformin API stability failure.",
+        "Skill fires: \"API Stability Failure Batch Trace\" (Executive priority) - immediately check all downstream batches within 60 days of API lot date.",
+        "Entity traversal: Metformin API -> manufactured at plant -> downstream product batches.",
+        "Lot Recall Execution workflow evaluates: trace affected lots through distribution chain.",
+        "Skill fires: \"Cold Chain Excursion Response\" - checks transport logs. No excursions detected.",
+        "Supplier Audit Trigger evaluates: API supplier quality score checked.",
+        "People routed: Quality Director gets batch impact assessment. Supply Chain Manager gets distribution chain trace."
+      ]
+    },
     {
       "id": "q-metformin-api-failure",
       "question": "Metformin Hydrochloride API fails a stability test. Which downstream batches, plants, and pharmacies are affected?",
@@ -85,7 +134,7 @@
     {
       "id": "q-insulin-cold-chain-break",
       "question": "If Cold Chain Logistics Inc reports a temperature excursion during Insulin Glargine transport, what's the impact?",
-      "answer": "Cold Chain Logistics transports Insulin Glargine 100U/mL, which is manufactured at Sterile Fill-Finish IN using Insulin Glargine Bulk from API Manufacturer India and Glass Vials from the vial supplier. The insulin is available at Specialty Pharmacy BioScript and Hospital Pharmacy Mass General. A temperature excursion may compromise the entire shipment — DSCSA tracking identifies affected serial numbers for targeted recall.",
+      "answer": "Cold Chain Logistics transports Insulin Glargine 100U/mL, which is manufactured at Sterile Fill-Finish IN using Insulin Glargine Bulk from API Manufacturer India and Glass Vials from the vial supplier. The insulin is available at Specialty Pharmacy BioScript and Hospital Pharmacy Mass General. A temperature excursion may compromise the entire shipment - DSCSA tracking identifies affected serial numbers for targeted recall.",
       "highlightNodes": ["sup-4", "prod-2", "plant-3", "ing-3", "sup-1", "sup-3", "ch-1", "store-3", "store-1"],
       "highlightEdges": ["sup-4->prod-2", "prod-2->plant-3", "sup-1->ing-3", "ing-3->prod-2", "sup-3->plant-3", "ch-1->prod-2", "prod-2->store-3", "prod-2->store-1"],
       "reasoningSteps": [
@@ -100,7 +149,7 @@
     {
       "id": "q-single-source-api-risk",
       "question": "API Manufacturer India is our only API supplier. What products are at risk if they fail an FDA inspection?",
-      "answer": "API Manufacturer India supplies Metformin HCl API and Insulin Glargine Bulk — the active ingredients for two of our four products. They are registered with FDA CDER. If they fail inspection, Metformin Tablets (available at Mass General and CVS) and Insulin Glargine (available at BioScript and Mass General) are both at risk. No alternative API supplier exists in the current supply chain — this is a critical single-source vulnerability.",
+      "answer": "API Manufacturer India supplies Metformin HCl API and Insulin Glargine Bulk - the active ingredients for two of our four products. They are registered with FDA CDER. If they fail inspection, Metformin Tablets (available at Mass General and CVS) and Insulin Glargine (available at BioScript and Mass General) are both at risk. No alternative API supplier exists in the current supply chain - this is a critical single-source vulnerability.",
       "highlightNodes": ["sup-1", "ing-1", "ing-3", "prod-1", "prod-2", "ch-3", "store-1", "store-2", "store-3"],
       "highlightEdges": ["sup-1->ing-1", "sup-1->ing-3", "ing-1->prod-1", "ing-3->prod-2", "sup-1->ch-3", "ch-3->plant-1", "ch-3->plant-3", "prod-1->store-1", "prod-1->store-2", "prod-2->store-3", "prod-2->store-1"],
       "reasoningSteps": [

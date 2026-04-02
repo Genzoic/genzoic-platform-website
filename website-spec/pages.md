@@ -75,13 +75,6 @@ Look up the solution from `solutionsData` by matching the `:slug` URL parameter.
 - Display the `contextGraphExample` text in a styled card with a left border accent in brand-primary color
 - This should feel like a technical specification - the graph structure for this specific use case
 
-**Section: Questions Your AI Can Now Answer**
-- Background: `bg-white dark:bg-slate-950`
-- Heading (H2): "Questions your AI can now answer"
-- Display the 3 `exampleQuestions` as individual cards
-- Each card: question mark icon (HelpCircle from Lucide) + the question text in quotes
-- These should feel like real things a VP would type into an AI tool. Style them almost like chat bubbles or query inputs.
-
 **Section: Key Capabilities**
 - Background: `bg-slate-50 dark:bg-slate-900/50`
 - Heading (H2): "Key capabilities"

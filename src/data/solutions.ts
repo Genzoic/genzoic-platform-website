@@ -1,3 +1,15 @@
+export interface BusinessImpactItem {
+  metric: string;
+  label: string;
+  context: string;
+}
+
+export interface KeyCapabilities {
+  connects: string[];
+  analyzes: string[];
+  recommends: string[];
+}
+
 export interface Solution {
   id: number;
   name: string;
@@ -8,9 +20,9 @@ export interface Solution {
   icon: string;
   image: string;
   contextGraphExample: string;
-  exampleQuestions: string[];
-  keyCapabilities: string[];
-  businessImpact: string[];
+
+  keyCapabilities: KeyCapabilities;
+  businessImpact: BusinessImpactItem[];
   graphFile?: string;
 }
 
@@ -20,7 +32,6 @@ export const industries = [
   "Chemical Manufacturing",
   "Pharmaceutical",
   "Food & Beverage",
-  "Energy & Utilities",
 ];
 
 export const solutionsData: Solution[] = [
@@ -33,57 +44,21 @@ export const solutionsData: Solution[] = [
     icon: "Package",
     image: "https://images.unsplash.com/photo-1633613286991-611bcf299461?w=800&h=500&fit=crop&auto=format",
     description: "Modern retailers face the dual challenge of stockouts that lose sales and overstock that expires on shelves. The Context Graph connects product sales velocity, supplier lead times, store-specific demand patterns, and expiry dates to enable AI to recommend optimal stock levels by location and predict which SKUs will expire before sale.",
-    contextGraphExample: "Products -> SKUs -> store locations -> supplier lead times -> shelf life dates -> historical demand patterns. Connects POS data to warehouse inventory to logistics schedules.",
-    exampleQuestions: [
-      "Which stores will have SKU #4521 expire in the next 14 days, and what is the optimal markdown strategy by location?",
-      "Given our supplier lead time for category X just increased from 21 to 35 days, which stores should we increase safety stock for?",
-      "What is our optimal stock level for this product at Store #42 considering its seasonal demand, weather patterns, and current inventory?",
-    ],
-    keyCapabilities: [
-      "Demand forecasting by store, category, and season",
-      "Expiry-date aware inventory planning",
-      "Supplier lead-time integration",
-      "Markdown optimization recommendations",
-      "Stock-out risk alerts by location",
-    ],
+    contextGraphExample: "Products -> SKUs -> store locations -> supplier lead times -> shelf life dates -> historical demand patterns. Connects POS data to warehouse inventory to logistics schedules. Intelligence layer adds: Markdown Decision Rules, Restock Triggers, learned expiry management skills from category managers and store operations staff.",
+    keyCapabilities: {
+      connects: ["POS sell-through data to shelf life dates and supplier lead times", "Store-level demand patterns to warehouse inventory positions"],
+      analyzes: ["Expiry risk by SKU, store, and time window", "Safety stock thresholds adjusted for seasonal demand and lead time changes"],
+      recommends: ["Markdown timing and pricing by store and day of week", "Cross-store transfers to move at-risk inventory to higher-demand locations"],
+    },
     businessImpact: [
-      "Reduce shrink/waste by 15-25% through better expiry management",
-      "Decrease stock-outs by 20-30% while lowering total inventory",
-      "Improve markdown effectiveness with AI-driven timing and pricing",
+      { metric: "Up to 49%", label: "Less food waste", context: "AI forecasting, replenishment, and logistics optimization in grocery retail (Traxtech / ReFED, 2024)" },
+      { metric: "20-30%", label: "Fewer stock-outs", context: "While lowering total inventory - Walmart achieved 30% with AI demand forecasting (Capgemini, 2024)" },
+      { metric: "10-20%", label: "Lower inventory carrying costs", context: "Through better demand-supply matching without compromising service levels (Capgemini / McKinsey)" },
     ],
     graphFile: "inventory-optimization-expiry",
   },
   {
     id: 2,
-    name: "Customer Feedback Intelligence",
-    slug: "customer-feedback-intelligence",
-    industry: "Retail & FMCG",
-    tagline: "Connect feedback across channels to products, stores, and suppliers - then drive action",
-    icon: "MessageSquare",
-    image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&h=500&fit=crop&auto=format",
-    description: "Customer feedback scattered across reviews, surveys, social media, and in-store comments is often disconnected from the products, stores, and suppliers it references. The Context Graph stitches feedback to specific SKUs, store locations, brands, and time periods, enabling AI to identify emerging quality issues, regional preferences, and supplier impact before they become crises.",
-    contextGraphExample: "Feedback channels -> sentiment scores -> SKU references -> store locations -> supplier batches -> time periods. Links complaints to specific product batches and supply chain origins.",
-    exampleQuestions: [
-      "Are complaints about Product X correlated with a specific supplier batch or manufacturing date?",
-      "Which stores in the Southeast region have seen a spike in negative feedback on our private-label dairy products in the last 30 days?",
-      "What product categories are generating the most improvement requests, and how do those map to our planned reformulations?",
-    ],
-    keyCapabilities: [
-      "Multi-channel feedback aggregation (reviews, surveys, social, in-store)",
-      "Automatic linking of feedback to SKUs, stores, and suppliers",
-      "Emerging quality issue detection",
-      "Regional preference analysis",
-      "Supplier quality correlation",
-    ],
-    businessImpact: [
-      "Detect quality issues 3-4 weeks earlier than traditional monitoring",
-      "Reduce negative review volume by addressing root causes faster",
-      "Inform product development with structured feedback-to-SKU insights",
-    ],
-    graphFile: "customer-feedback-intelligence",
-  },
-  {
-    id: 3,
     name: "DSD Copilot for Field Operations",
     slug: "dsd-copilot",
     industry: "Retail & FMCG",
@@ -91,86 +66,64 @@ export const solutionsData: Solution[] = [
     icon: "Truck",
     image: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&h=500&fit=crop&auto=format",
     description: "Direct Store Delivery reps manage dozens of accounts daily with minimal context on each store's unique patterns. The Context Graph connects route data, store planograms, order history, promotional calendars, and competitor shelf positioning to give every rep an AI copilot that knows each store as well as a veteran driver would.",
-    contextGraphExample: "Routes -> store accounts -> order history -> planograms -> promotional schedules -> competitor positioning -> delivery constraints. Links in-store execution data to distribution center inventory.",
-    exampleQuestions: [
-      "For my route today, which stores are likely to need restocking based on their sell-through rates since last delivery?",
-      "Store #87 has underperformed on the new promotion - what is different about their shelf placement compared to top-performing stores?",
-      "If I have 200 extra units of Product Y on my truck, which three stores on my route would benefit most from an opportunistic placement?",
-    ],
-    keyCapabilities: [
-      "AI-optimized route and stop prioritization",
-      "Store-level demand prediction",
-      "Shelf compliance monitoring and recommendations",
-      "Promotional execution tracking",
-      "Real-time inventory and delivery coordination",
-    ],
+    contextGraphExample: "Routes -> store accounts -> order history -> planograms -> promotional schedules -> competitor positioning -> delivery constraints. Links in-store execution data to distribution center inventory. Intelligence layer adds: Route Optimization Rules, Shelf Reset Protocols, learned delivery and weather-adjustment skills from route managers and field reps.",
+    keyCapabilities: {
+      connects: ["Route stops to real-time sell-through rates and shelf compliance scores", "Promotional calendars to store planograms and competitor positioning"],
+      analyzes: ["Store-level restock urgency based on delivery cadence and demand", "Shelf compliance gaps versus top-performing stores"],
+      recommends: ["Weather-adjusted route reprioritization", "Opportunistic placement decisions based on surplus inventory and nearby demand"],
+    },
     businessImpact: [
-      "Increase revenue per route by 10-15% through better store-level decisions",
-      "Improve shelf compliance scores by 20-30%",
-      "Reduce missed delivery windows and out-of-stock incidents",
+      { metric: "20-30%", label: "Lower fuel and route costs", context: "Through AI-optimized routing and stop prioritization (GM Insights, 2024)" },
+      { metric: "50% to 75%", label: "Shelf compliance accuracy improvement", context: "DSD companies improved compliance accuracy from ~50% to over 75% with digital tools (Locus / CigoTracker)" },
+      { metric: "1 day/week", label: "Operational overhead eliminated", context: "AI routing fitted a 6-day workload into 5 days in field service benchmarks (FieldCamp, 2024)" },
     ],
     graphFile: "dsd-copilot",
   },
   {
-    id: 4,
-    name: "Promotion & Demand Planning",
-    slug: "promotion-demand-planning",
-    industry: "Retail & FMCG",
-    tagline: "Plan promotions with full context of supplier capacity, inventory, and channel performance",
-    icon: "TrendingUp",
-    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=500&fit=crop&auto=format",
-    description: "Promotion planning typically happens in silos - marketing decides the offer, supply chain scrambles to fulfill it, and stores deal with the aftermath. The Context Graph connects promotional history, supplier production capacity, current inventory positions, store-level performance data, and channel constraints so AI can model the full impact of a promotion before it launches.",
-    contextGraphExample: "Promotional calendar -> product assortments -> supplier capacity -> warehouse inventory -> store-level historical lift -> channel constraints -> margin models.",
-    exampleQuestions: [
-      "If we run a BOGO promotion on Product X in 500 stores next month, can our current supplier handle the demand surge?",
-      "Which stores should we exclude from the promotion because their current inventory levels cannot support the expected lift?",
-      "Based on the last three promotions of similar products, what is the expected cannibalization effect on Products Y and Z?",
-    ],
-    keyCapabilities: [
-      "Full-chain promotion impact modeling",
-      "Supplier capacity validation before launch",
-      "Store-level promotion allocation optimization",
-      "Cannibalization and halo effect prediction",
-      "Post-promotion performance analysis",
-    ],
-    businessImpact: [
-      "Reduce out-of-stocks during promotions by 25-40%",
-      "Improve promotional ROI by 15-20% through better targeting",
-      "Eliminate surprise supplier shortfalls with pre-launch capacity checks",
-    ],
-    graphFile: "promotion-demand-planning",
-  },
-  {
-    id: 5,
-    name: "Supply Chain Risk Monitor",
+    id: 3,
+    name: "Supply Chain Risk & Compliance",
     slug: "supply-chain-risk-monitor",
     industry: "Battery Manufacturing",
-    tagline: "Trace raw material dependencies, monitor supplier risk, simulate disruptions in real time",
+    tagline: "Map material dependencies, monitor supplier risk, track IRA and EU Battery Passport compliance",
     icon: "AlertTriangle",
     image: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&h=500&fit=crop&auto=format",
-    description: "Battery manufacturing depends on a concentrated set of critical raw materials - lithium, cobalt, nickel, manganese - sourced from geopolitically sensitive regions through complex multi-tier supply chains. The Context Graph maps every material to its suppliers, their geographic locations, alternative sources, and downstream product dependencies, enabling AI to simulate disruption scenarios and recommend mitigation strategies before problems materialize.",
-    contextGraphExample: "Raw materials (lithium, cobalt, nickel) -> tier-1 and tier-2 suppliers -> geographic origins -> refining facilities -> cell chemistries -> battery product lines -> customer contracts -> compliance requirements (IRA, EU Battery Passport).",
-    exampleQuestions: [
-      "If our primary cobalt supplier in the DRC faces a 60-day production halt, which cell product lines are affected and what alternative sourcing options exist?",
-      "What percentage of our nickel supply comes from regions with sanctions risk, and which finished products would be impacted?",
-      "If lithium carbonate prices increase by 30%, what is the margin impact across our product portfolio, and which customer contracts have price adjustment clauses?",
-    ],
-    keyCapabilities: [
-      "Multi-tier supplier dependency mapping",
-      "Geopolitical and ESG risk scoring by material and supplier",
-      "Real-time disruption impact simulation",
-      "Alternative supplier identification with lead-time estimates",
-      "Price sensitivity modeling across the product portfolio",
-    ],
+    description: "Battery manufacturing depends on critical raw materials sourced from geopolitically sensitive regions through complex multi-tier supply chains - and faces a rapidly evolving regulatory landscape including IRA domestic content requirements, EU Battery Passport, and CBAM. The Context Graph maps every material to its suppliers, geographic origins, downstream products, and applicable regulations, enabling AI to simulate disruption scenarios, identify compliance gaps, and recommend mitigation strategies before problems materialize.",
+    contextGraphExample: "Raw materials (lithium, cobalt, nickel) -> tier-1 and tier-2 suppliers -> geographic origins -> refining facilities -> cell chemistries -> battery product lines -> customer contracts -> compliance requirements (IRA, EU Battery Passport, CBAM). Intelligence layer adds: Supplier Disruption Response Protocols, IRA Content Calculations, EU Battery Passport Data Mapping, learned disruption playbooks and sanctions check skills from supply chain leadership and compliance directors.",
+    keyCapabilities: {
+      connects: [
+        "Raw materials through multi-tier suppliers to geographic origins, product lines, and regulatory requirements",
+        "IRA domestic content, EU Battery Passport, and CBAM thresholds to specific material sourcing configurations"
+      ],
+      analyzes: [
+        "Single-source dependencies and geopolitical exposure by material",
+        "Per-product compliance gap size for each active regulation with cost of remediation"
+      ],
+      recommends: [
+        "Disruption response playbooks with qualified alternative suppliers and sanctions checks",
+        "Proactive supply chain restructuring before regulation deadlines with cost-effectiveness ranking"
+      ],
+    },
     businessImpact: [
-      "Reduce supply disruption response time from weeks to hours",
-      "Identify single-source risks before they become crises",
-      "Save 5-10% on material costs through proactive sourcing strategies",
+      {
+        metric: "60%",
+        label: "Of disruptions resolved autonomously by 2031",
+        context: "AI-enabled supply chains moving toward autonomous disruption resolution (Gartner, March 2026)"
+      },
+      {
+        metric: "30-40%",
+        label: "Lower compliance preparation costs",
+        context: "AI-driven compliance automation benchmark (Deloitte, 2024)"
+      },
+      {
+        metric: "75% to 95%+",
+        label: "Compliance coverage improvement",
+        context: "Automated RegTech solutions raised compliance from 75% to 95%+ in regulated industries (Deloitte)"
+      },
     ],
     graphFile: "supply-chain-risk-monitor",
   },
   {
-    id: 6,
+    id: 4,
     name: "Production Planning & Yield Optimization",
     slug: "production-planning-yield",
     industry: "Battery Manufacturing",
@@ -178,57 +131,21 @@ export const solutionsData: Solution[] = [
     icon: "Zap",
     image: "https://images.unsplash.com/photo-1565793298595-6a879b1d9492?w=800&h=500&fit=crop&auto=format",
     description: "Battery cell manufacturing involves tightly coupled processes where a quality deviation at one stage cascades through the entire line. The Context Graph connects electrode preparation parameters, cell assembly conditions, formation cycling data, and quality inspection results across production lines, shifts, and material batches, enabling AI to identify the root cause of yield losses and predict quality issues before cells complete the formation process.",
-    contextGraphExample: "Production lines -> process stages (mixing, coating, calendering, assembly, formation) -> equipment parameters -> material batches -> shift schedules -> quality inspection data -> yield metrics -> customer specifications.",
-    exampleQuestions: [
-      "Line 3 has seen a 4% yield drop this week - is it correlated with the new cathode material batch or the equipment calibration change on Tuesday?",
-      "Based on electrode coating thickness data from the last 8 hours, which cells in formation are likely to fail final quality inspection?",
-      "If we need to increase production of our 4680 cells by 20% next quarter, which line should we prioritize, and what are the bottleneck stages?",
-    ],
-    keyCapabilities: [
-      "Cross-stage production data correlation",
-      "Predictive quality modeling from early-stage parameters",
-      "Bottleneck identification and capacity simulation",
-      "Material batch traceability",
-      "Shift and operator performance analysis",
-    ],
+    contextGraphExample: "Production lines -> process stages (mixing, coating, calendering, assembly, formation) -> equipment parameters -> material batches -> shift schedules -> quality inspection data -> yield metrics -> customer specifications. Intelligence layer adds: Yield Deviation Investigation, Line Changeover Protocols, learned calibration and shift-adjustment skills from production managers and quality engineers.",
+    keyCapabilities: {
+      connects: ["Electrode preparation parameters to cell assembly conditions and formation data", "Material batch IDs to equipment settings, shift schedules, and quality results"],
+      analyzes: ["Cross-stage correlation between early parameters and final yield", "Shift-level yield patterns and equipment calibration drift"],
+      recommends: ["Root cause identification with specific parameter and batch attribution", "Capacity expansion priorities with bottleneck stage identification"],
+    },
     businessImpact: [
-      "Improve cell yield by 3-8% through early defect prediction",
-      "Reduce scrap rates by identifying process deviations faster",
-      "Increase effective capacity 10-15% without capital investment",
+      { metric: "Up to 16%", label: "Higher cell manufacturing yield", context: "Predictive quality analytics in battery cell production (Elisa IndustriQ case study)" },
+      { metric: "45%", label: "Reduction in production waste", context: "After deploying AI-based inspection tools in manufacturing (EnergyX / Springer, 2025)" },
+      { metric: "20%", label: "Shorter R&D and production cycles", context: "Early adopters of AI-powered quality prediction in manufacturing (Allchemist / Innova365)" },
     ],
     graphFile: "production-planning-yield",
   },
   {
-    id: 7,
-    name: "Regulatory & ESG Compliance Tracker",
-    slug: "regulatory-esg-compliance",
-    industry: "Battery Manufacturing",
-    tagline: "Track battery regulations, map compliance gaps, prepare for EU Battery Passport and IRA requirements",
-    icon: "Scale",
-    image: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&h=500&fit=crop&auto=format",
-    description: "Battery manufacturers face a rapidly evolving regulatory landscape - the EU Battery Passport, IRA domestic content requirements, CBAM, and emerging recycled content mandates. The Context Graph maps each regulation to specific product lines, material sourcing origins, and supply chain configurations, enabling AI to identify compliance gaps and model the cost of remediation before deadlines hit.",
-    contextGraphExample: "Regulations (EU Battery Passport, IRA, CBAM) -> compliance requirements -> product lines -> material origins -> supplier certifications -> recycled content percentages -> carbon footprint data -> customer contract obligations.",
-    exampleQuestions: [
-      "Which of our product lines currently do not meet the EU Battery Passport carbon footprint threshold, and what sourcing changes would bring them into compliance?",
-      "If the IRA domestic content percentage requirement increases to 80% in 2027, which products qualify and which need supply chain restructuring?",
-      "What is our current recycled content percentage by product line, and what would it cost to reach the 2030 EU minimum requirements?",
-    ],
-    keyCapabilities: [
-      "Multi-regulation tracking and deadline management",
-      "Per-product compliance gap analysis",
-      "Supply chain origin mapping for domestic content calculations",
-      "Carbon footprint tracking by material and product line",
-      "Remediation cost modeling and scenario planning",
-    ],
-    businessImpact: [
-      "Avoid regulatory penalties and market access restrictions",
-      "Reduce compliance preparation costs by 20-30% through proactive gap identification",
-      "Gain competitive advantage by achieving compliance ahead of deadlines",
-    ],
-    graphFile: "regulatory-esg-compliance",
-  },
-  {
-    id: 8,
+    id: 5,
     name: "Formulation & Recipe Management",
     slug: "formulation-recipe-management",
     industry: "Chemical Manufacturing",
@@ -236,28 +153,21 @@ export const solutionsData: Solution[] = [
     icon: "FlaskConical",
     image: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=800&h=500&fit=crop&auto=format",
     description: "Chemical manufacturers manage hundreds of formulations, each with specific ingredient requirements, supplier qualifications, and regulatory constraints. When a supplier changes or a raw material becomes unavailable, the ripple effects across the product portfolio are difficult to assess manually. The Context Graph connects formulations to ingredients, qualified suppliers, production processes, and regulatory requirements, enabling AI to instantly identify impact and recommend substitutions.",
-    contextGraphExample: "Formulations -> ingredients with concentration ranges -> qualified suppliers per ingredient -> regulatory constraints (REACH, TSCA) -> production processes -> customer specifications -> pricing and margin models.",
-    exampleQuestions: [
-      "If Supplier A discontinues Chemical Compound X, which formulations are affected, and which alternative suppliers are qualified to supply an equivalent?",
-      "We need to reformulate Product Y to remove a SVHC substance - what are the viable substitute chemicals, and which have already been qualified in our system?",
-      "What is the total cost impact across our portfolio if we switch from Supplier A to Supplier B for our primary surfactant?",
-    ],
-    keyCapabilities: [
-      "Full formulation-to-supplier dependency mapping",
-      "Ingredient substitution recommendation with qualification tracking",
-      "Regulatory constraint checking (REACH, TSCA, customer restrictions)",
-      "Cross-product impact analysis for ingredient changes",
-      "Supplier qualification status tracking",
-    ],
+    contextGraphExample: "Formulations -> ingredients with concentration ranges -> qualified suppliers per ingredient -> regulatory constraints (REACH, TSCA) -> production processes -> customer specifications -> pricing and margin models. Intelligence layer adds: Ingredient Substitution Approval workflows, Formulation Change Control, learned surfactant substitution and customer spec override skills from R&D chemists and regulatory specialists.",
+    keyCapabilities: {
+      connects: ["Formulations to ingredients, qualified suppliers, and regulatory constraints", "Customer specifications to formulation parameters and tolerance bands"],
+      analyzes: ["Cross-product impact when any single ingredient or supplier changes", "Substitution viability based on qualification status and regulatory clearance"],
+      recommends: ["Prioritized substitution plans with customer notification requirements", "Supplier qualification timelines for alternative ingredients"],
+    },
     businessImpact: [
-      "Reduce reformulation response time from months to days",
-      "Avoid production stoppages from unexpected supplier changes",
-      "Maintain regulatory compliance during ingredient transitions",
+      { metric: "85%", label: "Faster BOM creation and impact analysis", context: "AI-driven bill of materials generation vs. manual processes (Innova365, 2025)" },
+      { metric: "20%", label: "Shorter R&D reformulation cycles", context: "Early adopters of AI-powered formulation systems in chemical industry (Allchemist / ChemCopilot)" },
+      { metric: "Minutes vs. days", label: "For ingredient substitution analysis", context: "AI predicts viable formulation alternatives instantly vs. manual experimentation (ChemCopilot / Innova365)" },
     ],
     graphFile: "formulation-recipe-management",
   },
   {
-    id: 9,
+    id: 6,
     name: "Safety & Environmental Compliance",
     slug: "safety-environmental-compliance",
     industry: "Chemical Manufacturing",
@@ -265,28 +175,21 @@ export const solutionsData: Solution[] = [
     icon: "ShieldAlert",
     image: "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=800&h=500&fit=crop&auto=format",
     description: "Chemical plants operate under layered environmental permits, safety regulations, and reporting requirements that connect to specific chemicals, processes, and emission points. The Context Graph maps chemicals to their safety data, production processes to their emission profiles, and permits to their specific conditions and renewal dates, enabling AI to predict compliance risks and optimize reporting.",
-    contextGraphExample: "Chemicals -> SDS data -> storage requirements -> production processes -> emission points -> permits (air, water, waste) -> reporting requirements -> inspection schedules -> incident history.",
-    exampleQuestions: [
-      "If we increase production of Product X by 25%, which environmental permits need to be reviewed for emission threshold compliance?",
-      "Which chemicals currently on-site require updated emergency response plans based on recent regulatory changes?",
-      "Our Tier II reporting is due in 60 days - which facilities have inventory data gaps that need to be resolved?",
-    ],
-    keyCapabilities: [
-      "Chemical inventory to regulatory requirement mapping",
-      "Permit condition tracking with automated threshold monitoring",
-      "Proactive compliance risk identification",
-      "Emission modeling for production scenario planning",
-      "Reporting automation and data gap identification",
-    ],
+    contextGraphExample: "Chemicals -> SDS data -> storage requirements -> production processes -> emission points -> permits (air, water, waste) -> reporting requirements -> inspection schedules -> incident history. Intelligence layer adds: Emission Threshold Alerts, Chemical Incident Response Protocols, learned Tier II collection timing and chlorine response skills from EHS managers and plant directors.",
+    keyCapabilities: {
+      connects: ["Chemicals to SDS data, storage requirements, and emission profiles", "Production processes to permits, thresholds, and reporting deadlines"],
+      analyzes: ["Emission threshold proximity when production volumes change", "Data gaps in compliance reporting with days-to-deadline urgency"],
+      recommends: ["Incident response protocols with equipment-specific isolation sequences", "Permit review triggers before production scaling decisions"],
+    },
     businessImpact: [
-      "Reduce compliance reporting effort by 30-40%",
-      "Avoid permit violations and associated fines",
-      "Enable production scaling decisions with built-in regulatory awareness",
+      { metric: "20-40%", label: "Less time on compliance activities", context: "EHS software benchmarks for reporting and tracking automation (Verdantix / VelocityEHS)" },
+      { metric: "30%", label: "Reduction in safety incident rate", context: "Manufacturing clients using EHS automation platforms (Benchmark Gensuite case study)" },
+      { metric: "$200K+", label: "Annual savings in penalties and lost productivity", context: "Manufacturing benchmark for compliance automation ROI (EHS Momentum, 2024)" },
     ],
     graphFile: "safety-environmental-compliance",
   },
   {
-    id: 10,
+    id: 7,
     name: "Plant Maintenance & Reliability",
     slug: "plant-maintenance-reliability",
     industry: "Chemical Manufacturing",
@@ -294,28 +197,21 @@ export const solutionsData: Solution[] = [
     icon: "Wrench",
     image: "https://images.unsplash.com/photo-1581092162384-8987c1d64718?w=800&h=500&fit=crop&auto=format",
     description: "Maintenance decisions in chemical plants have cascading effects - taking a heat exchanger offline affects the reactor it feeds, the distillation column downstream, and the product lines that depend on all of them. The Context Graph maps equipment dependencies, production line configurations, spare parts inventory, and maintenance history, enabling AI to schedule maintenance that minimizes production impact and predict failures before they cause unplanned downtime.",
-    contextGraphExample: "Equipment assets -> production line configurations -> process dependencies -> maintenance history -> spare parts inventory -> work order history -> production schedules -> failure mode data.",
-    exampleQuestions: [
-      "If we take Reactor 4 offline for maintenance next week, what is the downstream production impact, and can other reactors absorb the load?",
-      "Based on vibration data trends, which pumps are likely to need unplanned maintenance in the next 30 days, and do we have spare parts in stock?",
-      "What is the optimal turnaround schedule for Q3 that minimizes total production loss while addressing all overdue maintenance items?",
-    ],
-    keyCapabilities: [
-      "Equipment dependency mapping across production lines",
-      "Predictive maintenance with production impact modeling",
-      "Spare parts inventory correlation",
-      "Turnaround planning optimization",
-      "Failure mode and root cause analysis",
-    ],
+    contextGraphExample: "Equipment assets -> production line configurations -> process dependencies -> maintenance history -> spare parts inventory -> work order history -> production schedules -> failure mode data. Intelligence layer adds: Maintenance Scheduling Rules, Failure Mode Analysis, learned vibration threshold and turnaround sequencing skills from maintenance managers and reliability engineers.",
+    keyCapabilities: {
+      connects: ["Equipment to production line dependencies, spare parts, and maintenance history", "Vibration and sensor data to failure mode patterns and historical incidents"],
+      analyzes: ["Learned failure thresholds stricter than manufacturer specifications", "Downstream production impact of taking any asset offline"],
+      recommends: ["Bundled maintenance windows that minimize separate shutdowns", "Spare parts pre-ordering based on early degradation signals"],
+    },
     businessImpact: [
-      "Reduce unplanned downtime by 20-35%",
-      "Optimize turnaround duration, saving 2-5 days per major event",
-      "Extend equipment life through better-timed maintenance interventions",
+      { metric: "30-50%", label: "Less unplanned downtime", context: "Predictive maintenance benchmark across manufacturing sectors (McKinsey / Deloitte)" },
+      { metric: "15-25%", label: "Shorter turnaround durations", context: "AI-based scheduling vs. manual turnaround planning in chemical and refining (McKinsey)" },
+      { metric: "20-40%", label: "Longer equipment lifespan", context: "Condition-based maintenance timing vs. fixed schedules (McKinsey)" },
     ],
     graphFile: "plant-maintenance-reliability",
   },
   {
-    id: 11,
+    id: 8,
     name: "Drug Supply Chain Integrity",
     slug: "drug-supply-chain-integrity",
     industry: "Pharmaceutical",
@@ -323,28 +219,21 @@ export const solutionsData: Solution[] = [
     icon: "Pill",
     image: "https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=800&h=500&fit=crop&auto=format",
     description: "Pharmaceutical supply chains require complete traceability from active pharmaceutical ingredients through formulation, manufacturing, packaging, and distribution to the patient. The Context Graph maps API suppliers, excipient sources, manufacturing sites, quality test results, lot numbers, and distribution channels, enabling AI to trace any quality issue to its origin and predict supply disruptions across the product portfolio.",
-    contextGraphExample: "APIs -> excipients -> qualified suppliers -> manufacturing sites -> batch/lot records -> quality test results -> stability data -> distribution channels -> cold chain requirements -> regulatory filings (DMFs, ANDAs, NDAs).",
-    exampleQuestions: [
-      "Lot #7823 failed a stability test at month 18 - which downstream batches used the same API lot, and where are they in the distribution chain?",
-      "If our primary API supplier for Drug X fails their next FDA inspection, what is our qualified backup capacity and how quickly can we switch?",
-      "Which products in our portfolio have single-source API suppliers, and what is the risk profile for each?",
-    ],
-    keyCapabilities: [
-      "End-to-end lot traceability from API to patient",
-      "Multi-tier supplier qualification tracking",
-      "Quality deviation impact assessment",
-      "Cold chain monitoring integration",
-      "Regulatory filing and approval status mapping",
-    ],
+    contextGraphExample: "APIs -> excipients -> qualified suppliers -> manufacturing sites -> batch/lot records -> quality test results -> stability data -> distribution channels -> cold chain requirements -> regulatory filings (DMFs, ANDAs, NDAs). Intelligence layer adds: Quality Deviation Investigation, Lot Recall Execution Workflows, learned API batch trace and cold chain response skills from quality directors and supply chain managers.",
+    keyCapabilities: {
+      connects: ["API lots through manufacturing, packaging, and distribution to patient endpoints", "Supplier quality scores to FDA inspection history and qualification status"],
+      analyzes: ["Downstream batch exposure when any API lot fails quality testing", "Cold chain excursion severity based on duration and product sensitivity"],
+      recommends: ["Recall scope with precise lot numbers and current distribution locations", "Supplier audit triggers and backup qualification priorities"],
+    },
     businessImpact: [
-      "Reduce quality investigation time from weeks to days",
-      "Identify and mitigate single-source supply risks before disruption",
-      "Accelerate regulatory response with complete traceability data",
+      { metric: "50-95%", label: "Smaller recall scope with traceability", context: "Lot-level traceability reduces recall scope vs. broad precautionary recalls (ITC / Kearney)" },
+      { metric: "<4 hours", label: "Full traceability demonstration", context: "GFSI scheme expectation for complete trace exercises (BRCGS / SQF standards)" },
+      { metric: "30-45%", label: "Faster incident response", context: "Organizations with AI compliance automation programs (Deloitte / BP-3, 2024)" },
     ],
     graphFile: "drug-supply-chain-integrity",
   },
   {
-    id: 12,
+    id: 9,
     name: "Allergen & Ingredient Compliance",
     slug: "allergen-ingredient-compliance",
     industry: "Food & Beverage",
@@ -352,53 +241,17 @@ export const solutionsData: Solution[] = [
     icon: "Wheat",
     image: "https://images.unsplash.com/photo-1606787366850-de6330128bfc?w=800&h=500&fit=crop&auto=format",
     description: "Food manufacturers must track allergens across recipes, ingredient suppliers, production lines, and labeling - where a single undeclared allergen can trigger recalls affecting millions of units. The Context Graph connects recipes to ingredients, suppliers to allergen certifications, production lines to cleaning schedules, and products to labeling requirements, enabling AI to catch allergen risks before products ship and execute targeted recalls when needed.",
-    contextGraphExample: "Recipes -> ingredients -> allergen profiles -> supplier certifications -> production lines -> cleaning protocols -> shared equipment -> labeling requirements -> distribution and retail endpoints.",
-    exampleQuestions: [
-      "If Supplier A's soy lecithin is found to contain undeclared milk protein, which products, production lots, and retail locations are potentially affected?",
-      "Which of our production lines process both tree nut and nut-free products, and are the cleaning protocols between runs validated for allergen removal?",
-      "We are reformulating Product X to be gluten-free - which ingredients need to be replaced, and which suppliers carry certified gluten-free alternatives?",
-    ],
-    keyCapabilities: [
-      "Recipe-to-allergen traceability across the full supply chain",
-      "Supplier allergen certification management",
-      "Production line cross-contact risk assessment",
-      "Targeted recall scoping with lot and location precision",
-      "Label compliance verification",
-    ],
+    contextGraphExample: "Recipes -> ingredients -> allergen profiles -> supplier certifications -> production lines -> cleaning protocols -> shared equipment -> labeling requirements -> distribution and retail endpoints. Intelligence layer adds: Allergen Cross-Contact Checks, Recall Scoping Workflows, learned line changeover cleaning and label cross-check skills from food safety managers and R&D leads.",
+    keyCapabilities: {
+      connects: ["Recipes to ingredients, allergen profiles, and production line cleaning protocols", "Supplier allergen certifications to expiry dates and product labels"],
+      analyzes: ["Cross-contact risk from shared production lines and cleaning gaps", "Label accuracy when any ingredient or supplier changes"],
+      recommends: ["Recall scoping with lot-level precision including cross-contact products", "Reformulation paths with pre-qualified allergen-free alternatives"],
+    },
     businessImpact: [
-      "Reduce recall scope by 50-70% through precise lot-level tracing",
-      "Prevent undeclared allergen incidents with proactive cross-contact monitoring",
-      "Accelerate allergen-related reformulations from months to weeks",
+      { metric: "50-95%", label: "Smaller recall scope", context: "Precision lot-level tracing vs. broad precautionary recalls (International Trade Centre / Kearney)" },
+      { metric: "<4 hours", label: "End-to-end trace completion", context: "GFSI certification schemes require full traceability demonstrated within 4 hours (BRCGS / SQF)" },
+      { metric: "20%", label: "Faster reformulation cycles", context: "AI-powered formulation systems in food and chemical manufacturing (Allchemist / Innova365)" },
     ],
     graphFile: "allergen-ingredient-compliance",
-  },
-  {
-    id: 13,
-    name: "Asset Performance Management",
-    slug: "asset-performance-management",
-    industry: "Energy & Utilities",
-    tagline: "Map generation assets to grid commitments, optimize maintenance against output obligations",
-    icon: "Activity",
-    image: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=800&h=500&fit=crop&auto=format",
-    description: "Energy producers balance asset maintenance needs against generation commitments, grid obligations, and market prices - where taking a unit offline at the wrong time can mean millions in penalties or missed revenue. The Context Graph maps generation assets to their maintenance schedules, grid commitments, weather-dependent output profiles, fuel contracts, and market positions, enabling AI to optimize the maintenance-versus-generation tradeoff.",
-    contextGraphExample: "Generation assets (turbines, transformers, solar arrays) -> maintenance schedules -> grid commitment contracts -> weather/output models -> fuel supply contracts -> market positions -> spare parts inventory -> regulatory inspection requirements.",
-    exampleQuestions: [
-      "If we defer turbine maintenance on Unit 5 by 30 days, what is the failure probability increase, and can we cover our grid commitment from other units?",
-      "Given the weather forecast for next week, which solar sites will underperform, and do we need to activate peaking capacity to meet grid obligations?",
-      "What is the optimal maintenance window for our top 10 assets in Q4 that minimizes both outage risk and revenue loss from reduced generation?",
-    ],
-    keyCapabilities: [
-      "Asset-to-commitment dependency mapping",
-      "Maintenance window optimization with revenue impact modeling",
-      "Weather-integrated output forecasting",
-      "Grid commitment tracking and penalty risk assessment",
-      "Spare parts and contractor availability coordination",
-    ],
-    businessImpact: [
-      "Reduce maintenance-related revenue loss by 10-20%",
-      "Avoid grid commitment penalties through better outage planning",
-      "Extend asset life by 3-5 years through optimized maintenance timing",
-    ],
-    graphFile: "asset-performance-management",
   },
 ];
