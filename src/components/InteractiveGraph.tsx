@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState, useCallback, useMemo } from "react";
-import { useTheme } from "@/contexts/ThemeContext";
 import * as d3 from "d3";
 import { Search, RotateCcw, Layers, ChevronDown, Database, HelpCircle, X, Maximize2, Minimize2, Plus, Minus } from "lucide-react";
 import graphData from "@/data/fmcg-context-graph.json";
@@ -39,38 +38,6 @@ const CAT_COLOR: Record<string, string> = {
   risk:        "#f87171",
   quality:     "#818cf8",
   compliance:  "#94a3b8",
-};
-
-// ─── Theme palettes ───────────────────────────────────────────────────────────
-
-const DARK_T = {
-  bg:          "#0a0e1a",
-  chrome:      "#111827",
-  panel:       "#0d1117",
-  border:      "#1f2937",
-  borderAlt:   "#374151",
-  textPri:     "#d1d5db",
-  textSec:     "#9ca3af",
-  textMut:     "#6b7280",
-  inputBg:     "#1f2937",
-  chipBg:      "#1f2937",
-  fieldBg:     "#111827",
-  fieldBorder: "#374151",
-};
-
-const LIGHT_T = {
-  bg:          "#f1f5f9",
-  chrome:      "#ffffff",
-  panel:       "#f8fafc",
-  border:      "#e2e8f0",
-  borderAlt:   "#cbd5e1",
-  textPri:     "#1e293b",
-  textSec:     "#475569",
-  textMut:     "#94a3b8",
-  inputBg:     "#ffffff",
-  chipBg:      "#f1f5f9",
-  fieldBg:     "#ffffff",
-  fieldBorder: "#e2e8f0",
 };
 
 // ─── Config ───────────────────────────────────────────────────────────────────
@@ -303,9 +270,6 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
   }, []);
 
   const questions: PredefinedQuestion[] = data?.questions ?? (!data ? (graphData as { nodes: unknown[]; edges: unknown[]; questions: PredefinedQuestion[] }).questions ?? [] : []);
-
-  const { theme } = useTheme();
-  const T = theme === "dark" ? DARK_T : LIGHT_T;
 
   // ── Derived data ───────────────────────────────────────────────────────────
 
@@ -649,10 +613,10 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
 
   if (nodes.length === 0) {
     return (
-      <div style={{ background: T.bg, borderRadius: 16 }} className="border border-slate-200 dark:border-slate-800 flex items-center justify-center">
+      <div className="bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex items-center justify-center rounded-2xl">
         <div className="flex flex-col items-center gap-3 py-20">
-          <Database className="h-6 w-6" style={{ color: T.textMut }} />
-          <p className="text-sm" style={{ color: T.textMut }}>No entities found.</p>
+          <Database className="h-6 w-6 text-slate-400 dark:text-slate-500" />
+          <p className="text-sm text-slate-500 dark:text-slate-400">No entities found.</p>
         </div>
       </div>
     );
@@ -664,38 +628,35 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
 
   return (
     <div
-      style={{ background: T.bg, fontFamily: "'Inter', sans-serif" }}
-      className={`border border-slate-200 dark:border-slate-800 ${isFullscreen ? "fixed inset-0 z-50 rounded-none w-screen h-screen flex flex-col m-0" : "rounded-2xl overflow-hidden flex flex-col w-full"}`}
+      className={`bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 ${isFullscreen ? "fixed inset-0 z-50 rounded-none w-screen h-screen flex flex-col m-0" : "rounded-2xl overflow-hidden flex flex-col w-full"}`}
     >
 
       {/* ── Toolbar ──────────────────────────────────────────────────────── */}
-      <div style={{ background: T.chrome, borderBottom: `1px solid ${T.border}` }} className="px-4 py-3 flex flex-col lg:flex-row lg:items-center gap-2">
+      <div className="bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-800 px-4 py-3 flex flex-col lg:flex-row lg:items-center gap-2">
         {/* Row 1: Search (hidden on lg, shown inline) */}
         <div className="relative flex-1">
-          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5" style={{ color: T.textMut }} />
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400 dark:text-slate-500" />
           <input
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
             placeholder="Search nodes…"
-            style={{ background: T.inputBg, border: `1px solid ${T.borderAlt}`, color: T.textPri, fontFamily: "'Inter', sans-serif", outline: "none" }}
-            className="w-full pl-8 pr-3 py-1.5 rounded-lg text-xs focus:border-blue-500 transition-colors"
+            className="w-full pl-8 pr-3 py-1.5 rounded-lg text-xs bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white outline-none focus:border-blue-500 transition-colors"
           />
         </div>
 
         {/* Row 2: Depth + Reset + Zoom + Clear focus */}
         <div className="flex items-center gap-2 flex-wrap lg:mx-auto">
-          <div className="flex items-center gap-1.5" style={{ color: T.textSec }}>
+          <div className="flex items-center gap-1.5 text-slate-600 dark:text-slate-400">
             <span className="text-xs">Depth:</span>
             {[1,2,3].map(d => (
               <button
                 key={d}
                 onClick={() => setDepth(d)}
-                style={{
-                  background: depth === d ? "#3b82f6" : T.chipBg,
-                  border: `1px solid ${depth === d ? "#3b82f6" : T.borderAlt}`,
-                  color: depth === d ? "#fff" : T.textSec,
-                }}
-                className="w-7 h-7 rounded text-xs font-mono transition-colors"
+                className={`w-7 h-7 rounded text-xs font-mono transition-colors border ${
+                  depth === d 
+                    ? "bg-blue-600 border-blue-600 text-white" 
+                    : "bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-700"
+                }`}
               >
                 {d}
               </button>
@@ -704,25 +665,22 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
 
           <button
             onClick={resetView}
-            style={{ background: T.chipBg, border: `1px solid ${T.borderAlt}`, color: T.textSec }}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs hover:border-slate-400 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-700 transition-colors"
           >
             <RotateCcw className="h-3 w-3" /> Reset
           </button>
 
-          <div className="flex items-center" style={{ border: `1px solid ${T.borderAlt}`, borderRadius: 8, overflow: "hidden" }}>
+          <div className="flex items-center border border-slate-200 dark:border-slate-800 rounded-lg overflow-hidden">
             <button
               onClick={zoomOut}
-              style={{ background: T.chipBg, color: T.textSec, borderRight: `1px solid ${T.borderAlt}` }}
-              className="flex items-center justify-center w-7 h-7 text-xs hover:border-slate-400 transition-colors"
+              className="flex items-center justify-center w-7 h-7 text-xs bg-white dark:bg-slate-950 text-slate-600 dark:text-slate-400 border-r border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors"
               aria-label="Zoom out"
             >
               <Minus className="h-3 w-3" />
             </button>
             <button
               onClick={zoomIn}
-              style={{ background: T.chipBg, color: T.textSec }}
-              className="flex items-center justify-center w-7 h-7 text-xs hover:border-slate-400 transition-colors"
+              className="flex items-center justify-center w-7 h-7 text-xs bg-white dark:bg-slate-950 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors"
               aria-label="Zoom in"
             >
               <Plus className="h-3 w-3" />
@@ -732,8 +690,7 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
           {focusedId && (
             <button
               onClick={() => setFocusedId(null)}
-              style={{ background: T.chipBg, border: `1px solid ${T.borderAlt}`, color: "#f87171" }}
-              className="px-3 py-1.5 rounded-lg text-xs hover:border-red-400 transition-colors"
+              className="px-3 py-1.5 rounded-lg text-xs bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-red-500 hover:border-red-400 transition-colors"
             >
               Clear focus
             </button>
@@ -742,8 +699,7 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
 
         <button
           onClick={() => setIsFullscreen(prev => !prev)}
-          style={{ background: T.chipBg, border: `1px solid ${T.borderAlt}`, color: T.textSec }}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs hover:border-slate-400 transition-colors shrink-0 self-start lg:self-auto"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-700 transition-colors shrink-0 self-start lg:self-auto"
           aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
         >
           {isFullscreen ? <Minimize2 className="h-3 w-3" /> : <Maximize2 className="h-3 w-3" />}
@@ -752,16 +708,15 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
       </div>
 
       {/* ── Main layout ──────────────────────────────────────────────────────── */}
-      <div className="flex flex-col md:flex-row md:h-[580px]">
+      <div className="flex flex-col md:flex-row md:h-145">
 
         {/* ── Left sidebar / top strip: Layer toggles + Legend ─────────────── */}
         {/* Mobile: two stacked rows (layers scroll row + legend scroll row); Desktop: vertical sidebar */}
         <div
-          style={{ background: T.panel }}
-          className="border-b border-slate-200 dark:border-slate-800 md:border-b-0 md:border-r md:w-[148px] md:flex-shrink-0 flex flex-col md:py-3 md:px-3 md:gap-2 md:overflow-y-auto"
+          className="bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 md:border-b-0 md:border-r md:w-36 md:shrink-0 flex flex-col md:py-3 md:px-3 md:gap-2 md:overflow-y-auto"
         >
           {/* Desktop heading */}
-          <p style={{ color: T.textMut, fontFamily: "'Inter', sans-serif" }} className="hidden md:flex text-xs uppercase tracking-widest mb-1 items-center gap-1.5">
+          <p className="hidden md:flex text-xs uppercase tracking-widest mb-1 items-center gap-1.5 text-slate-500 dark:text-slate-400 font-sans">
             <Layers className="h-3 w-3" /> Layers
           </p>
 
@@ -778,11 +733,17 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
                   <button
                     key={type}
                     onClick={() => toggleType(type)}
-                    className="flex items-center gap-2 text-left whitespace-nowrap shrink-0 md:w-full rounded px-2 py-1.5 transition-colors"
-                    style={{ background: active ? `${cfg.color}18` : "transparent", border: `1px solid ${active ? cfg.color + "60" : T.border}` }}
+                    className={`flex items-center gap-2 text-left whitespace-nowrap md:whitespace-normal shrink-0 md:w-full rounded px-2 py-1.5 transition-colors border ${
+                      active 
+                        ? "bg-blue-500/10 border-blue-500/40" 
+                        : "bg-transparent border-slate-200 dark:border-slate-800"
+                    }`}
                   >
                     <span className="text-sm">{cfg.emoji}</span>
-                    <span className="text-xs" style={{ color: active ? cfg.color : T.textMut, fontFamily: "'Inter', sans-serif" }}>
+                    <span 
+                      className="text-xs font-sans"
+                      style={{ color: active ? cfg.color : undefined }}
+                    >
                       {cfg.label}
                     </span>
                   </button>
@@ -792,13 +753,13 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
                 <>
                   {entityTypes.length > 0 && (
                     <>
-                      <p style={{ color: T.textMut, fontFamily: "'Inter', sans-serif" }} className="hidden md:block text-[9px] uppercase tracking-widest mt-1">Entities</p>
+                      <p className="hidden md:block text-[10px] uppercase tracking-widest mt-1 text-slate-500 dark:text-slate-400 font-sans">Entities</p>
                       {entityTypes.map(renderBtn)}
                     </>
                   )}
                   {intelTypes.length > 0 && (
                     <>
-                      <p style={{ color: T.textMut, fontFamily: "'Inter', sans-serif" }} className="hidden md:block text-[9px] uppercase tracking-widest mt-2">Intelligence</p>
+                      <p className="hidden md:block text-[10px] uppercase tracking-widest mt-2 text-slate-500 dark:text-slate-400 font-sans">Intelligence</p>
                       {intelTypes.map(renderBtn)}
                     </>
                   )}
@@ -808,45 +769,43 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
           </div>
 
           {/* Legend - desktop: vertical block; mobile: separate scrollable row */}
-          <div style={{ borderTop: `1px solid ${T.border}` }} className="hidden md:block mt-2 pt-2">
-            <p style={{ color: T.textMut, fontFamily: "'Inter', sans-serif" }} className="text-xs uppercase tracking-widest mb-2">Legend</p>
+          <div className="hidden md:block mt-2 pt-2 border-t border-slate-200 dark:border-slate-800">
+            <p className="text-xs uppercase tracking-widest mb-2 text-slate-500 dark:text-slate-400 font-sans">Legend</p>
             {[...new Set(edges.map(e => e.relation))].map(rel => (
               <div key={rel} className="flex items-center gap-1.5 mb-1">
                 <div className="h-0.5 w-4 rounded" style={{ background: getRelColor(rel) }} />
-                <span style={{ color: T.textMut, fontFamily: "'Inter', sans-serif" }} className="text-[9px]">{rel}</span>
+                <span className="text-[10px] text-slate-500 dark:text-slate-400 font-sans">{rel}</span>
               </div>
             ))}
           </div>
           <div
-            style={{ borderTop: `1px solid ${T.border}` }}
-            className="md:hidden flex flex-row gap-x-4 gap-y-1 overflow-x-auto px-3 py-1.5 items-center"
+            className="md:hidden flex flex-row gap-x-4 gap-y-1 overflow-x-auto px-3 py-1.5 items-center border-t border-slate-200 dark:border-slate-800"
           >
             {[...new Set(edges.map(e => e.relation))].map(rel => (
               <div key={rel} className="flex items-center gap-1 shrink-0">
                 <div className="h-0.5 w-3 rounded" style={{ background: getRelColor(rel) }} />
-                <span style={{ color: T.textMut, fontFamily: "'Inter', sans-serif" }} className="text-[9px] whitespace-nowrap">{rel}</span>
+                <span className="text-[10px] whitespace-nowrap text-slate-500 dark:text-slate-400 font-sans">{rel}</span>
               </div>
             ))}
           </div>
         </div>
 
         {/* ── Graph canvas ─────────────────────────────────────────────────── */}
-        <div ref={containerRef} className="flex-1 relative h-[500px] md:h-auto min-h-0" onClick={() => setContextMenu(null)}>
+        <div ref={containerRef} className="flex-1 relative h-125 md:h-auto min-h-0 bg-slate-50 dark:bg-slate-950" onClick={() => setContextMenu(null)}>
           <svg
             ref={svgRef}
             className="w-full h-full"
-            style={{ background: T.bg }}
           />
 
           {/* Node count overlay */}
           <div className="absolute bottom-3 left-3 flex gap-3">
-            <span style={{ background: T.chrome + "cc", border: `1px solid ${T.border}`, color: T.textMut, fontFamily: "'Inter', sans-serif" }}
-              className="text-xs px-2 py-1 rounded-lg backdrop-blur-sm">
+            <span 
+              className="text-xs px-2 py-1 rounded-lg backdrop-blur-sm bg-white/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 font-sans">
               {visibleNodes.length} nodes · {visibleEdges.length} edges
             </span>
             {focusedId && highlightedIds && (
-              <span style={{ background: "#1e3a5faa", border: "1px solid #3b82f680", color: "#93c5fd", fontFamily: "'Inter', sans-serif" }}
-                className="text-xs px-2 py-1 rounded-lg backdrop-blur-sm">
+              <span 
+                className="text-xs px-2 py-1 rounded-lg backdrop-blur-sm bg-blue-900/20 border border-blue-500/50 text-blue-600 dark:text-blue-400 font-sans">
                 Focus: {highlightedIds.size} related nodes
               </span>
             )}
@@ -856,21 +815,20 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
           {contextMenu && (
             <div
               onClick={e => e.stopPropagation()}
-              className="absolute z-50 rounded-xl overflow-hidden shadow-2xl"
-              style={{ left: contextMenu.x, top: contextMenu.y, background: T.chrome, border: `1px solid ${T.borderAlt}`, minWidth: 180 }}
+              className="absolute z-50 rounded-xl overflow-hidden shadow-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 min-w-45"
+              style={{ left: contextMenu.x, top: contextMenu.y }}
             >
-              <div style={{ borderBottom: `1px solid ${T.borderAlt}`, color: T.textSec }} className="px-3 py-2 text-xs font-mono">
+              <div className="px-3 py-2 text-xs font-mono border-b border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400">
                 {nodeMap.get(contextMenu.nodeId)?.label}
               </div>
               {[
-                { action: "expand", label: "Expand neighbors", color: "#60a5fa" },
-                { action: "copy",   label: "Copy node info",   color: T.textSec },
+                { action: "expand", label: "Expand neighbors", className: "text-blue-600 dark:text-blue-400" },
+                { action: "copy",   label: "Copy node info",   className: "text-slate-600 dark:text-slate-400" },
               ].map(item => (
                 <button
                   key={item.action}
                   onClick={() => handleContextAction(item.action)}
-                  className="block w-full text-left px-3 py-2 text-xs hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
-                  style={{ color: item.color, fontFamily: "'Inter', sans-serif" }}
+                  className={`block w-full text-left px-3 py-2 text-xs hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors font-sans ${item.className}`}
                 >
                   {item.label}
                 </button>
@@ -882,8 +840,7 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
         {/* ── Right panel / bottom panel: node details ─────────────────────── */}
         {focusedNode && focusedConns && (
           <div
-            style={{ background: T.panel }}
-            className="border-t border-slate-200 dark:border-slate-800 md:border-t-0 md:border-l w-full md:w-[260px] md:flex-shrink-0 overflow-y-auto max-h-[260px] md:max-h-none py-4 px-4 flex flex-col gap-4"
+            className="bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 md:border-t-0 md:border-l w-full md:w-64 md:shrink-0 overflow-y-auto max-h-64 md:max-h-none py-4 px-4 flex flex-col gap-4"
           >
             {/* Node header */}
             <div>
@@ -894,17 +851,21 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
                     {focusedNode.label}
                   </p>
                   <span
-                    className="text-xs px-2 py-0.5 rounded-full"
-                    style={{ background: getNodeCfg(focusedNode.type).color + "25", color: getNodeCfg(focusedNode.type).color, fontFamily: "'Inter', sans-serif" }}
+                    className="text-[10px] px-2 py-0.5 rounded-full font-sans uppercase tracking-wider"
+                    style={{ 
+                      background: `${getNodeCfg(focusedNode.type).color}20`, 
+                      color: getNodeCfg(focusedNode.type).color,
+                      border: `1px solid ${getNodeCfg(focusedNode.type).color}40`
+                    }}
                   >
                     {getNodeCfg(focusedNode.type).label}
                   </span>
                 </div>
               </div>
               {focusedNode.description && (
-                <p className="text-xs mt-1" style={{ color: T.textSec }}>{focusedNode.description}</p>
+                <p className="text-xs mt-1 text-slate-600 dark:text-slate-400">{focusedNode.description}</p>
               )}
-              <div style={{ color: T.textMut, fontFamily: "'Inter', sans-serif" }} className="text-[10px] mt-1">
+              <div className="text-[10px] mt-1 text-slate-500 dark:text-slate-500 font-sans uppercase tracking-[0.05em]">
                 ID: {focusedNode.id}
               </div>
             </div>
@@ -912,7 +873,7 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
             {/* Outgoing connections */}
             {Object.entries(focusedConns.outgoing).map(([rel, ids]) => (
               <div key={`out-${rel}`}>
-                <p className="text-xs mb-1.5" style={{ color: getRelColor(rel), fontFamily: "'Inter', sans-serif" }}>
+                <p className="text-[10px] font-bold uppercase tracking-widest mb-2 font-sans" style={{ color: getRelColor(rel) }}>
                   → {rel}
                 </p>
                 <div className="flex flex-wrap gap-1">
@@ -923,12 +884,11 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
                       <button
                         key={id}
                         onClick={() => setFocusedId(id)}
-                        className="text-xs px-2 py-0.5 rounded-full transition-colors"
+                        className="text-xs px-2 py-1 rounded-lg transition-all border font-sans"
                         style={{
-                          background: getNodeCfg(n.type).color + "20",
-                          border: `1px solid ${getNodeCfg(n.type).color}50`,
+                          background: `${getNodeCfg(n.type).color}10`,
+                          borderColor: `${getNodeCfg(n.type).color}30`,
                           color: getNodeCfg(n.type).color,
-                          fontFamily: "'Inter', sans-serif",
                         }}
                       >
                         {n.label.length > 14 ? n.label.slice(0, 13) + "…" : n.label}
@@ -942,7 +902,7 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
             {/* Incoming connections */}
             {Object.entries(focusedConns.incoming).map(([rel, ids]) => (
               <div key={`in-${rel}`}>
-                <p className="text-xs mb-1.5" style={{ color: getRelColor(rel), fontFamily: "'Inter', sans-serif" }}>
+                <p className="text-[10px] font-bold uppercase tracking-widest mb-2 font-sans" style={{ color: getRelColor(rel) }}>
                   ← {rel}
                 </p>
                 <div className="flex flex-wrap gap-1">
@@ -953,12 +913,11 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
                       <button
                         key={id}
                         onClick={() => setFocusedId(id)}
-                        className="text-xs px-2 py-0.5 rounded-full transition-colors"
+                        className="text-xs px-2 py-1 rounded-lg transition-all border font-sans"
                         style={{
-                          background: getNodeCfg(n.type).color + "20",
-                          border: `1px solid ${getNodeCfg(n.type).color}50`,
+                          background: `${getNodeCfg(n.type).color}10`,
+                          borderColor: `${getNodeCfg(n.type).color}30`,
                           color: getNodeCfg(n.type).color,
-                          fontFamily: "'Inter', sans-serif",
                         }}
                       >
                         {n.label.length > 14 ? n.label.slice(0, 13) + "…" : n.label}
@@ -970,18 +929,18 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
             ))}
 
             {Object.keys(focusedConns.outgoing).length === 0 && Object.keys(focusedConns.incoming).length === 0 && (
-              <p style={{ color: T.textMut }} className="text-xs">No visible connections with current layer filters.</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 italic">No visible connections with current layer filters.</p>
             )}
 
             {/* Data Sources */}
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <p className="text-xs flex items-center gap-1.5" style={{ color: T.textMut, fontFamily: "'Inter', sans-serif", textTransform: "uppercase", letterSpacing: "0.1em" }}>
+            <div className="mt-2 pt-4 border-t border-slate-200 dark:border-slate-800">
+              <div className="flex items-center justify-between mb-3">
+                <p className="text-[10px] font-bold uppercase tracking-[0.15em] flex items-center gap-1.5 text-slate-500 dark:text-slate-400 font-sans">
                   <Database className="h-3 w-3" /> Data Sources
                 </p>
               </div>
               {dataSources.length === 0 ? (
-                <p className="text-xs" style={{ color: T.textMut }}>No data sources configured.</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">No data sources configured.</p>
               ) : (
                 <div className="flex flex-col gap-1.5">
                   {dataSources.map((lnk, idx) => {
@@ -989,27 +948,27 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
                     const isOpen = expandedLinkage === key;
                     const catColor = CAT_COLOR[lnk.metric_category] ?? "#9ca3af";
                     return (
-                      <div key={key} className="rounded-lg overflow-hidden" style={{ border: `1px solid ${catColor}30`, background: `${catColor}08` }}>
+                      <div key={key} className="rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 transition-colors" style={{ background: `${catColor}08` }}>
                         <button
                           onClick={() => setExpandedLinkage(isOpen ? null : key)}
-                          className="w-full text-left px-2.5 py-1.5 flex items-start gap-2"
+                          className="w-full text-left px-3 py-2.5 flex items-start gap-2.5"
                         >
-                          <span className="h-2 w-2 rounded-full shrink-0 mt-1" style={{ background: catColor }} />
-                          <span className="text-xs flex-1 leading-snug" style={{ color: T.textPri }}>{lnk.description}</span>
-                          <ChevronDown className="h-3 w-3 shrink-0 mt-0.5 transition-transform" style={{ color: T.textMut, transform: isOpen ? "rotate(180deg)" : "none" }} />
+                          <span className="h-2 w-2 rounded-full shrink-0 mt-1.5" style={{ background: catColor }} />
+                          <span className="text-xs flex-1 leading-snug font-medium text-slate-900 dark:text-slate-100">{lnk.description}</span>
+                          <ChevronDown className={`h-3.5 w-3.5 shrink-0 mt-0.5 transition-transform text-slate-400 ${isOpen ? "rotate-180" : ""}`} />
                         </button>
                         {isOpen && (
-                          <div className="px-2.5 pb-2.5 space-y-1.5">
-                            <div className="flex flex-wrap gap-1">
-                              <span className="text-[9px] px-1.5 py-0.5 rounded" style={{ background: catColor + "22", color: catColor, fontFamily: "'Inter', sans-serif" }}>{lnk.metric_category}</span>
-                              <span className="text-[9px] px-1.5 py-0.5 rounded" style={{ background: T.chipBg, color: T.textSec, fontFamily: "'Inter', sans-serif" }}>{lnk.source_system}</span>
-                              <span className="text-[9px] px-1.5 py-0.5 rounded" style={{ background: T.chipBg, color: "#16a34a", fontFamily: "'Inter', sans-serif" }}>{lnk.refresh_frequency}</span>
+                          <div className="px-3 pb-3 space-y-2">
+                            <div className="flex flex-wrap gap-1.5">
+                              <span className="text-[9px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wider" style={{ background: `${catColor}22`, color: catColor }}>{lnk.metric_category}</span>
+                              <span className="text-[9px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wider bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400">{lnk.source_system}</span>
+                              <span className="text-[9px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">{lnk.refresh_frequency}</span>
                             </div>
-                            <p className="text-[9px] break-all" style={{ color: "#2563eb", fontFamily: "'Inter', sans-serif" }}>{lnk.object_name}</p>
-                            <p className="text-[9px]" style={{ color: T.textMut, fontFamily: "'Inter', sans-serif" }}>join: {lnk.join_key}</p>
+                            <p className="text-[10px] break-all font-mono text-blue-600 dark:text-blue-400">{lnk.object_name}</p>
+                            <p className="text-[10px] text-slate-500 dark:text-slate-500 font-sans">join: {lnk.join_key}</p>
                             <div className="flex flex-wrap gap-1">
                               {lnk.example_fields.map(f => (
-                                <span key={f} className="text-[8px] px-1 py-0.5 rounded" style={{ background: T.fieldBg, border: `1px solid ${T.fieldBorder}`, color: T.textMut, fontFamily: "'Inter', sans-serif" }}>{f}</span>
+                                <span key={f} className="text-[9px] px-1.5 py-0.5 rounded bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 font-mono">{f}</span>
                               ))}
                             </div>
                           </div>
@@ -1026,27 +985,28 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
 
       {/* ── Questions panel ──────────────────────────────────────────────────── */}
       {questions.length > 0 && (
-        <div style={{ borderTop: `1px solid ${T.border}`, background: T.panel }} className="px-4 py-4">
-          <p style={{ color: T.textMut, fontFamily: "'Inter', sans-serif" }} className="text-xs uppercase tracking-widest mb-3 flex items-center gap-1.5">
+        <div className="px-4 py-5 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50">
+          <p className="text-xs uppercase tracking-widest mb-4 flex items-center gap-1.5 text-slate-500 dark:text-slate-400 font-sans">
             <HelpCircle className="h-3.5 w-3.5" /> Ask the Context Graph
           </p>
-          <div className="grid sm:grid-cols-2 gap-2">
+          <div className="grid sm:grid-cols-2 gap-3">
             {questions.map(q => (
               <button
                 key={q.id}
                 onClick={() => handleQuestionClick(q)}
-                className="text-left px-3 py-2.5 rounded-xl transition-colors"
-                style={{
-                  border: activeQuestion?.id === q.id ? "1px solid #3b82f6" : `1px solid ${T.borderAlt}`,
-                  background: activeQuestion?.id === q.id ? "#3b82f615" : T.chrome,
-                }}
+                className={`text-left px-4 py-3 rounded-xl transition-all border ${
+                  activeQuestion?.id === q.id 
+                    ? "bg-blue-500/10 border-blue-500 border-opacity-50" 
+                    : "bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700"
+                }`}
               >
-                <div className="flex items-start gap-2">
+                <div className="flex items-start gap-3">
                   <HelpCircle
-                    className="h-4 w-4 shrink-0 mt-0.5"
-                    style={{ color: activeQuestion?.id === q.id ? "#3b82f6" : T.textMut }}
+                    className={`h-4 w-4 shrink-0 mt-0.5 ${activeQuestion?.id === q.id ? "text-blue-500" : "text-slate-400"}`}
                   />
-                  <span className="text-xs leading-snug" style={{ color: T.textPri }}>{q.question}</span>
+                  <span className={`text-xs leading-snug font-medium ${activeQuestion?.id === q.id ? "text-blue-700 dark:text-blue-400" : "text-slate-700 dark:text-slate-200"}`}>
+                    {q.question}
+                  </span>
                 </div>
               </button>
             ))}
@@ -1056,31 +1016,35 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
 
       {/* ── Answer + reasoning panel ─────────────────────────────────────────── */}
       {activeQuestion && (
-        <div style={{ borderTop: `1px solid ${T.border}`, background: T.chrome }} className="px-5 py-5">
-          <div className="flex items-start justify-between mb-4">
-            <h4 className="text-sm font-semibold pr-4" style={{ color: T.textPri }}>{activeQuestion.question}</h4>
-            <button onClick={() => setActiveQuestion(null)} style={{ color: T.textMut }} className="shrink-0 hover:opacity-70 transition-opacity">
+        <div className="px-6 py-6 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+          <div className="flex items-start justify-between mb-5">
+            <h4 className="text-sm font-bold text-slate-900 dark:text-white leading-tight">{activeQuestion.question}</h4>
+            <button 
+              onClick={() => setActiveQuestion(null)} 
+              title="Close answer"
+              className="-mt-1 -mr-1 p-1.5 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+            >
               <X className="h-4 w-4" />
             </button>
           </div>
 
-          <ol className="space-y-2 mb-4">
+          <ol className="space-y-3 mb-6">
             {activeQuestion.reasoningSteps.map((step, i) => (
-              <li key={i} className="flex items-start gap-3 text-xs">
-                <span className="shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-white text-[10px] font-bold mt-0.5" style={{ background: "#3b82f6" }}>
+              <li key={i} className="flex items-start gap-4 text-xs">
+                <span className="shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-white text-[10px] font-bold mt-0.5 bg-blue-600 shadow-sm shadow-blue-500/20">
                   {i + 1}
                 </span>
-                <span style={{ color: T.textSec }}>{step}</span>
+                <span className="text-slate-600 dark:text-slate-400 leading-relaxed font-sans">{step}</span>
               </li>
             ))}
           </ol>
 
-          <div className="rounded-lg p-3.5" style={{ borderLeft: "3px solid #3b82f6", background: T.panel }}>
-            <p className="text-xs leading-relaxed" style={{ color: T.textPri }}>{activeQuestion.answer}</p>
+          <div className="rounded-xl p-4 border-l-4 border-blue-500 bg-blue-500/5 dark:bg-blue-500/10">
+            <p className="text-xs leading-relaxed text-slate-800 dark:text-slate-200 font-medium">{activeQuestion.answer}</p>
           </div>
 
-          <p className="mt-2.5 text-[10px]" style={{ color: T.textMut, fontFamily: "'Inter', sans-serif" }}>
-            Generated by AI reasoning over the Context Graph
+          <p className="mt-4 text-[9px] uppercase tracking-[0.2em] font-bold text-slate-400 dark:text-slate-500 font-sans">
+            AI reasoned context insights
           </p>
         </div>
       )}

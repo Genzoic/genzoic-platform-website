@@ -1,13 +1,44 @@
-import { useState, type FormEvent } from "react";
+import { useState } from "react";
 import { Calendar, Send, ArrowRight, Mail } from "lucide-react";
 import { DEMO_URL } from "@/lib/constants";
 
 export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmitted(true);
+    setLoading(true);
+    setError(null);
+
+    const form = e.currentTarget;
+    const data = {
+      access_key: import.meta.env.VITE_WEB3FORMS_KEY as string,
+      name: (form.elements.namedItem("full-name") as HTMLInputElement).value,
+      email: (form.elements.namedItem("work-email") as HTMLInputElement).value,
+      company: (form.elements.namedItem("company") as HTMLInputElement).value,
+      message: (form.elements.namedItem("message") as HTMLTextAreaElement).value,
+      subject: "You Have a New Contact Form Message (Genzoic)",
+    };
+
+    try {
+      const res = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(data),
+      });
+      const json = await res.json() as { success: boolean; message?: string };
+      if (json.success) {
+        setSubmitted(true);
+      } else {
+        setError(json.message ?? "Something went wrong. Please try again.");
+      }
+    } catch {
+      setError("Network error. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -15,7 +46,7 @@ export default function Contact() {
       {/* Hero */}
       <section className="relative overflow-hidden section-soft py-20 md:py-28">
         <div className="hero-dots absolute inset-0 opacity-40" />
-        <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-[50%] bg-blue-100/60 dark:bg-blue-600/[0.06] blur-3xl pointer-events-none" />
+        <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-150 h-100 rounded-full bg-blue-100/60 dark:bg-blue-600/5 blur-3xl pointer-events-none" />
         <div className="relative mx-auto max-w-3xl px-4 md:px-6 text-center">
           <p className="text-xs font-semibold tracking-widest uppercase text-blue-500 dark:text-blue-400 mb-4">
             Let's talk
@@ -96,7 +127,7 @@ export default function Contact() {
                       type="text"
                       placeholder="Jane Smith"
                       required
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-white/[0.08] bg-slate-50 dark:bg-white/[0.04] text-slate-900 dark:text-white text-sm placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-400 transition-all"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-white/8 bg-slate-50 dark:bg-white/4 text-slate-900 dark:text-white text-sm placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-400 transition-all"
                     />
                   </div>
                   <div>
@@ -108,7 +139,7 @@ export default function Contact() {
                       type="email"
                       placeholder="jane@company.com"
                       required
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-white/[0.08] bg-slate-50 dark:bg-white/[0.04] text-slate-900 dark:text-white text-sm placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-400 transition-all"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-white/8 bg-slate-50 dark:bg-white/4 text-slate-900 dark:text-white text-sm placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-400 transition-all"
                     />
                   </div>
                   <div>
@@ -119,7 +150,7 @@ export default function Contact() {
                       id="company"
                       type="text"
                       placeholder="Your company"
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-white/[0.08] bg-slate-50 dark:bg-white/[0.04] text-slate-900 dark:text-white text-sm placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-400 transition-all"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-white/8 bg-slate-50 dark:bg-white/4 text-slate-900 dark:text-white text-sm placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-400 transition-all"
                     />
                   </div>
                   <div>
@@ -130,14 +161,18 @@ export default function Contact() {
                       id="message"
                       rows={3}
                       placeholder="Tell us about your project..."
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-white/[0.08] bg-slate-50 dark:bg-white/[0.04] text-slate-900 dark:text-white text-sm placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-400 transition-all resize-none"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-white/8 bg-slate-50 dark:bg-white/4 text-slate-900 dark:text-white text-sm placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-400 transition-all resize-none"
                     />
                   </div>
+                  {error && (
+                    <p className="text-sm text-red-500 dark:text-red-400">{error}</p>
+                  )}
                   <button
                     type="submit"
-                    className="cta-btn w-full justify-center"
+                    disabled={loading}
+                    className="cta-btn w-full justify-center disabled:opacity-60 disabled:cursor-not-allowed"
                   >
-                    Send Message <ArrowRight size={14} />
+                    {loading ? "Sending…" : "Send Message"} {!loading && <ArrowRight size={14} />}
                   </button>
                 </form>
               )}

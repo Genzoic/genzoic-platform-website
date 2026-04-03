@@ -34,7 +34,7 @@ export default function SolutionDetail() {
 
   if (!solution) {
     return (
-      <section className="bg-white dark:bg-[#05080f] py-20 md:py-28 text-center">
+      <section className="bg-white dark:bg-slate-950 py-20 md:py-28 text-center">
         <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">
           Solution not found
         </h1>
@@ -51,9 +51,9 @@ export default function SolutionDetail() {
   return (
     <>
       {/* Hero */}
-      <section className="relative overflow-hidden bg-white dark:bg-[#05080f] py-12 md:py-20">
+      <section className="relative overflow-hidden bg-white dark:bg-slate-950 py-12 md:py-20">
         <div className="hero-dots absolute inset-0 opacity-30" />
-        <div className="absolute -top-20 left-0 w-125 h-100 rounded-[50%] bg-blue-50/80 dark:bg-blue-600/5 blur-3xl pointer-events-none" />
+        <div className="absolute -top-20 left-0 w-125 h-100 rounded-full bg-blue-50/80 dark:bg-blue-600/5 blur-3xl pointer-events-none" />
 
         <div className="relative mx-auto max-w-5xl px-4 md:px-6">
           {/* Back nav */}
@@ -111,7 +111,7 @@ export default function SolutionDetail() {
           <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900 dark:text-white mb-8">
             What the Context Graph maps
           </h2>
-          <div className="bg-white dark:bg-[#0d1628] border border-slate-200 dark:border-white/[0.07] rounded-2xl p-6 md:p-7 mb-8 relative overflow-hidden">
+          <div className="bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-white/10 rounded-2xl p-6 md:p-7 mb-8 relative overflow-hidden">
             <div className="absolute left-0 top-0 bottom-0 w-0.5 rounded-l-2xl" style={{ background: "linear-gradient(180deg, #2563eb, #38bdf8, transparent)" }} />
             <p className="text-slate-600 dark:text-slate-300 leading-relaxed font-mono text-sm pl-3">
               {solution.contextGraphExample}
@@ -157,7 +157,7 @@ export default function SolutionDetail() {
       </section>
 
       {/* Measurable Results (Business Impact) */}
-      <section className="bg-white dark:bg-[#05080f] py-16 md:py-20">
+      <section className="bg-white dark:bg-slate-950 py-16 md:py-20">
         <div className="mx-auto max-w-5xl px-4 md:px-6">
           <p className="text-xs font-semibold tracking-widest uppercase text-orange-500 dark:text-orange-400 mb-3">
             Business Impact
@@ -172,9 +172,9 @@ export default function SolutionDetail() {
             {solution.businessImpact.map((impact, i) => (
               <div
                 key={i}
-                className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/[0.07] rounded-xl p-8 text-center"
+                className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/10 rounded-xl p-8 text-center"
               >
-                <p className="text-4xl md:text-5xl font-bold text-orange-500 dark:text-orange-400">
+                <p className="text-3xl md:text-4xl xl:text-5xl font-bold text-orange-500 dark:text-orange-400 wrap-break-word">
                   {impact.metric}
                 </p>
                 <p className="mt-3 text-base font-semibold text-slate-900 dark:text-white">
@@ -192,7 +192,7 @@ export default function SolutionDetail() {
       {/* CTA */}
       <section className="cta-dark-section relative overflow-hidden py-20 md:py-24">
         <div className="hero-dots absolute inset-0 opacity-25" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] rounded-[50%] bg-blue-600/10 blur-3xl pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-125 h-75 rounded-full bg-blue-600/10 blur-3xl pointer-events-none" />
         <div className="relative mx-auto max-w-3xl px-4 md:px-6 text-center">
           <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900 dark:text-white">
             See this in action
