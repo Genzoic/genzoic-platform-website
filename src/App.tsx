@@ -1,5 +1,6 @@
 import { Routes, Route, useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -7,6 +8,8 @@ import Homepage from "@/pages/Homepage";
 import SolutionDetail from "@/pages/SolutionDetail";
 import Contact from "@/pages/Contact";
 import NotFound from "@/pages/NotFound";
+import TermsOfService from "@/pages/TermsOfService";
+import PrivacyPolicy from "@/pages/PrivacyPolicy";
 
 function HashScroll() {
   const { hash } = useLocation();
@@ -31,10 +34,13 @@ export default function App() {
           <Route path="/" element={<Homepage />} />
           <Route path="/solutions/:slug" element={<SolutionDetail />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/terms-of-service" element={<TermsOfService />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
       <Footer />
+      <SpeedInsights />
     </div>
   );
 }

@@ -1,55 +1,32 @@
 import { Link } from "react-router-dom";
-import {
-  AlertTriangle,
-  Building2,
-  Scale,
-  Mail,
-  Shield,
-  ArrowRight,
-  Check,
-  Map,
-  Wrench,
-  TrendingUp,
-  Box,
-  GitBranch,
-  Sparkles,
-  User,
-  GraduationCap,
-  MessageSquare,
-  Eye,
-  FileStack,
-  Network,
-  Crown,
-  UserMinus,
-  BarChart3,
-} from "lucide-react";
+import { DEMO_URL } from "@/lib/constants";
 import { solutionsData } from "@/data/solutions";
 import InteractiveGraph from "@/components/InteractiveGraph";
-import { DEMO_URL } from "@/lib/constants";
+import { AlertTriangle, Building2, Scale, Mail, Shield, ArrowRight, Check, Map, Wrench, TrendingUp, Box, GitBranch, Sparkles, User, GraduationCap, MessageSquare, Eye, FileStack, Network, Crown, UserMinus, BarChart3 } from "lucide-react";
 
 const INDUSTRY_BADGE: Record<string, string> = {
-  "Retail & FMCG":          "badge-retail",
-  "Battery Manufacturing":  "badge-battery",
-  "Chemical":               "badge-chemical",
-  "Pharmaceutical":         "badge-pharma",
-  "Food & Beverage":        "badge-food",
+  "Retail & FMCG": "badge-retail",
+  "Battery Manufacturing": "badge-battery",
+  "Chemical": "badge-chemical",
+  "Pharmaceutical": "badge-pharma",
+  "Food & Beverage": "badge-food",
 };
 
 export default function Homepage() {
   return (
     <>
       {/* ── Hero ──────────────────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden bg-white dark:bg-[#05080f] py-16">
+      <section className="relative overflow-hidden bg-white dark:bg-slate-950 py-16">
         {/* Dot grid */}
         <div className="hero-dots absolute inset-0 opacity-70" />
 
         {/* Gradient orbs */}
-        <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[900px] h-[600px] rounded-[50%] bg-blue-200/50 dark:bg-blue-500/[0.12] blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 right-0 w-96 h-96 rounded-full bg-sky-200/40 dark:bg-sky-400/[0.08] blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-10 left-0 w-72 h-72 rounded-full bg-indigo-100/30 dark:bg-indigo-500/[0.06] blur-3xl pointer-events-none" />
+        <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-225 h-150 rounded-full bg-blue-200/50 dark:bg-blue-500/12 blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 right-0 w-96 h-96 rounded-full bg-sky-200/40 dark:bg-sky-400/8 blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-10 left-0 w-72 h-72 rounded-full bg-indigo-100/30 dark:bg-indigo-500/6 blur-3xl pointer-events-none" />
 
         <div className="relative mx-auto max-w-4xl px-4 md:px-6 text-center">
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-slate-900 dark:text-white leading-[1.08]">
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-slate-900 dark:text-white leading-tight">
             <span className="block">AI that actually understands</span>
             <span className="gradient-text">how your business works.</span>
           </h1>
@@ -89,7 +66,7 @@ export default function Homepage() {
 
           <div className="grid md:grid-cols-2 gap-5">
             {/* Left - what AI does today */}
-            <div className="bg-white dark:bg-[#0d1628] border border-slate-200 dark:border-white/[0.07] rounded-2xl p-7 md:p-8">
+            <div className="bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-white/10 rounded-2xl p-7 md:p-8">
               <p className="text-xs font-semibold tracking-widest uppercase text-slate-400 dark:text-slate-500 mb-5">
                 What AI does today
               </p>
@@ -112,7 +89,7 @@ export default function Homepage() {
             </div>
 
             {/* Right - what AI should do */}
-            <div className="bg-gradient-to-br from-blue-50 to-sky-50/60 dark:from-blue-950/40 dark:to-slate-900/60 border border-blue-200 dark:border-blue-800/40 rounded-2xl p-7 md:p-8">
+            <div className="bg-linear-to-br from-blue-50 to-sky-50/60 dark:from-blue-950/40 dark:to-slate-900/60 border border-blue-200 dark:border-blue-800/40 rounded-2xl p-7 md:p-8">
               <p className="text-xs font-semibold tracking-widest uppercase text-blue-500 dark:text-blue-400 mb-5">
                 What AI should be able to do
               </p>
@@ -146,7 +123,7 @@ export default function Homepage() {
       </section>
 
       {/* ── The Context Graph ─────────────────────────────────────────────────── */}
-      <section className="bg-white dark:bg-[#05080f] py-20 md:py-28">
+      <section className="bg-white dark:bg-slate-950 py-20 md:py-28">
         <div className="mx-auto max-w-5xl px-4 md:px-6">
           <div className="text-center mb-14">
             <p className="text-xs font-semibold tracking-widest uppercase text-blue-500 dark:text-blue-400 mb-3">
@@ -174,7 +151,7 @@ export default function Homepage() {
             ].map((card) => (
               <div
                 key={card.title}
-                className="flex items-start gap-3 min-w-[220px] md:min-w-0 rounded-xl border border-slate-200 dark:border-white/[0.07] bg-white dark:bg-[#0d1628] px-4 py-3 relative overflow-hidden"
+                className="flex items-start gap-3 min-w-56 md:min-w-0 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900/50 px-4 py-3 relative overflow-hidden"
               >
                 <div className="absolute top-0 left-0 w-0.5 h-full" style={{ background: card.color }} />
                 <card.icon size={18} className="shrink-0 mt-0.5" style={{ color: card.color }} />
@@ -231,14 +208,16 @@ export default function Homepage() {
             ].map((card) => (
               <div
                 key={card.title}
-                className="feature-card bg-white dark:bg-[#0d1628] border border-slate-200 dark:border-white/[0.07] rounded-2xl p-6 md:p-7 overflow-hidden relative"
+                className="feature-card bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-white/10 rounded-2xl p-6 md:p-7 overflow-hidden relative"
               >
                 {/* Top accent bar */}
                 <div className="absolute top-0 left-0 right-0 h-0.5 rounded-t-2xl" style={{ background: card.accent }} />
-                <card.icon size={22} className="mb-4" style={{ color: card.accent }} />
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
-                  {card.title}
-                </h3>
+                <div className="flex items-center justify-center gap-2 mb-4">
+                  <card.icon size={22} style={{ color: card.accent }} />
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+                    {card.title}
+                  </h3>
+                </div>
                 <p className="text-sm font-medium mb-4" style={{ color: card.accent }}>
                   &ldquo;{card.trigger}&rdquo;
                 </p>
@@ -306,7 +285,7 @@ export default function Homepage() {
             ].map((card) => (
               <div
                 key={card.title}
-                className="feature-card bg-white dark:bg-[#0d1628] border border-slate-200 dark:border-white/[0.07] rounded-2xl p-6 md:p-7 relative overflow-hidden"
+                className="feature-card bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-white/10 rounded-2xl p-6 md:p-7 relative overflow-hidden"
               >
                 <div className="absolute top-0 left-0 w-0.5 h-full" style={{ background: card.accent }} />
                 <div className="flex items-center gap-3 mb-3">
@@ -333,7 +312,7 @@ export default function Homepage() {
 
           <p className="mt-10 text-center text-slate-400 dark:text-slate-500 max-w-3xl mx-auto text-sm">
             Competitors do Mode 4 only. We do all four. In industries where
-            critical knowledge never touches a digital system  - 
+            critical knowledge never touches a digital system  -
             manufacturing, construction, field ops - Modes 1–3 are the only
             way to capture it.
           </p>
@@ -341,7 +320,7 @@ export default function Homepage() {
       </section>
 
       {/* ── How It Works ──────────────────────────────────────────────────────── */}
-      <section id="how-it-works" className="bg-white dark:bg-[#05080f] py-20 md:py-28">
+      <section id="how-it-works" className="bg-white dark:bg-slate-950 py-20 md:py-28">
         <div className="mx-auto max-w-5xl px-4 md:px-6">
           <div className="text-center mb-16">
             <p className="text-xs font-semibold tracking-widest uppercase text-blue-500 dark:text-blue-400 mb-3">
@@ -358,7 +337,7 @@ export default function Homepage() {
 
           <div className="grid md:grid-cols-3 gap-10 relative">
             {/* Connector line spanning circle 1 - circle 3 centers; circles sit on top via z-10 */}
-            <div className="hidden md:block absolute h-px top-[22px] bg-blue-200 dark:bg-blue-800/60"
+            <div className="hidden md:block absolute h-px top-5.5 bg-blue-200 dark:bg-blue-800/60"
               style={{ left: "calc(16.67% + 22px)", right: "calc(16.67% + 22px)" }} />
 
             {[
@@ -460,7 +439,7 @@ export default function Homepage() {
             ].map((feature) => (
               <div
                 key={feature.title}
-                className="feature-card bg-white dark:bg-[#0d1628] border border-slate-200 dark:border-white/[0.07] rounded-2xl p-6"
+                className="feature-card bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-white/10 rounded-2xl p-6"
               >
                 <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-4" style={{ background: `${feature.color}15` }}>
                   <feature.icon size={19} style={{ color: feature.color }} />
@@ -482,7 +461,7 @@ export default function Homepage() {
       </section>
 
       {/* ── Implementation Partnership ─────────────────────────────────────────── */}
-      <section className="bg-white dark:bg-[#05080f] py-20 md:py-28">
+      <section className="bg-white dark:bg-slate-950 py-20 md:py-28">
         <div className="mx-auto max-w-5xl px-4 md:px-6">
           <div className="text-center mb-14">
             <p className="text-xs font-semibold tracking-widest uppercase text-blue-500 dark:text-blue-400 mb-3">
@@ -510,18 +489,18 @@ export default function Homepage() {
                 icon: Wrench,
                 title: "Deploy and validate",
                 desc: "AI Assistants are configured with role-specific access, connected to your systems, and validated against real operational scenarios before anyone relies on them.",
-                accent: "#0891b2",
+                accent: "#7c3aed",
               },
               {
                 icon: TrendingUp,
                 title: "Stay until it works",
                 desc: "We measure adoption, accuracy, and business impact. We iterate on the graph, refine assistant skills, and expand to new teams - until AI is part of how your company operates.",
-                accent: "#059669",
+                accent: "#0891b2",
               },
             ].map((card) => (
               <div
                 key={card.title}
-                className="feature-card bg-white dark:bg-[#0d1628] border border-slate-200 dark:border-white/[0.07] rounded-2xl p-7 relative overflow-hidden"
+                className="feature-card bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-white/10 rounded-2xl p-7 relative overflow-hidden"
               >
                 <div className="absolute top-0 left-0 w-0.5 h-full rounded-l-2xl" style={{ background: `linear-gradient(180deg, ${card.accent}, transparent)` }} />
                 <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-4" style={{ background: `${card.accent}15` }}>
@@ -568,7 +547,7 @@ export default function Homepage() {
               <Link
                 key={solution.id}
                 to={`/solutions/${solution.slug}`}
-                className="feature-card block bg-white dark:bg-[#0d1628] border border-slate-200 dark:border-white/[0.07] rounded-2xl p-6 group"
+                className="feature-card block bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-white/10 rounded-2xl p-6 relative group transition-all"
               >
                 <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${INDUSTRY_BADGE[solution.industry] ?? "bg-slate-100 text-slate-600"}`}>
                   {solution.industry}
@@ -576,10 +555,10 @@ export default function Homepage() {
                 <h3 className="mt-4 text-base font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                   {solution.name}
                 </h3>
-                <p className="mt-2 text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                <p className="mt-2 text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-8">
                   {solution.tagline}
                 </p>
-                <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-blue-600 dark:text-blue-400">
+                <span className="absolute bottom-6 right-6 inline-flex items-center gap-1 text-sm font-medium text-blue-600 dark:text-blue-400 group-hover:underline transition-all">
                   Learn more <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
                 </span>
               </Link>
@@ -607,7 +586,7 @@ export default function Homepage() {
         {/* Dot grid on dark background */}
         <div className="hero-dots absolute inset-0 opacity-30" />
         {/* Glow orb */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] rounded-[50%] bg-blue-600/10 blur-3xl pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-100 rounded-full bg-blue-600/10 blur-3xl pointer-events-none" />
 
         <div className="relative mx-auto max-w-3xl px-4 md:px-6 text-center">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-slate-900 dark:text-white">

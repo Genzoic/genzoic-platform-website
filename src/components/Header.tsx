@@ -23,8 +23,8 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200/60 dark:border-white/[0.07] bg-white/60 dark:bg-[#07090f]/70 backdrop-blur-2xl backdrop-saturate-150 shadow-sm shadow-slate-200/50 dark:shadow-none">
-      <div className="mx-auto max-w-6xl flex items-center justify-between px-4 md:px-6 h-[64px]">
+    <header className="sticky top-0 z-50 border-b border-slate-200/60 dark:border-white/10 bg-white/60 dark:bg-slate-950/70 backdrop-blur-2xl backdrop-saturate-150 shadow-sm shadow-slate-200/50 dark:shadow-none">
+      <div className="mx-auto max-w-6xl flex items-center justify-between px-4 md:px-6 h-16">
         <Link to="/" onClick={() => setMenuOpen(false)} className="flex items-center">
           <img
             src={theme === "dark" ? logoDark : logoLight}
@@ -37,13 +37,13 @@ export default function Header() {
         <nav className="hidden md:flex items-center gap-0.5 shrink-0" aria-label="Desktop navigation">
           <button
             onClick={() => handleHashClick("platform")}
-            className="px-3 py-1.5 rounded-lg text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-black/[0.05] dark:hover:bg-white/[0.07] transition-all whitespace-nowrap"
+            className="px-3 py-1.5 rounded-lg text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-all whitespace-nowrap"
           >
             Platform
           </button>
           <button
             onClick={() => handleHashClick("solutions")}
-            className="px-3 py-1.5 rounded-lg text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-black/[0.05] dark:hover:bg-white/[0.07] transition-all whitespace-nowrap"
+            className="px-3 py-1.5 rounded-lg text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-all whitespace-nowrap"
           >
             Solutions
           </button>
@@ -52,7 +52,7 @@ export default function Header() {
 
           <button
             onClick={toggleTheme}
-            className="p-1.5 rounded-lg text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 hover:bg-black/[0.05] dark:hover:bg-white/[0.07] transition-all"
+            className="p-1.5 rounded-lg text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 hover:bg-black/5 dark:hover:bg-white/10 transition-all"
             aria-label="Toggle theme"
           >
             {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
@@ -89,23 +89,23 @@ export default function Header() {
 
       {/* Mobile menu */}
       {menuOpen && (
-        <nav className="md:hidden border-t border-slate-200/60 dark:border-white/[0.07] bg-white/80 dark:bg-[#07090f]/85 backdrop-blur-2xl px-4 py-5 space-y-1" aria-label="Mobile navigation">
+        <nav className="md:hidden border-t border-slate-200/60 dark:border-white/10 bg-white/80 dark:bg-slate-950/85 backdrop-blur-2xl px-4 py-5 space-y-1" aria-label="Mobile navigation">
           <button
             onClick={() => handleHashClick("platform")}
-            className="block w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/[0.05]"
+            className="block w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5"
           >
             Platform
           </button>
           <button
             onClick={() => handleHashClick("solutions")}
-            className="block w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/[0.05]"
+            className="block w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5"
           >
             Solutions
           </button>
           <Link
             to="/contact"
             onClick={() => setMenuOpen(false)}
-            className="block px-3 py-2.5 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/[0.05]"
+            className="block px-3 py-2.5 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5"
           >
             Contact
           </Link>
