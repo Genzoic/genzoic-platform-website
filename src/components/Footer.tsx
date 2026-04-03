@@ -8,7 +8,7 @@ export default function Footer() {
   const { theme } = useTheme();
 
   return (
-    <footer className="border-t border-slate-200/70 dark:border-white/[0.06] bg-white dark:bg-[#05080f]">
+    <footer className="border-t border-slate-200/70 dark:border-white/5 bg-white dark:bg-slate-950">
       <div className="mx-auto max-w-6xl px-4 md:px-6 py-12 md:py-16">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10">
           {/* Brand */}
@@ -59,10 +59,14 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <span className="text-slate-300 dark:text-slate-600">Privacy Policy</span>
+                <Link to="/privacy-policy" className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
+                  Privacy Policy
+                </Link>
               </li>
               <li>
-                <span className="text-slate-300 dark:text-slate-600">Terms of Service</span>
+                <Link to="/terms-of-service" className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
+                  Terms of Service
+                </Link>
               </li>
             </ul>
           </div>
@@ -97,7 +101,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 pt-6 border-t border-slate-200/70 dark:border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400 dark:text-slate-600">
+        <div className="mt-12 pt-6 border-t border-slate-200/70 dark:border-white/5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400 dark:text-slate-600">
           <span>&copy; {new Date().getFullYear()} Genzoic Inc. All rights reserved.</span>
         </div>
       </div>
