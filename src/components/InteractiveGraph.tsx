@@ -292,6 +292,11 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
     return null;
   }, [focusedId, visibleEdges, depth, activeQuestion]);
 
+  const highlightedEdgeIds = useMemo(() => {
+    if (activeQuestion?.highlightEdges?.length) return new Set(activeQuestion.highlightEdges);
+    return null;
+  }, [activeQuestion]);
+
   const focusedNode  = focusedId ? nodeMap.get(focusedId) ?? null : null;
   const focusedConns = focusedId ? getNeighborsByRelation(focusedId, visibleEdges) : null;
 
@@ -515,18 +520,20 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
 
     svg.selectAll<SVGGElement, SimNode>(".node").each(function(d) {
       const sel = d3.select(this);
-      const isFocused     = d.id === focusedId;
-      const isTypeVisible = visibleTypes.has(d.type);
-      const isHighlighted = highlightedIds ? highlightedIds.has(d.id) : true;
-      const isSearch      = sq ? d.label.toLowerCase().includes(sq) : true;
-      const visible       = isTypeVisible && isHighlighted && isSearch;
+      const isFocused          = d.id === focusedId;
+      const isTypeVisible      = visibleTypes.has(d.type);
+      const isHighlighted      = highlightedIds ? highlightedIds.has(d.id) : true;
+      const isSearch           = sq ? d.label.toLowerCase().includes(sq) : true;
+      const visible            = isTypeVisible && isHighlighted && isSearch;
+      const isQuestionGlowing  = !focusedId && highlightedEdgeIds != null && isHighlighted;
+      const showGlow           = isFocused || isQuestionGlowing;
 
       sel.attr("opacity", visible ? 1 : isTypeVisible ? 0.1 : 0.04);
       sel.select(".main-circle")
-        .attr("stroke-width", isFocused ? 3 : 1.5)
-        .attr("filter", isFocused ? "url(#glow-sel)" : null);
+        .attr("stroke-width", showGlow ? 3 : 1.5)
+        .attr("filter", showGlow ? "url(#glow-sel)" : null);
       sel.select(".glow-ring")
-        .attr("fill-opacity", isFocused ? 0.14 : 0);
+        .attr("fill-opacity", showGlow ? 0.14 : 0);
     });
 
     svg.selectAll<SVGPathElement, { source: SimNode; target: SimNode; relation: string }>(".links path")
@@ -537,6 +544,9 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
         const tNode = nodeMap.get(tId);
         if (!sNode || !tNode || !visibleTypes.has(sNode.type) || !visibleTypes.has(tNode.type)) return 0;
         if (highlightedIds) {
+          if (highlightedEdgeIds) {
+            return highlightedEdgeIds.has(`${sId}->${tId}`) ? 0.85 : 0.04;
+          }
           return (highlightedIds.has(sId) && highlightedIds.has(tId)) ? 0.75 : 0.04;
         }
         if (sq) {
@@ -546,7 +556,7 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
         }
         return 0.45;
       });
-  }, [focusedId, depth, searchQuery, highlightedIds, visibleTypes, nodeMap]);
+  }, [focusedId, depth, searchQuery, highlightedIds, highlightedEdgeIds, visibleTypes, nodeMap]);
 
   // ── Zoom-to-node on focus ─────────────────────────────────────────────────
 

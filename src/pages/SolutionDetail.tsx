@@ -59,7 +59,7 @@ export default function SolutionDetail() {
           {/* Back nav */}
           <div className="mb-8">
             <Link
-              to="/solutions"
+              to="/#solutions"
               className="inline-flex items-center gap-1.5 text-sm text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors"
             >
               <ArrowLeft size={14} /> Back to Solutions
