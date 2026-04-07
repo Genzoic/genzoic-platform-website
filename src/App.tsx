@@ -4,6 +4,7 @@ import { SpeedInsights } from "@vercel/speed-insights/react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
+import BackToTop from "@/components/BackToTop";
 import Homepage from "@/pages/Homepage";
 import SolutionDetail from "@/pages/SolutionDetail";
 import Contact from "@/pages/Contact";
@@ -40,6 +41,7 @@ export default function App() {
         </Routes>
       </main>
       <Footer />
+      <BackToTop />
       <SpeedInsights />
     </div>
   );

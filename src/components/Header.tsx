@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Sun, Moon, Menu, X } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
-import logoLight from "/logos-and-favicons/genzoic-logo-light.png";
-import logoDark from "/logos-and-favicons/genzoic-logo-dark.png";
 import { DEMO_URL } from "@/lib/constants";
+import logoDark from "/logos-and-favicons/genzoic-logo-dark.png";
+import logoLight from "/logos-and-favicons/genzoic-logo-light.png";
 
 export default function Header() {
   const { theme, toggleTheme } = useTheme();
@@ -25,7 +25,7 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200/60 dark:border-white/10 bg-white/60 dark:bg-slate-950/70 backdrop-blur-2xl backdrop-saturate-150 shadow-sm shadow-slate-200/50 dark:shadow-none">
       <div className="mx-auto max-w-6xl flex items-center justify-between px-4 md:px-6 h-16">
-        <Link to="/" onClick={() => setMenuOpen(false)} className="flex items-center">
+        <Link to="/" onClick={() => { setMenuOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} className="flex items-center">
           <img
             src={theme === "dark" ? logoDark : logoLight}
             alt="Genzoic"
