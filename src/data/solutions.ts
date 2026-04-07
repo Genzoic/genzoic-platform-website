@@ -42,7 +42,7 @@ export const solutionsData: Solution[] = [
     industry: "Retail & FMCG",
     tagline: "Predict demand, optimize stock levels, eliminate waste from expired goods",
     icon: "Package",
-    image: "https://images.unsplash.com/photo-1604719312566-8912e9227c6a?w=800&h=500&fit=crop&auto=format",
+    image: "https://images.unsplash.com/photo-1553413077-190dd305871c?w=800&h=500&fit=crop&auto=format",
     description: "Modern retailers face the dual challenge of stockouts that lose sales and overstock that expires on shelves. The Context Graph connects product sales velocity, supplier lead times, store-specific demand patterns, and expiry dates to enable AI to recommend optimal stock levels by location and predict which SKUs will expire before sale.",
     contextGraphExample: "Products -> SKUs -> store locations -> supplier lead times -> shelf life dates -> historical demand patterns. Connects POS data to warehouse inventory to logistics schedules. Intelligence layer adds: Markdown Decision Rules, Restock Triggers, learned expiry management skills from category managers and store operations staff.",
     keyCapabilities: {

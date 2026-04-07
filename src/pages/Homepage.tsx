@@ -16,7 +16,7 @@ export default function Homepage() {
   return (
     <>
       {/* ── Hero ──────────────────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden bg-white dark:bg-slate-950 py-16">
+      <section className="relative overflow-hidden bg-white dark:bg-slate-950 py-20 min-h-[calc(100dvh-4rem)] flex flex-col justify-center">
         {/* Dot grid */}
         <div className="hero-dots absolute inset-0 opacity-70" />
 
@@ -51,7 +51,7 @@ export default function Homepage() {
       </section>
 
       {/* ── The Problem ───────────────────────────────────────────────────────── */}
-      <section className="section-soft py-20 md:py-28">
+      <section className="section-soft py-20 md:py-28 min-h-dvh flex flex-col justify-center">
         <div className="mx-auto max-w-5xl px-4 md:px-6">
           <div className="text-center mb-14">
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-slate-900 dark:text-white">
@@ -123,7 +123,7 @@ export default function Homepage() {
       </section>
 
       {/* ── The Context Graph ─────────────────────────────────────────────────── */}
-      <section className="bg-white dark:bg-slate-950 py-20 md:py-28">
+      <section className="bg-white dark:bg-slate-950 py-20 md:py-28 min-h-dvh flex flex-col justify-center">
         <div className="mx-auto max-w-5xl px-4 md:px-6">
           <div className="text-center mb-14">
             <p className="text-xs font-semibold tracking-widest uppercase text-blue-500 dark:text-blue-400 mb-3">
@@ -236,7 +236,7 @@ export default function Homepage() {
       </section>
 
       {/* ── How Knowledge Gets Captured ──────────────────────────────────────── */}
-      <section className="section-soft py-20 md:py-28">
+      <section className="section-soft py-20 md:py-28 min-h-dvh flex flex-col justify-center">
         <div className="mx-auto max-w-5xl px-4 md:px-6">
           <div className="text-center mb-14">
             <p className="text-xs font-semibold tracking-widest uppercase text-blue-500 dark:text-blue-400 mb-3">
@@ -320,7 +320,7 @@ export default function Homepage() {
       </section>
 
       {/* ── How It Works ──────────────────────────────────────────────────────── */}
-      <section id="how-it-works" className="bg-white dark:bg-slate-950 py-20 md:py-28">
+      <section id="how-it-works" className="bg-white dark:bg-slate-950 py-20 md:py-28 min-h-dvh flex flex-col justify-center">
         <div className="mx-auto max-w-5xl px-4 md:px-6">
           <div className="text-center mb-16">
             <p className="text-xs font-semibold tracking-widest uppercase text-blue-500 dark:text-blue-400 mb-3">
@@ -381,7 +381,7 @@ export default function Homepage() {
       </section>
 
       {/* ── The Platform ──────────────────────────────────────────────────────── */}
-      <section id="platform" className="section-soft py-20 md:py-28">
+      <section id="platform" className="section-soft py-20 md:py-28 min-h-dvh flex flex-col justify-center">
         <div className="mx-auto max-w-5xl px-4 md:px-6">
           <div className="text-center mb-14">
             <p className="text-xs font-semibold tracking-widest uppercase text-blue-500 dark:text-blue-400 mb-3">
@@ -461,7 +461,7 @@ export default function Homepage() {
       </section>
 
       {/* ── Implementation Partnership ─────────────────────────────────────────── */}
-      <section className="bg-white dark:bg-slate-950 py-20 md:py-28">
+      <section className="bg-white dark:bg-slate-950 py-20 md:py-28 min-h-dvh flex flex-col justify-center">
         <div className="mx-auto max-w-5xl px-4 md:px-6">
           <div className="text-center mb-14">
             <p className="text-xs font-semibold tracking-widest uppercase text-blue-500 dark:text-blue-400 mb-3">
@@ -525,7 +525,7 @@ export default function Homepage() {
       </section>
 
       {/* ── Industry Solutions ────────────────────────────────────────────────── */}
-      <section id="solutions" className="section-soft py-20 md:py-28">
+      <section id="solutions" className="section-soft py-20 md:py-28 min-h-dvh flex flex-col justify-center">
         <div className="mx-auto max-w-6xl px-4 md:px-6">
           <div className="text-center mb-14">
             <p className="text-xs font-semibold tracking-widest uppercase text-blue-500 dark:text-blue-400 mb-3">
