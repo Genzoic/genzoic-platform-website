@@ -711,6 +711,16 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
             <RotateCcw className="h-3 w-3" /> Reset
           </button>
 
+          {activeQuestion && (
+            <button
+              type="button"
+              onClick={() => setActiveQuestion(null)}
+              className="px-3 py-1.5 rounded-lg text-xs bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-red-500 hover:border-red-400 transition-colors cursor-pointer"
+            >
+              Clear answer
+            </button>
+          )}
+
           <div className="flex items-center border border-slate-200 dark:border-slate-800 rounded-lg overflow-hidden">
             <button
               onClick={zoomOut}
@@ -1020,7 +1030,7 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
         )}
       </div>
 
-      <div className={`flex flex-col ${isFullscreen ? "shrink-0 max-h-[40vh] overflow-y-scroll" : ""}`}>
+      <div className={`flex flex-col ${isFullscreen ? "shrink-0 max-h-[40vh]" : ""} ${activeQuestion ? "overflow-y-scroll" : "overflow-hidden"}`}>
         {/* ── Questions panel ──────────────────────────────────────────────────– */}
         {questions.length > 0 && (
           <div className="px-4 py-5 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 shrink-0">
@@ -1028,15 +1038,6 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
               <p className="text-xs uppercase tracking-widest flex items-center gap-1.5 text-slate-500 dark:text-slate-400 font-sans">
                 <HelpCircle className="h-3.5 w-3.5" /> Ask the Context Graph
               </p>
-              {activeQuestion && (
-                <button
-                  type="button"
-                  onClick={() => setActiveQuestion(null)}
-                  className="px-3 py-1.5 rounded-lg text-xs bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-red-500 hover:border-red-400 transition-colors cursor-pointer"
-                >
-                  Clear answer
-                </button>
-              )}
             </div>
             <div className="grid sm:grid-cols-2 gap-3">
               {questions.map(q => (
@@ -1092,7 +1093,7 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
               <p className="text-xs leading-relaxed text-slate-800 dark:text-slate-200 font-medium">{activeQuestion.answer}</p>
             </div>
 
-            <p className="mt-4 text-[9px] uppercase tracking-[0.2em] font-bold text-slate-400 dark:text-slate-500 font-sans">
+            <p className={`mt-4 pb-4 text-[10px] italic ${activeQuestion.reasoningSteps.length > 0 ? "text-slate-500 dark:text-slate-400" : "text-slate-600 dark:text-slate-300"}`}>
               AI reasoned context insights
             </p>
           </div>
