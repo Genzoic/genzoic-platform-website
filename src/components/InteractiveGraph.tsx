@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import * as d3 from "d3";
-import { Search, RotateCcw, Layers, ChevronDown, Database, HelpCircle, X, Maximize2, Minimize2, Plus, Minus } from "lucide-react";
+import { Search, RotateCcw, Layers, ChevronDown, ChevronRight, Database, HelpCircle, X, Maximize2, Minimize2, Plus, Minus } from "lucide-react";
 import graphData from "@/data/fmcg-context-graph.json";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type NodeType = "supplier" | "ingredient" | "product" | "plant" | "channel" | "store" | "allergen" | "recipe" | "certification" | "cleaning_protocol" | "label_claim" | "lot" | "process" | "skill" | "people" | "department";
+type NodeType = "supplier" | "ingredient" | "product" | "plant" | "channel" | "store" | "allergen" | "recipe" | "certification" | "cleaning_protocol" | "label_claim" | "lot" | "process" | "skill" | "people" | "department" | "customer" | "material";
 
-interface RawNode { id: string; type: NodeType; label: string; description?: string; }
+interface RawNode { id: string; type: NodeType; label: string; description?: string; properties?: Record<string, unknown>; }
 interface RawEdge { source: string; target: string; relation: string; }
 
 interface SimNode extends RawNode {
@@ -59,9 +59,100 @@ const NODE_CFG: Record<string, { color: string; dim: string; size: number; label
   skill: { color: "#059669", dim: "#064e3b", size: 16, label: "Skill", emoji: "✨" },
   people: { color: "#e11d48", dim: "#881337", size: 17, label: "People", emoji: "👤" },
   department: { color: "#d946ef", dim: "#86198f", size: 18, label: "Department", emoji: "🏢" },
+  customer: { color: "#38bdf8", dim: "#0c4a6e", size: 20, label: "Customer", emoji: "🏢" },
+  material: { color: "#22d3ee", dim: "#164e63", size: 14, label: "Material", emoji: "🧱" },
 };
 
 const DEFAULT_NODE_CFG = { color: "#9ca3af", dim: "#4b5563", size: 14, label: "Unknown", emoji: "◯" };
+
+// ─── Keyword → Emoji inference for unknown entity types ──────────────────────
+const EMOJI_KEYWORDS: [string[], string][] = [
+  [["allergen", "allergy", "allergic"], "⚠️"],
+  [["recipe", "formula", "formulation"], "📖"],
+  [["food", "meal", "dish", "dietary", "nutrition", "beverage", "drink"], "🍽️"],
+  [["regulatory", "regulator", "regulation", "compliance", "policy", "rule", "standard", "guideline"], "⚖️"],
+  [["material", "raw", "component", "part", "input"], "🧱"],
+  [["battery", "cell", "cathode", "anode", "electrolyte", "lithium", "cobalt", "nickel", "graphite", "separator"], "🔋"],
+  [["mineral", "ore", "mining", "chemical", "compound", "substance"], "⛏️"],
+  [["person", "people", "user", "customer", "client", "employee", "staff", "member", "agent", "operator", "manager", "director", "owner", "admin", "contact", "lead", "prospect", "stakeholder"], "👤"],
+  [["team", "group", "department", "division", "org", "organization", "unit", "crew"], "👥"],
+  [["location", "place", "address", "site", "region", "area", "zone", "territory", "country", "city", "state", "district"], "📍"],
+  [["warehouse", "depot", "storage", "facility", "building", "office", "hq", "headquarters", "branch", "center"], "🏢"],
+  [["factory", "manufacturer", "manufacturing", "production", "assembly"], "🏭"],
+  [["farm", "ranch", "field", "crop", "harvest", "agriculture"], "🌾"],
+  [["product", "item", "good", "merchandise", "sku", "catalog"], "📦"],
+  [["inventory", "stock", "reserve", "supply", "lot", "batch"], "📊"],
+  [["ingredient", "additive"], "🌿"],
+  [["order", "purchase", "requisition", "request", "booking", "reservation"], "📝"],
+  [["invoice", "bill", "receipt", "statement", "voucher"], "🧾"],
+  [["payment", "transaction", "transfer", "remittance"], "💳"],
+  [["price", "cost", "rate", "fee", "charge", "tariff", "amount", "budget", "revenue", "profit", "margin"], "💰"],
+  [["contract", "agreement", "deal", "terms", "sla"], "📜"],
+  [["shipment", "shipping", "delivery", "dispatch", "freight", "cargo"], "🚚"],
+  [["route", "path", "lane", "corridor", "transit"], "🛤️"],
+  [["vehicle", "truck", "van", "fleet", "carrier", "transport"], "🚛"],
+  [["document", "doc", "file", "record", "report", "log", "entry", "note"], "📄"],
+  [["certificate", "license", "licence", "permit", "credential", "certification"], "🏆"],
+  [["event", "meeting", "appointment", "session", "conference", "call"], "📅"],
+  [["schedule", "timeline", "calendar", "plan", "agenda", "deadline"], "🗓️"],
+  [["task", "todo", "ticket", "issue", "job", "assignment", "work"], "✅"],
+  [["system", "platform", "application", "app", "software", "service", "api", "endpoint"], "💻"],
+  [["database", "db", "table", "schema", "data", "dataset"], "🗄️"],
+  [["workflow", "process", "pipeline", "flow", "automation", "sequence"], "⚡"],
+  [["case", "incident", "problem", "defect", "bug", "error"], "📋"],
+  [["skill", "capability", "ability", "competency", "function"], "🛠️"],
+  [["campaign", "promotion", "ad", "marketing", "offer", "discount"], "📣"],
+  [["channel", "marketplace", "market", "segment", "audience"], "🔄"],
+  [["store", "shop", "retail", "outlet", "pos"], "🛒"],
+  [["brand", "label", "trademark"], "🏷️"],
+  [["quality", "inspection", "audit", "review", "check", "test", "qa", "qc"], "🔍"],
+  [["risk", "hazard", "threat", "vulnerability", "safety"], "⚠️"],
+  [["account", "ledger", "journal", "balance", "credit", "debit"], "🏦"],
+  [["metric", "kpi", "measure", "indicator", "score", "rating", "benchmark"], "📈"],
+  [["forecast", "prediction", "projection", "estimate", "trend"], "🔮"],
+  [["vendor", "partner", "distributor", "reseller", "broker"], "🤝"],
+  [["project", "program", "initiative", "portfolio"], "📂"],
+  [["goal", "objective", "target", "outcome", "result"], "🎯"],
+];
+
+function inferEmoji(type: string): string {
+  const lower = type.toLowerCase().replace(/[_\-]/g, " ");
+  const words = lower.split(/\s+/);
+  for (const [keywords, emoji] of EMOJI_KEYWORDS) {
+    for (const word of words) { if (keywords.includes(word)) return emoji; }
+  }
+  for (const [keywords, emoji] of EMOJI_KEYWORDS) {
+    for (const kw of keywords) { if (lower.includes(kw)) return emoji; }
+  }
+  const firstChar = type.replace(/[^a-zA-Z]/, "").charAt(0).toUpperCase();
+  return firstChar || "◯";
+}
+
+// Dynamic color palette for entity types not in NODE_CFG
+const DYNAMIC_COLORS = [
+  { color: "#14b8a6", dim: "#134e4a" },
+  { color: "#e879f9", dim: "#701a75" },
+  { color: "#38bdf8", dim: "#0c4a6e" },
+  { color: "#a3e635", dim: "#365314" },
+  { color: "#fb7185", dim: "#881337" },
+  { color: "#facc15", dim: "#713f12" },
+  { color: "#818cf8", dim: "#312e81" },
+  { color: "#2dd4bf", dim: "#115e59" },
+  { color: "#f97316", dim: "#7c2d12" },
+  { color: "#a78bfa", dim: "#4c1d95" },
+];
+
+const _dynamicNodeCfgCache: Record<string, typeof DEFAULT_NODE_CFG & { emoji: string }> = {};
+let _dynamicColorIdx = 0;
+
+// Cache for dynamically assigned relationship colors
+const _dynamicRelColorCache: Record<string, string> = {};
+let _dynamicRelColorIdx = 0;
+
+const DYNAMIC_REL_COLORS = ["#06b6d4", "#d946ef", "#84cc16", "#f43f5e", "#eab308", "#6366f1", "#2dd4bf", "#f97316", "#a78bfa", "#34d399"];
+
+// ─── Non-domain node types (shown in Intelligence section) ───────────────────
+const NON_DOMAIN_NODE_TYPES = new Set(["process", "skill", "people", "department", "workflow", "case"]);
 
 const REL_COLOR_STATIC: Record<string, string> = {
   SUPPLIES: "#f59e0b",
@@ -94,20 +185,13 @@ const REL_COLOR_STATIC: Record<string, string> = {
   RESPONSIBLE_FOR: "#f59e0b",
 };
 
-const REL_PALETTE = [
-  "#60a5fa", "#34d399", "#f97316", "#c084fc", "#fb923c",
-  "#f43f5e", "#06b6d4", "#84cc16", "#fbbf24", "#a78bfa",
-  "#22d3ee", "#e879f9",
-];
-
-function hashStr(s: string): number {
-  let h = 0;
-  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
-  return h;
-}
-
 function getRelColor(rel: string): string {
-  return REL_COLOR_STATIC[rel] ?? REL_PALETTE[hashStr(rel) % REL_PALETTE.length];
+  if (REL_COLOR_STATIC[rel]) return REL_COLOR_STATIC[rel];
+  if (!_dynamicRelColorCache[rel]) {
+    _dynamicRelColorCache[rel] = DYNAMIC_REL_COLORS[_dynamicRelColorIdx % DYNAMIC_REL_COLORS.length];
+    _dynamicRelColorIdx++;
+  }
+  return _dynamicRelColorCache[rel];
 }
 
 // ─── Dummy data source mappings ──────────────────────────────────────────────
@@ -168,7 +252,21 @@ const DUMMY_DATA_SOURCES: Record<string, DataLinkage[]> = {
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function getNodeCfg(type: string) {
-  return NODE_CFG[type] ?? DEFAULT_NODE_CFG;
+  // Normalize to lowercase for lookup
+  const key = type.toLowerCase();
+  if (NODE_CFG[key]) return NODE_CFG[key];
+  if (!_dynamicNodeCfgCache[key]) {
+    const palette = DYNAMIC_COLORS[_dynamicColorIdx % DYNAMIC_COLORS.length];
+    _dynamicColorIdx++;
+    _dynamicNodeCfgCache[key] = {
+      color: palette.color,
+      dim: palette.dim,
+      size: 16,
+      label: key.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase()),
+      emoji: inferEmoji(key),
+    };
+  }
+  return _dynamicNodeCfgCache[key];
 }
 
 function getNeighborIds(nodeId: string, edges: RawEdge[], depth: number): Set<string> {
@@ -213,11 +311,48 @@ const STATIC_EDGES: RawEdge[] = graphData.edges.map(e => ({
   relation: e.relationship,
 }));
 
-// ─── Public types for external graph data ────────────────────────────────────
+// ─── Public types for external graph data (new entities/relationships format) ─
 
+export interface GraphEntity {
+  id: string;
+  name: string;
+  type: string;
+  properties?: Record<string, unknown>;
+}
+
+export interface GraphRelationship {
+  source: string; // entity name
+  target: string; // entity name
+  relation: string;
+  properties?: Record<string, unknown>;
+}
+
+export interface GraphDataSource {
+  entity_type: string;
+  metric_category: string;
+  description: string;
+  source_system: string;
+  object_type: string;
+  object_name: string;
+  join_key: string;
+  refresh_frequency: string;
+  example_fields: string[];
+}
+
+// Legacy format (kept for backward compatibility)
 export interface GraphNode { id: string; label: string; type: string; description?: string; }
 export interface GraphEdge { source: string; target: string; relationship: string; }
-export interface GraphData { nodes: GraphNode[]; edges: GraphEdge[]; questions?: PredefinedQuestion[]; }
+
+export interface GraphData {
+  // New format
+  entities?: GraphEntity[];
+  relationships?: GraphRelationship[];
+  data_sources?: GraphDataSource[];
+  // Legacy format
+  nodes?: GraphNode[];
+  edges?: GraphEdge[];
+  questions?: PredefinedQuestion[];
+}
 
 interface PredefinedQuestion {
   id: string;
@@ -245,12 +380,28 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
 
   const nodes: RawNode[] = useMemo(() => {
     if (!data) return STATIC_NODES;
-    return data.nodes.map(n => ({ id: n.id, type: n.type.toLowerCase() as NodeType, label: n.label, description: n.description }));
+    if (data.entities) {
+      return data.entities.map(e => ({
+        id: e.id ?? e.name,
+        type: e.type.toLowerCase() as NodeType,
+        label: e.name,
+        properties: e.properties,
+      }));
+    }
+    return (data.nodes ?? []).map(n => ({ id: n.id, type: n.type.toLowerCase() as NodeType, label: n.label, description: n.description }));
   }, [data]);
 
   const edges: RawEdge[] = useMemo(() => {
     if (!data) return STATIC_EDGES;
-    return data.edges.map(e => ({ source: e.source, target: e.target, relation: e.relationship }));
+    if (data.relationships) {
+      const nameToId = new Map((data.entities ?? []).map(e => [e.name, e.id]));
+      return data.relationships.map(r => ({
+        source: nameToId.get(r.source) ?? r.source,
+        target: nameToId.get(r.target) ?? r.target,
+        relation: r.relation,
+      }));
+    }
+    return (data.edges ?? []).map(e => ({ source: e.source, target: e.target, relation: e.relationship }));
   }, [data]);
 
   // UI state
@@ -262,6 +413,8 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
   const [expandedLinkage, setExpandedLinkage] = useState<string | null>(null);
   const [activeQuestion, setActiveQuestion] = useState<PredefinedQuestion | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [entitiesOpen, setEntitiesOpen] = useState(true);
+  const [intelligenceOpen, setIntelligenceOpen] = useState(true);
 
   useEffect(() => {
     document.body.classList.toggle("overflow-hidden", isFullscreen);
@@ -544,6 +697,14 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
     });
 
     svg.selectAll<SVGPathElement, { source: SimNode; target: SimNode; relation: string }>(".links path")
+      .style("display", function (d) {
+        const sId = d.source?.id, tId = d.target?.id;
+        if (!sId || !tId) return "none";
+        const sNode = nodeMap.get(sId);
+        const tNode = nodeMap.get(tId);
+        if (!sNode || !tNode || !visibleTypes.has(sNode.type) || !visibleTypes.has(tNode.type)) return "none";
+        return null;
+      })
       .attr("stroke-opacity", function (d) {
         const sId = d.source?.id, tId = d.target?.id;
         if (!sId || !tId) return 0;
@@ -665,7 +826,11 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
 
   // ─── Render ──────────────────────────────────────────────────────────────────
 
-  const dataSources = focusedNode ? (DUMMY_DATA_SOURCES[focusedNode.type] || []) : [];
+  const dataSources = focusedNode
+    ? (data?.data_sources
+        ? data.data_sources.filter(ds => ds.entity_type.toLowerCase() === focusedNode.type)
+        : (DUMMY_DATA_SOURCES[focusedNode.type] ?? []))
+    : [];
 
   return (
     <div
@@ -762,23 +927,19 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
       <div className={`flex flex-col md:flex-row min-h-0 ${isFullscreen ? "flex-1" : "h-125"}`}>
 
         {/* ── Left sidebar / top strip: Layer toggles + Legend ─────────────── */}
-        <div className="bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 md:border-b-0 md:border-r md:w-auto md:shrink-0 flex flex-col md:py-3 md:px-3 md:gap-2 md:overflow-y-auto">
-          {/* Desktop heading */}
-          <p className="hidden md:flex text-xs uppercase tracking-widest mb-1 items-center gap-1 text-slate-500 dark:text-slate-400 font-sans">
-            <Layers className="h-3 w-3" /> Layers
-          </p>
+        <div className="bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 md:border-b-0 md:border-r md:w-44 md:shrink-0 flex flex-col md:py-2 md:px-2 md:gap-0 md:overflow-y-auto">
 
-          {/* Layer toggle buttons - grouped */}
+          {/* Layer toggle buttons - mobile horizontal, desktop collapsible sections */}
           <div className="flex flex-row md:flex-col gap-2 overflow-x-auto px-3 py-2 md:p-0 md:overflow-x-visible">
             {(() => {
-              const INTELLIGENCE_TYPES = new Set(["process", "skill", "people", "department"]);
-              const entityTypes = ALL_TYPES.filter(t => !INTELLIGENCE_TYPES.has(t));
-              const intelTypes = ALL_TYPES.filter(t => INTELLIGENCE_TYPES.has(t));
+              const entityTypes = ALL_TYPES.filter(t => !NON_DOMAIN_NODE_TYPES.has(t.toLowerCase()));
+              const intelTypes  = ALL_TYPES.filter(t =>  NON_DOMAIN_NODE_TYPES.has(t.toLowerCase()));
               const renderBtn = (type: string) => {
                 const cfg = getNodeCfg(type);
                 const active = visibleTypes.has(type);
                 return (
                   <button
+                    type="button"
                     key={type}
                     onClick={() => toggleType(type)}
                     className={`flex items-center gap-2 text-left whitespace-nowrap md:whitespace-normal shrink-0 md:w-full rounded px-2 py-1.5 transition-colors border ${active
@@ -800,14 +961,40 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
                 <>
                   {entityTypes.length > 0 && (
                     <>
-                      <p className="hidden md:block text-[10px] uppercase tracking-widest mt-1 text-slate-500 dark:text-slate-400 font-sans">Entities</p>
-                      {entityTypes.map(renderBtn)}
+                      {/* Desktop collapsible header */}
+                      <button
+                        type="button"
+                        onClick={() => setEntitiesOpen(o => !o)}
+                        className="hidden md:flex items-center gap-1 w-full px-1 py-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors mt-1"
+                      >
+                        {entitiesOpen
+                          ? <ChevronDown className="h-3 w-3 text-slate-400" />
+                          : <ChevronRight className="h-3 w-3 text-slate-400" />}
+                        <Layers className="h-3 w-3 text-slate-400" />
+                        <span className="text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 font-sans">Entities</span>
+                      </button>
+                      {/* Mobile: always show; Desktop: show when open */}
+                      <div className={`flex flex-row md:flex-col gap-2 md:gap-1 ${entitiesOpen ? "" : "hidden md:hidden"}`}>
+                        {entityTypes.map(renderBtn)}
+                      </div>
                     </>
                   )}
                   {intelTypes.length > 0 && (
                     <>
-                      <p className="hidden md:block text-[10px] uppercase tracking-widest mt-2 text-slate-500 dark:text-slate-400 font-sans">Intelligence</p>
-                      {intelTypes.map(renderBtn)}
+                      <button
+                        type="button"
+                        onClick={() => setIntelligenceOpen(o => !o)}
+                        className="hidden md:flex items-center gap-1 w-full px-1 py-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors mt-2 border-t border-slate-200 dark:border-slate-800 pt-2"
+                      >
+                        {intelligenceOpen
+                          ? <ChevronDown className="h-3 w-3 text-slate-400" />
+                          : <ChevronRight className="h-3 w-3 text-slate-400" />}
+                        <Layers className="h-3 w-3 text-violet-400" />
+                        <span className="text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 font-sans">Intelligence</span>
+                      </button>
+                      <div className={`flex flex-row md:flex-col gap-2 md:gap-1 ${intelligenceOpen ? "" : "hidden md:hidden"}`}>
+                        {intelTypes.map(renderBtn)}
+                      </div>
                     </>
                   )}
                 </>
@@ -816,18 +1003,16 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
           </div>
 
           {/* Legend - desktop: vertical block; mobile: separate scrollable row */}
-          <div className="hidden md:block mt-2 pt-2 border-t border-slate-200 dark:border-slate-800">
-            <p className="text-xs uppercase tracking-widest mb-2 text-slate-500 dark:text-slate-400 font-sans">Legend</p>
+          <div className="hidden md:block mt-2 pt-2 border-t border-slate-200 dark:border-slate-800 px-2">
+            <p className="text-[10px] uppercase tracking-widest mb-2 text-slate-500 dark:text-slate-400 font-sans">Relations</p>
             {[...new Set(edges.map(e => e.relation))].map(rel => (
               <div key={rel} className="flex items-center gap-1.5 mb-1">
-                <div className="h-0.5 w-4 rounded" style={{ background: getRelColor(rel) }} />
-                <span className="text-[10px] text-slate-500 dark:text-slate-400 font-sans">{rel}</span>
+                <div className="h-0.5 w-4 rounded shrink-0" style={{ background: getRelColor(rel) }} />
+                <span className="text-[10px] text-slate-500 dark:text-slate-400 font-sans truncate">{rel}</span>
               </div>
             ))}
           </div>
-          <div
-            className="md:hidden flex flex-row gap-x-4 gap-y-1 overflow-x-auto px-3 py-1.5 items-center border-t border-slate-200 dark:border-slate-800"
-          >
+          <div className="md:hidden flex flex-row gap-x-4 gap-y-1 overflow-x-auto px-3 py-1.5 items-center border-t border-slate-200 dark:border-slate-800">
             {[...new Set(edges.map(e => e.relation))].map(rel => (
               <div key={rel} className="flex items-center gap-1 shrink-0">
                 <div className="h-0.5 w-3 rounded" style={{ background: getRelColor(rel) }} />
@@ -909,7 +1094,24 @@ export default function InteractiveGraph({ data }: InteractiveGraphProps = {}) {
                   </span>
                 </div>
               </div>
-              {focusedNode.description && (
+              {focusedNode.properties && Object.keys(focusedNode.properties).length > 0 && (
+                <div className="mt-2 space-y-0.5">
+                  {Object.entries(focusedNode.properties).map(([k, v]) => (
+                    Array.isArray(v) ? (
+                      <div key={k} className="flex gap-2 text-xs">
+                        <span className="text-slate-500 dark:text-slate-500 font-sans shrink-0 capitalize">{k.replace(/_/g, " ")}:</span>
+                        <span className="text-slate-700 dark:text-slate-300 font-mono text-[10px] break-all">{v.join(", ")}</span>
+                      </div>
+                    ) : (
+                      <div key={k} className="flex gap-2 text-xs">
+                        <span className="text-slate-500 dark:text-slate-500 font-sans shrink-0 capitalize">{k.replace(/_/g, " ")}:</span>
+                        <span className="text-slate-700 dark:text-slate-300 font-mono text-[10px] break-all">{String(v)}</span>
+                      </div>
+                    )
+                  ))}
+                </div>
+              )}
+              {focusedNode.description && !focusedNode.properties && (
                 <p className="text-xs mt-1 text-slate-600 dark:text-slate-400">{focusedNode.description}</p>
               )}
               <div className="text-[10px] mt-1 text-slate-500 dark:text-slate-500 font-sans uppercase tracking-[0.05em]">

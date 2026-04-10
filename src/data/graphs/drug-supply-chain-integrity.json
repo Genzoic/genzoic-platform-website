@@ -1,164 +1,2500 @@
 {
-  "nodes": [
-    { "id": "prod-1", "label": "Metformin 500mg Tablets", "type": "product", "description": "Oral antidiabetic drug for type 2 diabetes, immediate release formulation" },
-    { "id": "prod-2", "label": "Insulin Glargine 100U/mL", "type": "product", "description": "Long-acting basal insulin analog in pre-filled pen format" },
-    { "id": "prod-3", "label": "Atorvastatin 20mg Tablets", "type": "product", "description": "HMG-CoA reductase inhibitor for cholesterol management" },
-    { "id": "prod-4", "label": "Omeprazole 40mg Capsules", "type": "product", "description": "Proton pump inhibitor for GERD and gastric ulcer treatment" },
-    { "id": "sup-1", "label": "API Manufacturer India", "type": "supplier", "description": "Active pharmaceutical ingredient producer in Hyderabad, India with FDA approval" },
-    { "id": "sup-2", "label": "Excipient Supplier EU", "type": "supplier", "description": "European supplier of pharmaceutical-grade excipients and binders" },
-    { "id": "sup-3", "label": "Glass Vial Manufacturer", "type": "supplier", "description": "Borosilicate glass vial and cartridge manufacturer for injectables" },
-    { "id": "sup-4", "label": "Cold Chain Logistics Inc", "type": "supplier", "description": "GDP-certified cold chain logistics provider for temperature-sensitive drugs" },
-    { "id": "plant-1", "label": "FDA Facility NJ", "type": "plant", "description": "FDA-inspected solid dosage manufacturing plant in New Jersey" },
-    { "id": "plant-2", "label": "Packaging Line TX", "type": "plant", "description": "Secondary packaging and serialization facility in Texas" },
-    { "id": "plant-3", "label": "Sterile Fill-Finish IN", "type": "plant", "description": "Aseptic fill-finish facility for injectable products in Indiana" },
-    { "id": "ch-1", "label": "Track & Trace (DSCSA)", "type": "channel", "description": "Drug Supply Chain Security Act serialization and tracking system" },
-    { "id": "ch-2", "label": "DEA Reporting System", "type": "channel", "description": "DEA ARCOS reporting for controlled substance distribution tracking" },
-    { "id": "ch-3", "label": "FDA CDER Submission Portal", "type": "channel", "description": "FDA Center for Drug Evaluation and Research regulatory submission system" },
-    { "id": "ch-4", "label": "Quality Management System", "type": "channel", "description": "GMP-compliant QMS for batch records, deviations, and CAPA tracking" },
-    { "id": "ing-1", "label": "Metformin Hydrochloride API", "type": "ingredient", "description": "Active pharmaceutical ingredient, USP grade, white crystalline powder" },
-    { "id": "ing-2", "label": "Microcrystalline Cellulose", "type": "ingredient", "description": "Pharmaceutical excipient used as binder and diluent in tablet formulations" },
-    { "id": "ing-3", "label": "Insulin Glargine Bulk", "type": "ingredient", "description": "Recombinant insulin analog bulk drug substance produced via E. coli fermentation" },
-    { "id": "ing-4", "label": "Magnesium Stearate NF", "type": "ingredient", "description": "Lubricant excipient for tablet compression and capsule filling" },
-    { "id": "ing-5", "label": "Enteric Coating Polymer", "type": "ingredient", "description": "Methacrylic acid copolymer for delayed-release capsule coating" },
-    { "id": "store-1", "label": "Hospital Pharmacy Mass General", "type": "store", "description": "Inpatient hospital pharmacy with 340B program and formulary management" },
-    { "id": "store-2", "label": "Retail Pharmacy CVS", "type": "store", "description": "Retail community pharmacy chain dispensing prescription medications" },
-    { "id": "store-3", "label": "Specialty Pharmacy BioScript", "type": "store", "description": "Specialty pharmacy for biologics and cold-chain injectable medications" },
-    { "id": "proc-quality-deviation", "label": "Quality Deviation Investigation", "type": "Process", "description": "When a batch fails any quality test, trace the deviation back through the manufacturing chain to identify root cause and scope of impact." },
-    { "id": "proc-lot-recall", "label": "Lot Recall Execution Workflow", "type": "Process", "description": "When a recall is initiated, trace affected lots through the distribution chain, identify current locations, and generate recall notifications." },
-    { "id": "proc-supplier-audit", "label": "Supplier Audit Trigger", "type": "Process", "description": "When a supplier quality score drops below threshold or an FDA warning letter is issued, trigger on-site audit within 30 days." },
-    { "id": "skill-stability-batch-trace", "label": "API Stability Failure Batch Trace", "type": "Skill", "description": "Taught by Quality Director: When an API fails stability at month 18, immediately check all downstream batches within 60 days of the API lot date. Do not wait for month 24 data.", "mode": "Active Teaching", "creator": "people-quality-dir", "priority": "Executive" },
-    { "id": "skill-cold-chain-excursion", "label": "Cold Chain Excursion Response", "type": "Skill", "description": "Mined from 45 excursion events: 78% of excursions exceeding 2 hours but under 4 hours have no product impact. Above 4 hours, quarantine immediately.", "mode": "Record Ingestion", "creator": "people-sc-manager", "priority": "Department" },
-    { "id": "skill-fda-inspection-prep", "label": "FDA Inspection Preparation", "type": "Skill", "description": "Learned from correction: When preparing for FDA inspection, always have the last 3 CAPA closures for each product line ready. Inspectors always ask for them.", "mode": "Conversational Learning", "creator": "people-quality-dir", "priority": "Executive" },
-    { "id": "people-quality-dir", "label": "Quality Director", "type": "People", "description": "Executive level. Oversees quality assurance, regulatory compliance, and batch release decisions." },
-    { "id": "people-sc-manager", "label": "Supply Chain Manager", "type": "People", "description": "Department level. Manages supplier relationships, logistics, and cold chain operations." },
-    { "id": "dept-quality-assurance", "label": "Quality Assurance", "type": "Department", "description": "Manages quality standards, batch testing, CAPA, and regulatory inspections." },
-    { "id": "dept-supply-chain", "label": "Supply Chain", "type": "Department", "description": "Manages supplier logistics, cold chain, and distribution operations." }
+  "entities": [
+    {
+      "name": "Johnson & Johnson",
+      "type": "manufacturer",
+      "properties": {
+        "division": "Janssen Pharmaceuticals",
+        "hq": "New Brunswick, NJ, USA",
+        "markets": "Global"
+      }
+    },
+    {
+      "name": "DARZALEX FASPRO",
+      "type": "drug_product",
+      "properties": {
+        "ingredient": "Daratumumab",
+        "therapeutic_area": "Oncology",
+        "form": "Subcutaneous Solution",
+        "cold_chain_required": true,
+        "serialization_required": true
+      }
+    },
+    {
+      "name": "IMBRUVICA",
+      "type": "drug_product",
+      "properties": {
+        "ingredient": "Ibrutinib",
+        "therapeutic_area": "Oncology",
+        "form": "Hard Capsule",
+        "cold_chain_required": false,
+        "serialization_required": true
+      }
+    },
+    {
+      "name": "STELARA",
+      "type": "drug_product",
+      "properties": {
+        "ingredient": "Ustekinumab",
+        "therapeutic_area": "Immunology",
+        "form": "Injection Solution",
+        "cold_chain_required": true,
+        "serialization_required": true
+      }
+    },
+    {
+      "name": "TREMFYA",
+      "type": "drug_product",
+      "properties": {
+        "ingredient": "Guselkumab",
+        "therapeutic_area": "Immunology",
+        "form": "Injection Solution",
+        "cold_chain_required": true,
+        "serialization_required": true
+      }
+    },
+    {
+      "name": "XARELTO",
+      "type": "drug_product",
+      "properties": {
+        "ingredient": "Rivaroxaban",
+        "therapeutic_area": "Cardiovascular",
+        "form": "Film-Coated Tablet",
+        "cold_chain_required": false,
+        "serialization_required": true
+      }
+    },
+    {
+      "name": "EDURANT",
+      "type": "drug_product",
+      "properties": {
+        "ingredient": "Rilpivirine",
+        "therapeutic_area": "Infectious Disease",
+        "form": "Film-Coated Tablet",
+        "cold_chain_required": false,
+        "serialization_required": true
+      }
+    },
+    {
+      "name": "PREZISTA",
+      "type": "drug_product",
+      "properties": {
+        "ingredient": "Darunavir",
+        "therapeutic_area": "Infectious Disease",
+        "form": "Film-Coated Tablet",
+        "cold_chain_required": false,
+        "serialization_required": true
+      }
+    },
+    {
+      "name": "JANSSEN COVID-19 VACCINE",
+      "type": "drug_product",
+      "properties": {
+        "ingredient": "Ad26.COV2.S",
+        "therapeutic_area": "Vaccines",
+        "form": "Suspension for Injection",
+        "cold_chain_required": true,
+        "serialization_required": true
+      }
+    },
+    {
+      "name": "REMICADE",
+      "type": "drug_product",
+      "properties": {
+        "ingredient": "Infliximab",
+        "therapeutic_area": "Immunology",
+        "form": "Powder for Infusion",
+        "cold_chain_required": true,
+        "serialization_required": true,
+        "recall_active": true
+      }
+    },
+    {
+      "name": "ZYTIGA",
+      "type": "drug_product",
+      "properties": {
+        "ingredient": "Abiraterone Acetate",
+        "therapeutic_area": "Oncology",
+        "form": "Film-Coated Tablet",
+        "cold_chain_required": false,
+        "serialization_required": true
+      }
+    },
+    {
+      "name": "Daratumumab Drug Substance",
+      "type": "api",
+      "properties": {
+        "category": "Biologic",
+        "criticality": "Critical"
+      }
+    },
+    {
+      "name": "Ibrutinib API",
+      "type": "api",
+      "properties": {
+        "category": "Small Molecule",
+        "criticality": "Critical"
+      }
+    },
+    {
+      "name": "Ustekinumab Drug Substance",
+      "type": "api",
+      "properties": {
+        "category": "Biologic",
+        "criticality": "Critical",
+        "single_source": true
+      }
+    },
+    {
+      "name": "Guselkumab Drug Substance",
+      "type": "api",
+      "properties": {
+        "category": "Biologic",
+        "criticality": "Critical",
+        "single_source": true
+      }
+    },
+    {
+      "name": "Rivaroxaban API",
+      "type": "api",
+      "properties": {
+        "category": "Small Molecule",
+        "criticality": "Critical"
+      }
+    },
+    {
+      "name": "Rilpivirine API",
+      "type": "api",
+      "properties": {
+        "category": "Small Molecule",
+        "criticality": "Critical",
+        "india_dependency": true
+      }
+    },
+    {
+      "name": "Darunavir API",
+      "type": "api",
+      "properties": {
+        "category": "Small Molecule",
+        "criticality": "Critical",
+        "single_source": true
+      }
+    },
+    {
+      "name": "Infliximab Drug Substance",
+      "type": "api",
+      "properties": {
+        "category": "Biologic",
+        "criticality": "Critical",
+        "china_dependency": true
+      }
+    },
+    {
+      "name": "Abiraterone Acetate API",
+      "type": "api",
+      "properties": {
+        "category": "Small Molecule",
+        "criticality": "Critical",
+        "china_dependency": true
+      }
+    },
+    {
+      "name": "Janssen Beerse Campus",
+      "type": "manufacturing_site",
+      "properties": {
+        "location": "Beerse, Belgium",
+        "site_type": "API & Formulation",
+        "gmp_certified": true,
+        "fda_registered": true,
+        "ema_approved": true,
+        "is_cmo": false
+      }
+    },
+    {
+      "name": "Janssen Cork Campus",
+      "type": "manufacturing_site",
+      "properties": {
+        "location": "Cork, Ireland",
+        "site_type": "Formulation & Packaging",
+        "gmp_certified": true,
+        "fda_registered": true,
+        "ema_approved": true,
+        "is_cmo": false
+      }
+    },
+    {
+      "name": "Leiden Biologics Facility",
+      "type": "manufacturing_site",
+      "properties": {
+        "location": "Leiden, Netherlands",
+        "site_type": "Biologics API",
+        "gmp_certified": true,
+        "fda_registered": true,
+        "ema_approved": true,
+        "is_cmo": false
+      }
+    },
+    {
+      "name": "Wilson NC Facility",
+      "type": "manufacturing_site",
+      "properties": {
+        "location": "Wilson, NC, USA",
+        "site_type": "Sterile Fill-Finish",
+        "gmp_certified": true,
+        "fda_registered": true,
+        "ema_approved": false,
+        "is_cmo": false
+      }
+    },
+    {
+      "name": "Titusville NJ",
+      "type": "manufacturing_site",
+      "properties": {
+        "location": "Titusville, NJ, USA",
+        "site_type": "Oral Solid Dosage",
+        "gmp_certified": true,
+        "fda_registered": true,
+        "ema_approved": false,
+        "is_cmo": false
+      }
+    },
+    {
+      "name": "Cilag AG Schaffhausen",
+      "type": "manufacturing_site",
+      "properties": {
+        "location": "Schaffhausen, Switzerland",
+        "site_type": "Biologics Fill-Finish",
+        "gmp_certified": true,
+        "fda_registered": true,
+        "ema_approved": true,
+        "is_cmo": false
+      }
+    },
+    {
+      "name": "Xi'an Janssen OSD",
+      "type": "manufacturing_site",
+      "properties": {
+        "location": "Xi'an, China",
+        "site_type": "Oral Solid Dosage",
+        "gmp_certified": true,
+        "fda_registered": false,
+        "ema_approved": false,
+        "is_cmo": false,
+        "geopolitical_risk": "medium"
+      }
+    },
+    {
+      "name": "Lonza AG (CMO)",
+      "type": "manufacturing_site",
+      "properties": {
+        "location": "Basel, Switzerland",
+        "site_type": "Biologics API",
+        "gmp_certified": true,
+        "fda_registered": true,
+        "ema_approved": true,
+        "is_cmo": true
+      }
+    },
+    {
+      "name": "Catalent Bloomington (CMO)",
+      "type": "manufacturing_site",
+      "properties": {
+        "location": "Bloomington, IN, USA",
+        "site_type": "Vaccine Fill-Finish",
+        "gmp_certified": true,
+        "fda_registered": true,
+        "ema_approved": false,
+        "is_cmo": true
+      }
+    },
+    {
+      "name": "Emergent BioSolutions (CMO)",
+      "type": "manufacturing_site",
+      "properties": {
+        "location": "Rockville, MD, USA",
+        "site_type": "Vaccine Drug Substance",
+        "gmp_certified": true,
+        "fda_registered": true,
+        "ema_approved": false,
+        "is_cmo": true
+      }
+    },
+    {
+      "name": "Lonza Group AG",
+      "type": "api_supplier",
+      "properties": {
+        "tier": "1",
+        "category": "Biologics API",
+        "country": "Switzerland",
+        "region": "Europe",
+        "fda_registered": true,
+        "feoc_flag": false,
+        "sanctioned_flag": false,
+        "quality_score": 95
+      }
+    },
+    {
+      "name": "Samsung Biologics",
+      "type": "api_supplier",
+      "properties": {
+        "tier": "1",
+        "category": "Biologics API",
+        "country": "South Korea",
+        "region": "Asia",
+        "fda_registered": true,
+        "feoc_flag": false,
+        "sanctioned_flag": false,
+        "quality_score": 90
+      }
+    },
+    {
+      "name": "Boehringer Ingelheim BioXcellence",
+      "type": "api_supplier",
+      "properties": {
+        "tier": "1",
+        "category": "Biologics API",
+        "country": "Germany",
+        "region": "Europe",
+        "fda_registered": true,
+        "feoc_flag": false,
+        "sanctioned_flag": false,
+        "quality_score": 94
+      }
+    },
+    {
+      "name": "WuXi Biologics",
+      "type": "api_supplier",
+      "properties": {
+        "tier": "1",
+        "category": "Biologics API",
+        "country": "China",
+        "region": "Asia",
+        "fda_registered": false,
+        "feoc_flag": true,
+        "sanctioned_flag": false,
+        "quality_score": 75
+      }
+    },
+    {
+      "name": "Dr. Reddy's Laboratories",
+      "type": "api_supplier",
+      "properties": {
+        "tier": "1",
+        "category": "Small Molecule API",
+        "country": "India",
+        "region": "Asia",
+        "fda_registered": true,
+        "feoc_flag": false,
+        "sanctioned_flag": false,
+        "quality_score": 80
+      }
+    },
+    {
+      "name": "Sun Pharmaceutical Industries",
+      "type": "api_supplier",
+      "properties": {
+        "tier": "1",
+        "category": "Small Molecule API",
+        "country": "India",
+        "region": "Asia",
+        "fda_registered": true,
+        "feoc_flag": false,
+        "sanctioned_flag": false,
+        "quality_score": 78
+      }
+    },
+    {
+      "name": "Teva API",
+      "type": "api_supplier",
+      "properties": {
+        "tier": "1",
+        "category": "Small Molecule API",
+        "country": "Israel",
+        "region": "Europe",
+        "fda_registered": true,
+        "feoc_flag": false,
+        "sanctioned_flag": false,
+        "quality_score": 82
+      }
+    },
+    {
+      "name": "Albany Molecular Research (Curia)",
+      "type": "api_supplier",
+      "properties": {
+        "tier": "1",
+        "category": "Small Molecule API",
+        "country": "USA",
+        "region": "North America",
+        "fda_registered": true,
+        "feoc_flag": false,
+        "sanctioned_flag": false,
+        "quality_score": 88
+      }
+    },
+    {
+      "name": "Siegfried Group",
+      "type": "api_supplier",
+      "properties": {
+        "tier": "1",
+        "category": "Small Molecule API",
+        "country": "Switzerland",
+        "region": "Europe",
+        "fda_registered": true,
+        "feoc_flag": false,
+        "sanctioned_flag": false,
+        "quality_score": 91
+      }
+    },
+    {
+      "name": "Novatek Pharma Russia",
+      "type": "api_supplier",
+      "properties": {
+        "tier": "1",
+        "category": "Small Molecule API",
+        "country": "Russia",
+        "region": "Europe",
+        "fda_registered": false,
+        "feoc_flag": false,
+        "sanctioned_flag": true,
+        "quality_score": 30
+      }
+    },
+    {
+      "name": "Evonik Industries AG",
+      "type": "api_supplier",
+      "properties": {
+        "tier": "2",
+        "category": "Excipients",
+        "country": "Germany",
+        "region": "Europe",
+        "fda_registered": true,
+        "feoc_flag": false,
+        "sanctioned_flag": false,
+        "quality_score": 92
+      }
+    },
+    {
+      "name": "Merck KGaA (MilliporeSigma)",
+      "type": "api_supplier",
+      "properties": {
+        "tier": "2",
+        "category": "Raw Materials",
+        "country": "Germany",
+        "region": "Europe",
+        "fda_registered": true,
+        "feoc_flag": false,
+        "sanctioned_flag": false,
+        "quality_score": 93
+      }
+    },
+    {
+      "name": "Zhejiang Hisun Pharmaceutical",
+      "type": "api_supplier",
+      "properties": {
+        "tier": "2",
+        "category": "Chemical Intermediates",
+        "country": "China",
+        "region": "Asia",
+        "fda_registered": false,
+        "feoc_flag": true,
+        "sanctioned_flag": false,
+        "quality_score": 62
+      }
+    },
+    {
+      "name": "Cambrex Corporation",
+      "type": "api_supplier",
+      "properties": {
+        "tier": "3",
+        "category": "Chemical Intermediates",
+        "country": "USA",
+        "region": "North America",
+        "fda_registered": true,
+        "feoc_flag": false,
+        "sanctioned_flag": false,
+        "quality_score": 83
+      }
+    },
+    {
+      "name": "Shandong Xinhua Pharma",
+      "type": "api_supplier",
+      "properties": {
+        "tier": "3",
+        "category": "Starting Materials",
+        "country": "China",
+        "region": "Asia",
+        "fda_registered": false,
+        "feoc_flag": true,
+        "sanctioned_flag": false,
+        "quality_score": 52
+      }
+    },
+    {
+      "name": "McKesson Corporation",
+      "type": "distributor",
+      "properties": {
+        "type": "Wholesale Distributor",
+        "coverage": "National US",
+        "fda_licensed": true,
+        "dscsa_compliant": true,
+        "cold_chain_capable": true
+      }
+    },
+    {
+      "name": "AmerisourceBergen",
+      "type": "distributor",
+      "properties": {
+        "type": "Wholesale Distributor",
+        "coverage": "National US",
+        "fda_licensed": true,
+        "dscsa_compliant": true,
+        "cold_chain_capable": true
+      }
+    },
+    {
+      "name": "Cardinal Health",
+      "type": "distributor",
+      "properties": {
+        "type": "Wholesale Distributor",
+        "coverage": "National US",
+        "fda_licensed": true,
+        "dscsa_compliant": true,
+        "cold_chain_capable": true
+      }
+    },
+    {
+      "name": "Alliance Healthcare (EU)",
+      "type": "distributor",
+      "properties": {
+        "type": "Wholesale Distributor",
+        "coverage": "EU",
+        "fda_licensed": true,
+        "dscsa_compliant": true,
+        "cold_chain_capable": true
+      }
+    },
+    {
+      "name": "Walgreens Specialty Pharmacy",
+      "type": "distributor",
+      "properties": {
+        "type": "Specialty Pharmacy",
+        "coverage": "National US",
+        "fda_licensed": true,
+        "dscsa_compliant": true,
+        "cold_chain_capable": true
+      }
+    },
+    {
+      "name": "CVS Caremark Specialty",
+      "type": "distributor",
+      "properties": {
+        "type": "Specialty Pharmacy",
+        "coverage": "National US",
+        "fda_licensed": true,
+        "dscsa_compliant": true,
+        "cold_chain_capable": true
+      }
+    },
+    {
+      "name": "Mayo Clinic Pharmacy",
+      "type": "distributor",
+      "properties": {
+        "type": "Hospital Pharmacy",
+        "coverage": "Regional US",
+        "fda_licensed": true,
+        "dscsa_compliant": true,
+        "cold_chain_capable": true
+      }
+    },
+    {
+      "name": "Massachusetts General Hospital Pharmacy",
+      "type": "distributor",
+      "properties": {
+        "type": "Hospital Pharmacy",
+        "coverage": "Regional US",
+        "fda_licensed": true,
+        "dscsa_compliant": true,
+        "cold_chain_capable": true
+      }
+    },
+    {
+      "name": "IQVIA (Medicines to Patients)",
+      "type": "distributor",
+      "properties": {
+        "type": "3PL/Logistics",
+        "coverage": "Global",
+        "fda_licensed": true,
+        "dscsa_compliant": true,
+        "cold_chain_capable": true
+      }
+    },
+    {
+      "name": "DHL Supply Chain (Pharma)",
+      "type": "distributor",
+      "properties": {
+        "type": "3PL/Logistics",
+        "coverage": "Global",
+        "fda_licensed": true,
+        "dscsa_compliant": true,
+        "cold_chain_capable": true
+      }
+    },
+    {
+      "name": "United States (FDA/DSCSA)",
+      "type": "regulatory_market",
+      "properties": {
+        "regulatory_body": "FDA",
+        "framework": "DSCSA",
+        "serialization_required": true,
+        "track_trace_required": true
+      }
+    },
+    {
+      "name": "European Union (EMA/FMD)",
+      "type": "regulatory_market",
+      "properties": {
+        "regulatory_body": "EMA",
+        "framework": "FMD/EMVS",
+        "serialization_required": true,
+        "track_trace_required": true
+      }
+    },
+    {
+      "name": "United Kingdom (MHRA)",
+      "type": "regulatory_market",
+      "properties": {
+        "regulatory_body": "MHRA",
+        "framework": "UK FMD",
+        "serialization_required": true,
+        "track_trace_required": true
+      }
+    },
+    {
+      "name": "China (NMPA)",
+      "type": "regulatory_market",
+      "properties": {
+        "regulatory_body": "NMPA",
+        "framework": "China DSCSA",
+        "serialization_required": true,
+        "track_trace_required": true
+      }
+    },
+    {
+      "name": "Global Supply Chain",
+      "type": "department",
+      "properties": {
+        "head": "VP Global Supply Chain",
+        "headcount": 85,
+        "processes_owned": [
+          "Lot Traceability Review",
+          "Cold Chain Breach Response",
+          "API Sourcing Concentration Review"
+        ],
+        "agents_maintained": [
+          "Supply Chain Integrity Agent",
+          "Cold Chain Monitoring Agent"
+        ]
+      }
+    },
+    {
+      "name": "Regulatory Affairs & Compliance",
+      "type": "department",
+      "properties": {
+        "head": "VP Regulatory Affairs",
+        "headcount": 62,
+        "processes_owned": [
+          "DSCSA Compliance Review",
+          "Regulatory Filing Submission",
+          "Serialization Verification"
+        ],
+        "agents_maintained": [
+          "DSCSA Compliance Agent",
+          "Regulatory Filing Agent"
+        ]
+      }
+    },
+    {
+      "name": "Quality Assurance",
+      "type": "department",
+      "properties": {
+        "head": "Chief Quality Officer",
+        "headcount": 74,
+        "processes_owned": [
+          "Sterility Investigation",
+          "Lot Recall Initiation",
+          "OOS Deviation Management"
+        ],
+        "agents_maintained": [
+          "Recall Management Agent"
+        ]
+      }
+    },
+    {
+      "name": "Procurement & Supplier Management",
+      "type": "department",
+      "properties": {
+        "head": "Chief Procurement Officer",
+        "headcount": 48,
+        "processes_owned": [
+          "API Sourcing Concentration Review",
+          "Alternate Supplier Qualification",
+          "Supplier Quality Review"
+        ],
+        "agents_maintained": [
+          "API Risk Agent"
+        ]
+      }
+    },
+    {
+      "name": "Pharmacovigilance",
+      "type": "department",
+      "properties": {
+        "head": "VP Pharmacovigilance",
+        "headcount": 39,
+        "processes_owned": [
+          "Patient Impact Assessment",
+          "Lot Recall Initiation"
+        ],
+        "agents_maintained": [
+          "Recall Management Agent"
+        ]
+      }
+    },
+    {
+      "name": "Andrea Hoffmann",
+      "type": "people",
+      "properties": {
+        "title": "VP Global Supply Chain",
+        "department": "Global Supply Chain",
+        "approval_threshold_usd": 2000000,
+        "email": "andrea.hoffmann@jnj.com",
+        "active": true
+      }
+    },
+    {
+      "name": "Marcus Lee",
+      "type": "people",
+      "properties": {
+        "title": "VP Regulatory Affairs & Compliance",
+        "department": "Regulatory Affairs & Compliance",
+        "approval_threshold_usd": 500000,
+        "email": "marcus.lee@jnj.com",
+        "active": true
+      }
+    },
+    {
+      "name": "Dr. Susan Patel",
+      "type": "people",
+      "properties": {
+        "title": "Chief Quality Officer",
+        "department": "Quality Assurance",
+        "approval_threshold_usd": 1000000,
+        "email": "susan.patel@jnj.com",
+        "active": true
+      }
+    },
+    {
+      "name": "Roberto Ferreira",
+      "type": "people",
+      "properties": {
+        "title": "Chief Procurement Officer",
+        "department": "Procurement & Supplier Management",
+        "approval_threshold_usd": 5000000,
+        "email": "roberto.ferreira@jnj.com",
+        "active": true
+      }
+    },
+    {
+      "name": "Claire Dupont",
+      "type": "people",
+      "properties": {
+        "title": "Recall Coordinator - REMICADE",
+        "department": "Quality Assurance",
+        "approval_threshold_usd": null,
+        "email": "claire.dupont@jnj.com",
+        "active": true
+      }
+    },
+    {
+      "name": "Daniel Kim",
+      "type": "people",
+      "properties": {
+        "title": "Senior Sourcing Manager - Biologics",
+        "department": "Procurement & Supplier Management",
+        "approval_threshold_usd": null,
+        "email": "daniel.kim@jnj.com",
+        "active": true
+      }
+    },
+    {
+      "name": "Elena Russo",
+      "type": "people",
+      "properties": {
+        "title": "DSCSA Compliance Manager",
+        "department": "Regulatory Affairs & Compliance",
+        "approval_threshold_usd": null,
+        "email": "elena.russo@jnj.com",
+        "active": true
+      }
+    },
+    {
+      "name": "James Obi",
+      "type": "people",
+      "properties": {
+        "title": "VP Pharmacovigilance",
+        "department": "Pharmacovigilance",
+        "approval_threshold_usd": 750000,
+        "email": "james.obi@jnj.com",
+        "active": true
+      }
+    },
+    {
+      "name": "Lot Recall Initiation",
+      "type": "process",
+      "properties": {
+        "type": "operational",
+        "trigger_condition": "lot_status = Under Recall or sterility OOS confirmed",
+        "owner_department": "Quality Assurance",
+        "sla_hours": 2,
+        "criticality": "critical",
+        "entity_types_affected": [
+          "drug_product",
+          "lot",
+          "distributor",
+          "regulatory_market"
+        ],
+        "automation_level": "human-in-loop",
+        "executed_by_agent": "Recall Management Agent",
+        "approved_by_role": "Chief Quality Officer",
+        "instruction_prompt": "Execute the Lot Recall Initiation workflow for the affected lot. Confirm the triggering condition (OOS sterility result or recalled lot status), identify all downstream distributors and markets holding the lot, determine recall scope and classification, and produce the initial recall action plan with assigned owners and regulatory notification requirements."
+      }
+    },
+    {
+      "name": "Cold Chain Breach Response",
+      "type": "process",
+      "properties": {
+        "type": "operational",
+        "trigger_condition": "excursion_flag = TRUE in mv_cold_chain_monitoring",
+        "owner_department": "Global Supply Chain",
+        "sla_hours": 1,
+        "criticality": "critical",
+        "entity_types_affected": [
+          "lot",
+          "drug_product",
+          "distributor"
+        ],
+        "automation_level": "semi-auto",
+        "executed_by_agent": "Cold Chain Monitoring Agent",
+        "approved_by_role": "VP Global Supply Chain",
+        "instruction_prompt": "Execute the Cold Chain Breach Response workflow for the affected shipment or lot. Identify the breach event, assess temperature excursion duration and severity, determine product impact, evaluate whether the lot remains releasable, and recommend hold, disposition, or replacement actions for affected inventory."
+      }
+    },
+    {
+      "name": "DSCSA Compliance Review",
+      "type": "process",
+      "properties": {
+        "type": "compliance",
+        "trigger_condition": "dscsa_compliant = FALSE or US deadline 2026-11-27 approaching",
+        "owner_department": "Regulatory Affairs & Compliance",
+        "sla_hours": 24,
+        "criticality": "high",
+        "entity_types_affected": [
+          "lot",
+          "drug_product",
+          "distributor"
+        ],
+        "automation_level": "fully-auto",
+        "executed_by_agent": "DSCSA Compliance Agent",
+        "approved_by_role": "VP Regulatory Affairs",
+        "instruction_prompt": "Execute the DSCSA Compliance Review for the affected product or distributor. Assess serialization status, transaction data completeness, and verification gaps, identify which lots or trading partners are non-compliant, and recommend the remediation actions needed to meet the November 2026 DSCSA deadline."
+      }
+    },
+    {
+      "name": "API Sourcing Concentration Review",
+      "type": "process",
+      "properties": {
+        "type": "strategic",
+        "trigger_condition": "single_source_flag = TRUE or china_dependency_flag = TRUE in mv_api_sourcing_concentration",
+        "owner_department": "Procurement & Supplier Management",
+        "sla_hours": 72,
+        "criticality": "high",
+        "entity_types_affected": [
+          "api_supplier",
+          "drug_product"
+        ],
+        "automation_level": "advisory",
+        "executed_by_agent": "API Risk Agent",
+        "approved_by_role": "Chief Procurement Officer",
+        "instruction_prompt": "Execute the API Sourcing Concentration Review for the flagged active pharmaceutical ingredient. Identify single-source dependencies, China or FEOC exposure, alternate supplier options, and qualification status, and recommend the diversification actions needed to reduce supply concentration risk."
+      }
+    },
+    {
+      "name": "Sterility Investigation",
+      "type": "process",
+      "properties": {
+        "type": "compliance",
+        "trigger_condition": "OOS result in mv_quality_test_results for sterility test",
+        "owner_department": "Quality Assurance",
+        "sla_hours": 4,
+        "criticality": "critical",
+        "entity_types_affected": [
+          "lot",
+          "manufacturing_site"
+        ],
+        "automation_level": "human-in-loop",
+        "executed_by_agent": "Recall Management Agent",
+        "approved_by_role": "Chief Quality Officer",
+        "instruction_prompt": "Execute the Sterility Investigation workflow for the out-of-specification result. Identify the affected lot, manufacturing site, and production batch, trace root cause hypotheses, determine patient risk and regulatory notification requirements, and recommend investigation steps and containment actions."
+      }
+    },
+    {
+      "name": "Regulatory Filing Submission",
+      "type": "process",
+      "properties": {
+        "type": "compliance",
+        "trigger_condition": "new market approval required or label update",
+        "owner_department": "Regulatory Affairs & Compliance",
+        "sla_hours": 120,
+        "criticality": "medium",
+        "entity_types_affected": [
+          "drug_product",
+          "regulatory_market"
+        ],
+        "automation_level": "semi-auto",
+        "executed_by_agent": "Regulatory Filing Agent",
+        "approved_by_role": "VP Regulatory Affairs",
+        "instruction_prompt": "Execute the Regulatory Filing Submission workflow for the new market or label change. Identify the filing requirement, review data package readiness, check market-specific dossier gaps, and produce a submission-ready action plan with target dates and responsible owners."
+      }
+    },
+    {
+      "name": "Lot Traceability Review",
+      "type": "process",
+      "properties": {
+        "type": "operational",
+        "trigger_condition": "chain_complete = FALSE in mv_lot_traceability",
+        "owner_department": "Global Supply Chain",
+        "sla_hours": 8,
+        "criticality": "high",
+        "entity_types_affected": [
+          "lot",
+          "distributor",
+          "manufacturing_site"
+        ],
+        "automation_level": "fully-auto",
+        "executed_by_agent": "Supply Chain Integrity Agent",
+        "approved_by_role": "VP Global Supply Chain",
+        "instruction_prompt": "Execute the Lot Traceability Review for the lot with an incomplete chain of custody. Identify the missing transaction records, locate where the traceability gap occurred, determine downstream exposure, and recommend the data remediation and verification steps needed to restore full DSCSA-compliant traceability."
+      }
+    },
+    {
+      "name": "Supply Chain Integrity Agent",
+      "type": "skill",
+      "properties": {
+        "type": "analytical",
+        "capabilities": [
+          "lot traceability gap detection",
+          "chain node completion tracking",
+          "multi-tier supply chain mapping",
+          "feoc flag monitoring"
+        ],
+        "data_sources": [
+          "mv_lot_traceability",
+          "dim_lot",
+          "dim_manufacturing_site",
+          "dim_distributor"
+        ],
+        "autonomy_level": "human-in-loop",
+        "status": "active",
+        "escalates_to_role": "VP Global Supply Chain",
+        "instruction_prompt": "Use lot traceability, manufacturing site, and distributor data to verify chain of custody completeness. Identify traceability gaps, trace lot movement from manufacture to distribution, and flag any breaks in the transaction record that create DSCSA or recall risk."
+      }
+    },
+    {
+      "name": "Cold Chain Monitoring Agent",
+      "type": "skill",
+      "properties": {
+        "type": "operational",
+        "capabilities": [
+          "temperature excursion detection",
+          "excursion duration analysis",
+          "cold chain product monitoring",
+          "corrective action tracking"
+        ],
+        "data_sources": [
+          "mv_cold_chain_monitoring",
+          "dim_lot",
+          "dim_distributor"
+        ],
+        "autonomy_level": "semi-auto",
+        "status": "active",
+        "escalates_to_role": "VP Global Supply Chain",
+        "instruction_prompt": "Use cold chain monitoring, lot master, and distributor data to detect and assess temperature excursions. Determine breach severity, affected lot disposition risk, and downstream exposure, and return recommendations for product hold, replacement, or release with conditions."
+      }
+    },
+    {
+      "name": "Recall Management Agent",
+      "type": "skill",
+      "properties": {
+        "type": "operational",
+        "capabilities": [
+          "recall scope quantification",
+          "patient impact estimation",
+          "financial impact modeling",
+          "regulatory authority notification",
+          "distributor reach analysis"
+        ],
+        "data_sources": [
+          "mv_recall_impact_analysis",
+          "mv_lot_traceability",
+          "dim_regulatory_market",
+          "dim_distributor"
+        ],
+        "autonomy_level": "human-in-loop",
+        "status": "active",
+        "escalates_to_role": "Chief Quality Officer",
+        "instruction_prompt": "Use recall impact, traceability, regulatory market, and distributor data to scope and execute drug product recalls. Identify all affected lots, markets, and trading partners, determine regulatory notification requirements, and recommend the fastest containment path."
+      }
+    },
+    {
+      "name": "DSCSA Compliance Agent",
+      "type": "skill",
+      "properties": {
+        "type": "regulatory",
+        "capabilities": [
+          "serialization gap detection",
+          "EPCIS event completeness check",
+          "trading partner verification",
+          "US/EU deadline tracking"
+        ],
+        "data_sources": [
+          "mv_dscsa_compliance_status",
+          "dim_lot",
+          "dim_distributor",
+          "dim_regulatory_market"
+        ],
+        "autonomy_level": "advisory",
+        "status": "active",
+        "escalates_to_role": "VP Regulatory Affairs",
+        "instruction_prompt": "Use DSCSA compliance status, lot master, distributor, and market data to assess serialization and verification readiness. Identify non-compliant lots, trading partners, or markets, and recommend the actions needed to achieve full DSCSA compliance before the regulatory deadline."
+      }
+    },
+    {
+      "name": "API Risk Agent",
+      "type": "skill",
+      "properties": {
+        "type": "analytical",
+        "capabilities": [
+          "single-source concentration risk scoring",
+          "china/feoc dependency flagging",
+          "lead time and safety stock analysis",
+          "alternate supplier qualification tracking"
+        ],
+        "data_sources": [
+          "mv_api_sourcing_concentration",
+          "mv_supplier_quality_risk",
+          "dim_api_supplier"
+        ],
+        "autonomy_level": "advisory",
+        "status": "active",
+        "escalates_to_role": "Chief Procurement Officer",
+        "instruction_prompt": "Use API sourcing concentration and supplier quality risk data to assess active pharmaceutical ingredient supply vulnerability. Identify single-source dependencies, geographic concentration, FEOC exposure, and supplier performance gaps, and recommend sourcing diversification or qualification actions."
+      }
+    },
+    {
+      "name": "Regulatory Filing Agent",
+      "type": "skill",
+      "properties": {
+        "type": "regulatory",
+        "capabilities": [
+          "market approval status tracking",
+          "FDA/EMA submission gap analysis",
+          "label compliance monitoring",
+          "EU FMD deadline tracking"
+        ],
+        "data_sources": [
+          "mv_dscsa_compliance_status",
+          "dim_regulatory_market",
+          "dim_product"
+        ],
+        "autonomy_level": "advisory",
+        "status": "active",
+        "escalates_to_role": "VP Regulatory Affairs",
+        "instruction_prompt": "Use compliance status, regulatory market, and product master data to evaluate filing readiness for new market entries or label changes. Identify missing dossier elements, market-specific requirements, and timeline risks, and produce a prioritized submission action plan."
+      }
+    }
   ],
-  "edges": [
-    { "source": "sup-1", "target": "ing-1", "relationship": "SUPPLIES" },
-    { "source": "sup-1", "target": "ing-3", "relationship": "SUPPLIES" },
-    { "source": "sup-2", "target": "ing-2", "relationship": "SUPPLIES" },
-    { "source": "sup-2", "target": "ing-4", "relationship": "SUPPLIES" },
-    { "source": "sup-2", "target": "ing-5", "relationship": "SUPPLIES" },
-    { "source": "sup-3", "target": "plant-3", "relationship": "SUPPLIES" },
-    { "source": "ing-1", "target": "prod-1", "relationship": "USED_IN" },
-    { "source": "ing-2", "target": "prod-1", "relationship": "USED_IN" },
-    { "source": "ing-4", "target": "prod-1", "relationship": "USED_IN" },
-    { "source": "ing-3", "target": "prod-2", "relationship": "USED_IN" },
-    { "source": "ing-2", "target": "prod-3", "relationship": "USED_IN" },
-    { "source": "ing-5", "target": "prod-4", "relationship": "USED_IN" },
-    { "source": "ing-4", "target": "prod-3", "relationship": "USED_IN" },
-    { "source": "prod-1", "target": "plant-1", "relationship": "MANUFACTURED_AT" },
-    { "source": "prod-3", "target": "plant-1", "relationship": "MANUFACTURED_AT" },
-    { "source": "prod-4", "target": "plant-1", "relationship": "MANUFACTURED_AT" },
-    { "source": "prod-2", "target": "plant-3", "relationship": "MANUFACTURED_AT" },
-    { "source": "plant-1", "target": "plant-2", "relationship": "FEEDS_INTO" },
-    { "source": "plant-3", "target": "plant-2", "relationship": "FEEDS_INTO" },
-    { "source": "ch-1", "target": "prod-1", "relationship": "TRACKS" },
-    { "source": "ch-1", "target": "prod-2", "relationship": "TRACKS" },
-    { "source": "ch-1", "target": "prod-3", "relationship": "TRACKS" },
-    { "source": "ch-1", "target": "prod-4", "relationship": "TRACKS" },
-    { "source": "ch-3", "target": "plant-1", "relationship": "REGULATES" },
-    { "source": "ch-3", "target": "plant-3", "relationship": "REGULATES" },
-    { "source": "ch-4", "target": "plant-1", "relationship": "MONITORS" },
-    { "source": "ch-4", "target": "plant-2", "relationship": "MONITORS" },
-    { "source": "ch-4", "target": "plant-3", "relationship": "MONITORS" },
-    { "source": "ch-2", "target": "store-1", "relationship": "MONITORS" },
-    { "source": "ch-2", "target": "store-2", "relationship": "MONITORS" },
-    { "source": "sup-4", "target": "prod-2", "relationship": "TRANSPORTS" },
-    { "source": "prod-1", "target": "store-1", "relationship": "AVAILABLE_AT" },
-    { "source": "prod-1", "target": "store-2", "relationship": "AVAILABLE_AT" },
-    { "source": "prod-2", "target": "store-3", "relationship": "AVAILABLE_AT" },
-    { "source": "prod-2", "target": "store-1", "relationship": "AVAILABLE_AT" },
-    { "source": "prod-3", "target": "store-2", "relationship": "AVAILABLE_AT" },
-    { "source": "prod-4", "target": "store-2", "relationship": "AVAILABLE_AT" },
-    { "source": "sup-1", "target": "ch-3", "relationship": "REGISTERED_WITH" },
-    { "source": "ch-1", "target": "plant-2", "relationship": "SERIALIZES_AT" },
-    { "source": "proc-quality-deviation", "target": "ing-1", "relationship": "TRIGGERS" },
-    { "source": "proc-quality-deviation", "target": "ch-4", "relationship": "TRIGGERS" },
-    { "source": "proc-lot-recall", "target": "prod-1", "relationship": "TRIGGERS" },
-    { "source": "proc-lot-recall", "target": "prod-2", "relationship": "TRIGGERS" },
-    { "source": "proc-lot-recall", "target": "ch-1", "relationship": "TRIGGERS" },
-    { "source": "proc-supplier-audit", "target": "sup-1", "relationship": "TRIGGERS" },
-    { "source": "proc-supplier-audit", "target": "sup-2", "relationship": "TRIGGERS" },
-    { "source": "skill-stability-batch-trace", "target": "ing-1", "relationship": "ANCHORED_TO" },
-    { "source": "skill-stability-batch-trace", "target": "proc-quality-deviation", "relationship": "ANCHORED_TO" },
-    { "source": "skill-cold-chain-excursion", "target": "sup-4", "relationship": "ANCHORED_TO" },
-    { "source": "skill-cold-chain-excursion", "target": "prod-2", "relationship": "ANCHORED_TO" },
-    { "source": "skill-fda-inspection-prep", "target": "ch-3", "relationship": "ANCHORED_TO" },
-    { "source": "skill-fda-inspection-prep", "target": "ch-4", "relationship": "ANCHORED_TO" },
-    { "source": "skill-stability-batch-trace", "target": "people-quality-dir", "relationship": "CREATED_BY" },
-    { "source": "skill-cold-chain-excursion", "target": "people-sc-manager", "relationship": "CREATED_BY" },
-    { "source": "skill-fda-inspection-prep", "target": "people-quality-dir", "relationship": "CREATED_BY" },
-    { "source": "people-quality-dir", "target": "dept-quality-assurance", "relationship": "BELONGS_TO" },
-    { "source": "people-sc-manager", "target": "dept-supply-chain", "relationship": "BELONGS_TO" },
-    { "source": "dept-supply-chain", "target": "dept-quality-assurance", "relationship": "REPORTS_TO" },
-    { "source": "people-quality-dir", "target": "plant-1", "relationship": "RESPONSIBLE_FOR" },
-    { "source": "people-quality-dir", "target": "plant-3", "relationship": "RESPONSIBLE_FOR" },
-    { "source": "people-sc-manager", "target": "sup-1", "relationship": "RESPONSIBLE_FOR" },
-    { "source": "people-sc-manager", "target": "sup-4", "relationship": "RESPONSIBLE_FOR" }
+  "relationships": [
+    {
+      "source": "Johnson & Johnson",
+      "target": "DARZALEX FASPRO",
+      "relation": "MARKETS",
+      "properties": {}
+    },
+    {
+      "source": "Johnson & Johnson",
+      "target": "IMBRUVICA",
+      "relation": "MARKETS",
+      "properties": {}
+    },
+    {
+      "source": "Johnson & Johnson",
+      "target": "STELARA",
+      "relation": "MARKETS",
+      "properties": {}
+    },
+    {
+      "source": "Johnson & Johnson",
+      "target": "TREMFYA",
+      "relation": "MARKETS",
+      "properties": {}
+    },
+    {
+      "source": "Johnson & Johnson",
+      "target": "XARELTO",
+      "relation": "MARKETS",
+      "properties": {}
+    },
+    {
+      "source": "Johnson & Johnson",
+      "target": "EDURANT",
+      "relation": "MARKETS",
+      "properties": {}
+    },
+    {
+      "source": "Johnson & Johnson",
+      "target": "PREZISTA",
+      "relation": "MARKETS",
+      "properties": {}
+    },
+    {
+      "source": "Johnson & Johnson",
+      "target": "JANSSEN COVID-19 VACCINE",
+      "relation": "MARKETS",
+      "properties": {}
+    },
+    {
+      "source": "Johnson & Johnson",
+      "target": "REMICADE",
+      "relation": "MARKETS",
+      "properties": {}
+    },
+    {
+      "source": "Johnson & Johnson",
+      "target": "ZYTIGA",
+      "relation": "MARKETS",
+      "properties": {}
+    },
+    {
+      "source": "DARZALEX FASPRO",
+      "target": "Daratumumab Drug Substance",
+      "relation": "CONTAINS_API",
+      "properties": {}
+    },
+    {
+      "source": "IMBRUVICA",
+      "target": "Ibrutinib API",
+      "relation": "CONTAINS_API",
+      "properties": {}
+    },
+    {
+      "source": "STELARA",
+      "target": "Ustekinumab Drug Substance",
+      "relation": "CONTAINS_API",
+      "properties": {}
+    },
+    {
+      "source": "TREMFYA",
+      "target": "Guselkumab Drug Substance",
+      "relation": "CONTAINS_API",
+      "properties": {}
+    },
+    {
+      "source": "XARELTO",
+      "target": "Rivaroxaban API",
+      "relation": "CONTAINS_API",
+      "properties": {}
+    },
+    {
+      "source": "EDURANT",
+      "target": "Rilpivirine API",
+      "relation": "CONTAINS_API",
+      "properties": {}
+    },
+    {
+      "source": "PREZISTA",
+      "target": "Darunavir API",
+      "relation": "CONTAINS_API",
+      "properties": {}
+    },
+    {
+      "source": "REMICADE",
+      "target": "Infliximab Drug Substance",
+      "relation": "CONTAINS_API",
+      "properties": {}
+    },
+    {
+      "source": "ZYTIGA",
+      "target": "Abiraterone Acetate API",
+      "relation": "CONTAINS_API",
+      "properties": {}
+    },
+    {
+      "source": "Lonza Group AG",
+      "target": "Daratumumab Drug Substance",
+      "relation": "SUPPLIES",
+      "properties": {
+        "share_pct": 70
+      }
+    },
+    {
+      "source": "Samsung Biologics",
+      "target": "Daratumumab Drug Substance",
+      "relation": "SUPPLIES",
+      "properties": {
+        "share_pct": 30
+      }
+    },
+    {
+      "source": "Lonza Group AG",
+      "target": "Ustekinumab Drug Substance",
+      "relation": "SUPPLIES",
+      "properties": {
+        "share_pct": 100,
+        "single_source_risk": true
+      }
+    },
+    {
+      "source": "Boehringer Ingelheim BioXcellence",
+      "target": "Guselkumab Drug Substance",
+      "relation": "SUPPLIES",
+      "properties": {
+        "share_pct": 100,
+        "single_source_risk": true
+      }
+    },
+    {
+      "source": "Albany Molecular Research (Curia)",
+      "target": "Ibrutinib API",
+      "relation": "SUPPLIES",
+      "properties": {
+        "share_pct": 60
+      }
+    },
+    {
+      "source": "Siegfried Group",
+      "target": "Ibrutinib API",
+      "relation": "SUPPLIES",
+      "properties": {
+        "share_pct": 40
+      }
+    },
+    {
+      "source": "Siegfried Group",
+      "target": "Darunavir API",
+      "relation": "SUPPLIES",
+      "properties": {
+        "share_pct": 100,
+        "single_source_risk": true
+      }
+    },
+    {
+      "source": "Teva API",
+      "target": "Rivaroxaban API",
+      "relation": "SUPPLIES",
+      "properties": {
+        "share_pct": 50
+      }
+    },
+    {
+      "source": "Dr. Reddy's Laboratories",
+      "target": "Rivaroxaban API",
+      "relation": "SUPPLIES",
+      "properties": {
+        "share_pct": 50
+      }
+    },
+    {
+      "source": "Dr. Reddy's Laboratories",
+      "target": "Rilpivirine API",
+      "relation": "SUPPLIES",
+      "properties": {
+        "share_pct": 80
+      }
+    },
+    {
+      "source": "Sun Pharmaceutical Industries",
+      "target": "Rilpivirine API",
+      "relation": "SUPPLIES",
+      "properties": {
+        "share_pct": 20
+      }
+    },
+    {
+      "source": "Samsung Biologics",
+      "target": "Infliximab Drug Substance",
+      "relation": "SUPPLIES",
+      "properties": {
+        "share_pct": 55
+      }
+    },
+    {
+      "source": "WuXi Biologics",
+      "target": "Infliximab Drug Substance",
+      "relation": "SUPPLIES",
+      "properties": {
+        "share_pct": 45,
+        "feoc_risk": true
+      }
+    },
+    {
+      "source": "Dr. Reddy's Laboratories",
+      "target": "Abiraterone Acetate API",
+      "relation": "SUPPLIES",
+      "properties": {
+        "share_pct": 45
+      }
+    },
+    {
+      "source": "Shandong Xinhua Pharma",
+      "target": "Abiraterone Acetate API",
+      "relation": "SUPPLIES",
+      "properties": {
+        "share_pct": 40,
+        "feoc_risk": true
+      }
+    },
+    {
+      "source": "Novatek Pharma Russia",
+      "target": "Abiraterone Acetate API",
+      "relation": "SUPPLIES",
+      "properties": {
+        "share_pct": 15,
+        "sanctioned_risk": true
+      }
+    },
+    {
+      "source": "Zhejiang Hisun Pharmaceutical",
+      "target": "Dr. Reddy's Laboratories",
+      "relation": "SUPPLIES_TO",
+      "properties": {
+        "material": "Chemical Intermediates"
+      }
+    },
+    {
+      "source": "Cambrex Corporation",
+      "target": "Albany Molecular Research (Curia)",
+      "relation": "SUPPLIES_TO",
+      "properties": {
+        "material": "Chemical Intermediates"
+      }
+    },
+    {
+      "source": "Merck KGaA (MilliporeSigma)",
+      "target": "Lonza Group AG",
+      "relation": "SUPPLIES_TO",
+      "properties": {
+        "material": "Cell Culture Media & Raw Materials"
+      }
+    },
+    {
+      "source": "Evonik Industries AG",
+      "target": "Janssen Beerse Campus",
+      "relation": "SUPPLIES_TO",
+      "properties": {
+        "material": "Excipients"
+      }
+    },
+    {
+      "source": "Shandong Xinhua Pharma",
+      "target": "Zhejiang Hisun Pharmaceutical",
+      "relation": "SUPPLIES_TO",
+      "properties": {
+        "material": "Starting Materials"
+      }
+    },
+    {
+      "source": "DARZALEX FASPRO",
+      "target": "Leiden Biologics Facility",
+      "relation": "MANUFACTURED_AT",
+      "properties": {}
+    },
+    {
+      "source": "IMBRUVICA",
+      "target": "Janssen Cork Campus",
+      "relation": "MANUFACTURED_AT",
+      "properties": {}
+    },
+    {
+      "source": "STELARA",
+      "target": "Janssen Beerse Campus",
+      "relation": "MANUFACTURED_AT",
+      "properties": {}
+    },
+    {
+      "source": "TREMFYA",
+      "target": "Janssen Beerse Campus",
+      "relation": "MANUFACTURED_AT",
+      "properties": {}
+    },
+    {
+      "source": "XARELTO",
+      "target": "Janssen Cork Campus",
+      "relation": "MANUFACTURED_AT",
+      "properties": {}
+    },
+    {
+      "source": "EDURANT",
+      "target": "Titusville NJ",
+      "relation": "MANUFACTURED_AT",
+      "properties": {}
+    },
+    {
+      "source": "PREZISTA",
+      "target": "Titusville NJ",
+      "relation": "MANUFACTURED_AT",
+      "properties": {}
+    },
+    {
+      "source": "JANSSEN COVID-19 VACCINE",
+      "target": "Wilson NC Facility",
+      "relation": "MANUFACTURED_AT",
+      "properties": {}
+    },
+    {
+      "source": "JANSSEN COVID-19 VACCINE",
+      "target": "Catalent Bloomington (CMO)",
+      "relation": "MANUFACTURED_AT",
+      "properties": {}
+    },
+    {
+      "source": "JANSSEN COVID-19 VACCINE",
+      "target": "Emergent BioSolutions (CMO)",
+      "relation": "MANUFACTURED_AT",
+      "properties": {}
+    },
+    {
+      "source": "REMICADE",
+      "target": "Cilag AG Schaffhausen",
+      "relation": "MANUFACTURED_AT",
+      "properties": {}
+    },
+    {
+      "source": "Daratumumab Drug Substance",
+      "target": "Lonza AG (CMO)",
+      "relation": "MANUFACTURED_AT",
+      "properties": {}
+    },
+    {
+      "source": "ZYTIGA",
+      "target": "Xi'an Janssen OSD",
+      "relation": "MANUFACTURED_AT",
+      "properties": {}
+    },
+    {
+      "source": "DARZALEX FASPRO",
+      "target": "McKesson Corporation",
+      "relation": "DISTRIBUTED_BY",
+      "properties": {}
+    },
+    {
+      "source": "DARZALEX FASPRO",
+      "target": "Walgreens Specialty Pharmacy",
+      "relation": "DISTRIBUTED_BY",
+      "properties": {}
+    },
+    {
+      "source": "IMBRUVICA",
+      "target": "AmerisourceBergen",
+      "relation": "DISTRIBUTED_BY",
+      "properties": {}
+    },
+    {
+      "source": "STELARA",
+      "target": "CVS Caremark Specialty",
+      "relation": "DISTRIBUTED_BY",
+      "properties": {}
+    },
+    {
+      "source": "TREMFYA",
+      "target": "Alliance Healthcare (EU)",
+      "relation": "DISTRIBUTED_BY",
+      "properties": {}
+    },
+    {
+      "source": "XARELTO",
+      "target": "Cardinal Health",
+      "relation": "DISTRIBUTED_BY",
+      "properties": {}
+    },
+    {
+      "source": "REMICADE",
+      "target": "Massachusetts General Hospital Pharmacy",
+      "relation": "DISTRIBUTED_BY",
+      "properties": {
+        "lot": "JB2025-R002",
+        "recall_active": true
+      }
+    },
+    {
+      "source": "JANSSEN COVID-19 VACCINE",
+      "target": "IQVIA (Medicines to Patients)",
+      "relation": "DISTRIBUTED_BY",
+      "properties": {}
+    },
+    {
+      "source": "ZYTIGA",
+      "target": "DHL Supply Chain (Pharma)",
+      "relation": "DISTRIBUTED_BY",
+      "properties": {}
+    },
+    {
+      "source": "DARZALEX FASPRO",
+      "target": "Mayo Clinic Pharmacy",
+      "relation": "DISTRIBUTED_BY",
+      "properties": {}
+    },
+    {
+      "source": "DARZALEX FASPRO",
+      "target": "United States (FDA/DSCSA)",
+      "relation": "SOLD_IN",
+      "properties": {}
+    },
+    {
+      "source": "DARZALEX FASPRO",
+      "target": "European Union (EMA/FMD)",
+      "relation": "SOLD_IN",
+      "properties": {}
+    },
+    {
+      "source": "STELARA",
+      "target": "United States (FDA/DSCSA)",
+      "relation": "SOLD_IN",
+      "properties": {}
+    },
+    {
+      "source": "STELARA",
+      "target": "European Union (EMA/FMD)",
+      "relation": "SOLD_IN",
+      "properties": {}
+    },
+    {
+      "source": "TREMFYA",
+      "target": "European Union (EMA/FMD)",
+      "relation": "SOLD_IN",
+      "properties": {}
+    },
+    {
+      "source": "REMICADE",
+      "target": "United States (FDA/DSCSA)",
+      "relation": "SOLD_IN",
+      "properties": {}
+    },
+    {
+      "source": "REMICADE",
+      "target": "European Union (EMA/FMD)",
+      "relation": "SOLD_IN",
+      "properties": {}
+    },
+    {
+      "source": "REMICADE",
+      "target": "United Kingdom (MHRA)",
+      "relation": "SOLD_IN",
+      "properties": {}
+    },
+    {
+      "source": "ZYTIGA",
+      "target": "China (NMPA)",
+      "relation": "SOLD_IN",
+      "properties": {}
+    },
+    {
+      "source": "Quality Assurance",
+      "target": "Lot Recall Initiation",
+      "relation": "OWNS_PROCESS"
+    },
+    {
+      "source": "Quality Assurance",
+      "target": "Sterility Investigation",
+      "relation": "OWNS_PROCESS"
+    },
+    {
+      "source": "Global Supply Chain",
+      "target": "Cold Chain Breach Response",
+      "relation": "OWNS_PROCESS"
+    },
+    {
+      "source": "Global Supply Chain",
+      "target": "Lot Traceability Review",
+      "relation": "OWNS_PROCESS"
+    },
+    {
+      "source": "Regulatory Affairs & Compliance",
+      "target": "DSCSA Compliance Review",
+      "relation": "OWNS_PROCESS"
+    },
+    {
+      "source": "Regulatory Affairs & Compliance",
+      "target": "Regulatory Filing Submission",
+      "relation": "OWNS_PROCESS"
+    },
+    {
+      "source": "Procurement & Supplier Management",
+      "target": "API Sourcing Concentration Review",
+      "relation": "OWNS_PROCESS"
+    },
+    {
+      "source": "Global Supply Chain",
+      "target": "Supply Chain Integrity Agent",
+      "relation": "MAINTAINS_SKILL"
+    },
+    {
+      "source": "Global Supply Chain",
+      "target": "Cold Chain Monitoring Agent",
+      "relation": "MAINTAINS_SKILL"
+    },
+    {
+      "source": "Quality Assurance",
+      "target": "Recall Management Agent",
+      "relation": "MAINTAINS_SKILL"
+    },
+    {
+      "source": "Regulatory Affairs & Compliance",
+      "target": "DSCSA Compliance Agent",
+      "relation": "MAINTAINS_SKILL"
+    },
+    {
+      "source": "Regulatory Affairs & Compliance",
+      "target": "Regulatory Filing Agent",
+      "relation": "MAINTAINS_SKILL"
+    },
+    {
+      "source": "Procurement & Supplier Management",
+      "target": "API Risk Agent",
+      "relation": "MAINTAINS_SKILL"
+    },
+    {
+      "source": "Andrea Hoffmann",
+      "target": "Global Supply Chain",
+      "relation": "LEADS"
+    },
+    {
+      "source": "Marcus Lee",
+      "target": "Regulatory Affairs & Compliance",
+      "relation": "LEADS"
+    },
+    {
+      "source": "Dr. Susan Patel",
+      "target": "Quality Assurance",
+      "relation": "LEADS"
+    },
+    {
+      "source": "Roberto Ferreira",
+      "target": "Procurement & Supplier Management",
+      "relation": "LEADS"
+    },
+    {
+      "source": "James Obi",
+      "target": "Pharmacovigilance",
+      "relation": "LEADS"
+    },
+    {
+      "source": "Claire Dupont",
+      "target": "Quality Assurance",
+      "relation": "MEMBER_OF"
+    },
+    {
+      "source": "Daniel Kim",
+      "target": "Procurement & Supplier Management",
+      "relation": "MEMBER_OF"
+    },
+    {
+      "source": "Elena Russo",
+      "target": "Regulatory Affairs & Compliance",
+      "relation": "MEMBER_OF"
+    },
+    {
+      "source": "Lot Recall Initiation",
+      "target": "Recall Management Agent",
+      "relation": "EXECUTED_BY"
+    },
+    {
+      "source": "Cold Chain Breach Response",
+      "target": "Cold Chain Monitoring Agent",
+      "relation": "EXECUTED_BY"
+    },
+    {
+      "source": "DSCSA Compliance Review",
+      "target": "DSCSA Compliance Agent",
+      "relation": "EXECUTED_BY"
+    },
+    {
+      "source": "API Sourcing Concentration Review",
+      "target": "API Risk Agent",
+      "relation": "EXECUTED_BY"
+    },
+    {
+      "source": "Sterility Investigation",
+      "target": "Recall Management Agent",
+      "relation": "EXECUTED_BY"
+    },
+    {
+      "source": "Lot Traceability Review",
+      "target": "Supply Chain Integrity Agent",
+      "relation": "EXECUTED_BY"
+    },
+    {
+      "source": "Regulatory Filing Submission",
+      "target": "Regulatory Filing Agent",
+      "relation": "EXECUTED_BY"
+    },
+    {
+      "source": "Lot Recall Initiation",
+      "target": "REMICADE",
+      "relation": "AFFECTS"
+    },
+    {
+      "source": "Sterility Investigation",
+      "target": "Cilag AG Schaffhausen",
+      "relation": "APPLIES_TO"
+    },
+    {
+      "source": "Cold Chain Breach Response",
+      "target": "REMICADE",
+      "relation": "APPLIES_TO"
+    },
+    {
+      "source": "Dr. Susan Patel",
+      "target": "Lot Recall Initiation",
+      "relation": "APPROVES"
+    },
+    {
+      "source": "Marcus Lee",
+      "target": "DSCSA Compliance Review",
+      "relation": "APPROVES"
+    },
+    {
+      "source": "Roberto Ferreira",
+      "target": "API Sourcing Concentration Review",
+      "relation": "APPROVES"
+    },
+    {
+      "source": "Johnson & Johnson",
+      "target": "Global Supply Chain",
+      "relation": "HAS_DEPARTMENT"
+    },
+    {
+      "source": "Johnson & Johnson",
+      "target": "Regulatory Affairs & Compliance",
+      "relation": "HAS_DEPARTMENT"
+    },
+    {
+      "source": "Johnson & Johnson",
+      "target": "Quality Assurance",
+      "relation": "HAS_DEPARTMENT"
+    },
+    {
+      "source": "Johnson & Johnson",
+      "target": "Procurement & Supplier Management",
+      "relation": "HAS_DEPARTMENT"
+    },
+    {
+      "source": "Johnson & Johnson",
+      "target": "Pharmacovigilance",
+      "relation": "HAS_DEPARTMENT"
+    },
+    {
+      "source": "Johnson & Johnson",
+      "target": "Andrea Hoffmann",
+      "relation": "EMPLOYS"
+    },
+    {
+      "source": "Johnson & Johnson",
+      "target": "Marcus Lee",
+      "relation": "EMPLOYS"
+    },
+    {
+      "source": "Johnson & Johnson",
+      "target": "Dr. Susan Patel",
+      "relation": "EMPLOYS"
+    },
+    {
+      "source": "Johnson & Johnson",
+      "target": "Roberto Ferreira",
+      "relation": "EMPLOYS"
+    },
+    {
+      "source": "Claire Dupont",
+      "target": "Lot Recall Initiation",
+      "relation": "COORDINATES"
+    },
+    {
+      "source": "Claire Dupont",
+      "target": "REMICADE",
+      "relation": "MANAGES_RECALL_FOR"
+    },
+    {
+      "source": "Daniel Kim",
+      "target": "Lonza Group AG",
+      "relation": "MANAGES_SUPPLIER"
+    },
+    {
+      "source": "Daniel Kim",
+      "target": "WuXi Biologics",
+      "relation": "MANAGES_SUPPLIER"
+    },
+    {
+      "source": "Elena Russo",
+      "target": "United States (FDA/DSCSA)",
+      "relation": "MONITORS"
+    },
+    {
+      "source": "Elena Russo",
+      "target": "European Union (EMA/FMD)",
+      "relation": "MONITORS"
+    },
+    {
+      "source": "James Obi",
+      "target": "REMICADE",
+      "relation": "MONITORS_SAFETY"
+    },
+    {
+      "source": "Andrea Hoffmann",
+      "target": "Global Supply Chain",
+      "relation": "LEADS"
+    },
+    {
+      "source": "Cold Chain Breach Response",
+      "target": "DARZALEX FASPRO",
+      "relation": "APPLIES_TO"
+    },
+    {
+      "source": "Cold Chain Breach Response",
+      "target": "STELARA",
+      "relation": "APPLIES_TO"
+    },
+    {
+      "source": "Cold Chain Breach Response",
+      "target": "TREMFYA",
+      "relation": "APPLIES_TO"
+    },
+    {
+      "source": "Cold Chain Breach Response",
+      "target": "JANSSEN COVID-19 VACCINE",
+      "relation": "APPLIES_TO"
+    },
+    {
+      "source": "DSCSA Compliance Review",
+      "target": "United States (FDA/DSCSA)",
+      "relation": "GOVERNED_BY"
+    },
+    {
+      "source": "DSCSA Compliance Review",
+      "target": "European Union (EMA/FMD)",
+      "relation": "GOVERNED_BY"
+    },
+    {
+      "source": "Lot Recall Initiation",
+      "target": "United Kingdom (MHRA)",
+      "relation": "NOTIFIES"
+    },
+    {
+      "source": "Lot Recall Initiation",
+      "target": "McKesson Corporation",
+      "relation": "NOTIFIES"
+    },
+    {
+      "source": "Lot Recall Initiation",
+      "target": "AmerisourceBergen",
+      "relation": "NOTIFIES"
+    },
+    {
+      "source": "API Sourcing Concentration Review",
+      "target": "STELARA",
+      "relation": "COVERS"
+    },
+    {
+      "source": "API Sourcing Concentration Review",
+      "target": "TREMFYA",
+      "relation": "COVERS"
+    },
+    {
+      "source": "API Sourcing Concentration Review",
+      "target": "REMICADE",
+      "relation": "COVERS"
+    },
+    {
+      "source": "Lot Traceability Review",
+      "target": "REMICADE",
+      "relation": "COVERS"
+    },
+    {
+      "source": "Lot Traceability Review",
+      "target": "DARZALEX FASPRO",
+      "relation": "COVERS"
+    },
+    {
+      "source": "Sterility Investigation",
+      "target": "REMICADE",
+      "relation": "TRIGGERED_BY"
+    },
+    {
+      "source": "Supply Chain Integrity Agent",
+      "target": "REMICADE",
+      "relation": "MONITORS"
+    },
+    {
+      "source": "Supply Chain Integrity Agent",
+      "target": "DARZALEX FASPRO",
+      "relation": "MONITORS"
+    },
+    {
+      "source": "Supply Chain Integrity Agent",
+      "target": "Xi'an Janssen OSD",
+      "relation": "MONITORS"
+    },
+    {
+      "source": "Cold Chain Monitoring Agent",
+      "target": "DARZALEX FASPRO",
+      "relation": "MONITORS"
+    },
+    {
+      "source": "Cold Chain Monitoring Agent",
+      "target": "STELARA",
+      "relation": "MONITORS"
+    },
+    {
+      "source": "Cold Chain Monitoring Agent",
+      "target": "TREMFYA",
+      "relation": "MONITORS"
+    },
+    {
+      "source": "Cold Chain Monitoring Agent",
+      "target": "JANSSEN COVID-19 VACCINE",
+      "relation": "MONITORS"
+    },
+    {
+      "source": "Recall Management Agent",
+      "target": "REMICADE",
+      "relation": "MONITORS"
+    },
+    {
+      "source": "Recall Management Agent",
+      "target": "Massachusetts General Hospital Pharmacy",
+      "relation": "COORDINATES_WITH"
+    },
+    {
+      "source": "DSCSA Compliance Agent",
+      "target": "McKesson Corporation",
+      "relation": "MONITORS"
+    },
+    {
+      "source": "DSCSA Compliance Agent",
+      "target": "AmerisourceBergen",
+      "relation": "MONITORS"
+    },
+    {
+      "source": "DSCSA Compliance Agent",
+      "target": "Cardinal Health",
+      "relation": "MONITORS"
+    },
+    {
+      "source": "API Risk Agent",
+      "target": "Lonza Group AG",
+      "relation": "MONITORS"
+    },
+    {
+      "source": "API Risk Agent",
+      "target": "WuXi Biologics",
+      "relation": "MONITORS"
+    },
+    {
+      "source": "API Risk Agent",
+      "target": "Novatek Pharma Russia",
+      "relation": "MONITORS"
+    },
+    {
+      "source": "API Risk Agent",
+      "target": "Samsung Biologics",
+      "relation": "MONITORS"
+    },
+    {
+      "source": "Regulatory Filing Agent",
+      "target": "United States (FDA/DSCSA)",
+      "relation": "MONITORS"
+    },
+    {
+      "source": "Regulatory Filing Agent",
+      "target": "European Union (EMA/FMD)",
+      "relation": "MONITORS"
+    },
+    {
+      "source": "Regulatory Filing Agent",
+      "target": "JANSSEN COVID-19 VACCINE",
+      "relation": "MONITORS"
+    },
+    {
+      "source": "Quality Assurance",
+      "target": "Cilag AG Schaffhausen",
+      "relation": "OVERSEES"
+    },
+    {
+      "source": "Quality Assurance",
+      "target": "Wilson NC Facility",
+      "relation": "OVERSEES"
+    },
+    {
+      "source": "Quality Assurance",
+      "target": "Leiden Biologics Facility",
+      "relation": "OVERSEES"
+    },
+    {
+      "source": "Procurement & Supplier Management",
+      "target": "Lonza Group AG",
+      "relation": "MANAGES"
+    },
+    {
+      "source": "Procurement & Supplier Management",
+      "target": "Samsung Biologics",
+      "relation": "MANAGES"
+    },
+    {
+      "source": "Procurement & Supplier Management",
+      "target": "WuXi Biologics",
+      "relation": "MANAGES"
+    },
+    {
+      "source": "Procurement & Supplier Management",
+      "target": "Dr. Reddy's Laboratories",
+      "relation": "MANAGES"
+    },
+    {
+      "source": "Global Supply Chain",
+      "target": "McKesson Corporation",
+      "relation": "COORDINATES_WITH"
+    },
+    {
+      "source": "Global Supply Chain",
+      "target": "Cardinal Health",
+      "relation": "COORDINATES_WITH"
+    },
+    {
+      "source": "Global Supply Chain",
+      "target": "AmerisourceBergen",
+      "relation": "COORDINATES_WITH"
+    },
+    {
+      "source": "Regulatory Affairs & Compliance",
+      "target": "United States (FDA/DSCSA)",
+      "relation": "REPORTS_TO"
+    },
+    {
+      "source": "Regulatory Affairs & Compliance",
+      "target": "European Union (EMA/FMD)",
+      "relation": "REPORTS_TO"
+    },
+    {
+      "source": "Regulatory Affairs & Compliance",
+      "target": "United Kingdom (MHRA)",
+      "relation": "REPORTS_TO"
+    }
   ],
-  "questions": [
+  "data_sources": [
     {
-      "id": "q-intelligence-pharma",
-      "question": "Metformin API fails stability test at month 18. What is the exposure?",
-      "answer": "API lot #M-7823 failure affects 3 downstream tablet batches. Lot #T-903 is still at the plant - hold immediately. Lots #T-901 and #T-902 are in distribution (hospital network and retail pharmacy chain). Quality Director should initiate the Batch Trace protocol immediately per the 60-day rule. Cold chain is not a factor. API Manufacturer India's quality score is borderline - flag for next audit cycle.",
-      "highlightNodes": ["ing-1", "sup-1", "prod-1", "plant-1", "plant-2", "store-1", "store-2", "proc-quality-deviation", "proc-lot-recall", "proc-supplier-audit", "skill-stability-batch-trace", "skill-cold-chain-excursion", "people-quality-dir", "people-sc-manager"],
-      "highlightEdges": ["sup-1->ing-1", "ing-1->prod-1", "prod-1->plant-1", "plant-1->plant-2", "prod-1->store-1", "prod-1->store-2", "proc-quality-deviation->ing-1", "skill-stability-batch-trace->ing-1", "skill-stability-batch-trace->proc-quality-deviation", "proc-lot-recall->prod-1", "proc-lot-recall->ch-1", "proc-supplier-audit->sup-1", "skill-stability-batch-trace->people-quality-dir", "skill-cold-chain-excursion->sup-4"],
-      "reasoningSteps": [
-        "Quality Deviation Investigation triggers on Metformin API stability failure.",
-        "Skill fires: \"API Stability Failure Batch Trace\" (Executive priority) - immediately check all downstream batches within 60 days of API lot date.",
-        "Entity traversal: Metformin API -> manufactured at plant -> downstream product batches.",
-        "Lot Recall Execution workflow evaluates: trace affected lots through distribution chain.",
-        "Skill fires: \"Cold Chain Excursion Response\" - checks transport logs. No excursions detected.",
-        "Supplier Audit Trigger evaluates: API supplier quality score checked.",
-        "People routed: Quality Director gets batch impact assessment. Supply Chain Manager gets distribution chain trace."
+      "entity_type": "drug_product",
+      "metric_category": "master",
+      "description": "Pharmaceutical product master data including cold chain, serialization, and regulatory requirements",
+      "source_system": "Snowflake",
+      "object_type": "table",
+      "object_name": "JNJ.DRUG_SUPPLY_CHAIN.DIM_PRODUCT",
+      "join_key": "PRODUCT_ID",
+      "refresh_frequency": "daily",
+      "example_fields": [
+        "PRODUCT_ID",
+        "BRAND_NAME",
+        "THERAPEUTIC_AREA",
+        "DOSAGE_FORM",
+        "COLD_CHAIN_REQUIRED",
+        "SERIALIZATION_REQUIRED",
+        "FDA_APPROVED",
+        "EU_APPROVED"
       ]
     },
     {
-      "id": "q-metformin-api-failure",
-      "question": "Metformin Hydrochloride API fails a stability test. Which downstream batches, plants, and pharmacies are affected?",
-      "answer": "Metformin HCl API from API Manufacturer India is used in Metformin 500mg Tablets, which are manufactured at FDA Facility NJ and packaged at Packaging Line TX. The tablets are available at Hospital Pharmacy Mass General and Retail Pharmacy CVS. Track & Trace (DSCSA) serializes at the packaging line and tracks the product. Quality Management System monitors both manufacturing and packaging plants for deviation handling.",
-      "highlightNodes": ["ing-1", "sup-1", "prod-1", "plant-1", "plant-2", "ch-1", "ch-4", "store-1", "store-2"],
-      "highlightEdges": ["sup-1->ing-1", "ing-1->prod-1", "prod-1->plant-1", "plant-1->plant-2", "ch-1->prod-1", "ch-1->plant-2", "ch-4->plant-1", "ch-4->plant-2", "prod-1->store-1", "prod-1->store-2"],
-      "reasoningSteps": [
-        "Metformin HCl API supplied by API Manufacturer India",
-        "Used in Metformin 500mg Tablets",
-        "Manufactured at FDA Facility NJ",
-        "Packaged and serialized at Packaging Line TX",
-        "DSCSA tracks product through distribution",
-        "Available at Mass General and CVS pharmacies",
-        "QMS monitors both plants for deviation handling"
+      "entity_type": "drug_product",
+      "metric_category": "lot_traceability",
+      "description": "Full lot-level traceability chain from API manufacturing to pharmacy/patient delivery",
+      "source_system": "Snowflake",
+      "object_type": "table",
+      "object_name": "JNJ.DRUG_SUPPLY_CHAIN.MV_LOT_TRACEABILITY",
+      "join_key": "LOT_ID",
+      "refresh_frequency": "daily",
+      "example_fields": [
+        "TRACE_ID",
+        "LOT_ID",
+        "PRODUCT_ID",
+        "BATCH_NUMBER",
+        "API_SUPPLIER_ID",
+        "API_COUNTRY",
+        "MANUFACTURING_SITE_ID",
+        "DISTRIBUTOR_ID",
+        "MARKET_ID",
+        "CHAIN_NODE",
+        "NODE_ENTRY_TIMESTAMP",
+        "NODE_EXIT_TIMESTAMP",
+        "TEMPERATURE_MIN_C",
+        "TEMPERATURE_MAX_C",
+        "CHAIN_COMPLETE"
       ]
     },
     {
-      "id": "q-insulin-cold-chain-break",
-      "question": "If Cold Chain Logistics Inc reports a temperature excursion during Insulin Glargine transport, what's the impact?",
-      "answer": "Cold Chain Logistics transports Insulin Glargine 100U/mL, which is manufactured at Sterile Fill-Finish IN using Insulin Glargine Bulk from API Manufacturer India and Glass Vials from the vial supplier. The insulin is available at Specialty Pharmacy BioScript and Hospital Pharmacy Mass General. A temperature excursion may compromise the entire shipment - DSCSA tracking identifies affected serial numbers for targeted recall.",
-      "highlightNodes": ["sup-4", "prod-2", "plant-3", "ing-3", "sup-1", "sup-3", "ch-1", "store-3", "store-1"],
-      "highlightEdges": ["sup-4->prod-2", "prod-2->plant-3", "sup-1->ing-3", "ing-3->prod-2", "sup-3->plant-3", "ch-1->prod-2", "prod-2->store-3", "prod-2->store-1"],
-      "reasoningSteps": [
-        "Cold Chain Logistics transports Insulin Glargine",
-        "Insulin manufactured at Sterile Fill-Finish IN",
-        "Uses Insulin Glargine Bulk from API Manufacturer India",
-        "Glass vials supplied to the fill-finish facility",
-        "Available at BioScript Specialty and Mass General pharmacies",
-        "DSCSA serial numbers enable targeted recall of affected units"
+      "entity_type": "drug_product",
+      "metric_category": "api_to_patient_view",
+      "description": "Unified view tracing each lot from API supplier through manufacturing, distribution to patient with compliance flags",
+      "source_system": "Snowflake",
+      "object_type": "view",
+      "object_name": "JNJ.DRUG_SUPPLY_CHAIN.V_API_TO_PATIENT_TRACEABILITY",
+      "join_key": "LOT_ID",
+      "refresh_frequency": "daily",
+      "example_fields": [
+        "LOT_ID",
+        "BATCH_NUMBER",
+        "BRAND_NAME",
+        "API_SUPPLIER",
+        "API_SOURCE_COUNTRY",
+        "MANUFACTURING_SITE",
+        "DISTRIBUTOR_NAME",
+        "MARKET_NAME",
+        "CHAIN_NODE",
+        "SUPPLIER_COMPLIANCE_FLAG",
+        "LOT_STATUS"
       ]
     },
     {
-      "id": "q-single-source-api-risk",
-      "question": "API Manufacturer India is our only API supplier. What products are at risk if they fail an FDA inspection?",
-      "answer": "API Manufacturer India supplies Metformin HCl API and Insulin Glargine Bulk - the active ingredients for two of our four products. They are registered with FDA CDER. If they fail inspection, Metformin Tablets (available at Mass General and CVS) and Insulin Glargine (available at BioScript and Mass General) are both at risk. No alternative API supplier exists in the current supply chain - this is a critical single-source vulnerability.",
-      "highlightNodes": ["sup-1", "ing-1", "ing-3", "prod-1", "prod-2", "ch-3", "store-1", "store-2", "store-3"],
-      "highlightEdges": ["sup-1->ing-1", "sup-1->ing-3", "ing-1->prod-1", "ing-3->prod-2", "sup-1->ch-3", "ch-3->plant-1", "ch-3->plant-3", "prod-1->store-1", "prod-1->store-2", "prod-2->store-3", "prod-2->store-1"],
-      "reasoningSteps": [
-        "API Manufacturer India supplies Metformin HCl and Insulin Glargine Bulk",
-        "Registered with FDA CDER submission portal",
-        "Metformin Tablets available at Mass General and CVS",
-        "Insulin Glargine available at BioScript and Mass General",
-        "No alternative API supplier in the system",
-        "FDA inspection failure would halt both product lines"
+      "entity_type": "drug_product",
+      "metric_category": "dscsa_compliance",
+      "description": "DSCSA and global serialization compliance status by lot and market \u2014 serialization, EPCIS, trading partner data",
+      "source_system": "Snowflake",
+      "object_type": "table",
+      "object_name": "JNJ.DRUG_SUPPLY_CHAIN.MV_DSCSA_COMPLIANCE_STATUS",
+      "join_key": "LOT_ID",
+      "refresh_frequency": "daily",
+      "example_fields": [
+        "LOT_ID",
+        "PRODUCT_ID",
+        "BATCH_NUMBER",
+        "MARKET_ID",
+        "SERIALIZED_FLAG",
+        "EPCIS_EVENTS_COMPLETE",
+        "TRADING_PARTNER_DATA_RECEIVED",
+        "VERIFICATION_COMPLETED",
+        "DSCSA_COMPLIANT",
+        "GAP_DESCRIPTION",
+        "COMPLIANCE_DEADLINE"
+      ]
+    },
+    {
+      "entity_type": "drug_product",
+      "metric_category": "quality_test_results",
+      "description": "QC test results per lot including identity, assay, purity, sterility, endotoxin, and particulate tests",
+      "source_system": "Snowflake",
+      "object_type": "table",
+      "object_name": "JNJ.DRUG_SUPPLY_CHAIN.MV_QUALITY_TEST_RESULTS",
+      "join_key": "LOT_ID",
+      "refresh_frequency": "daily",
+      "example_fields": [
+        "TEST_ID",
+        "LOT_ID",
+        "PRODUCT_ID",
+        "TEST_CATEGORY",
+        "TEST_NAME",
+        "SPECIFICATION_MIN",
+        "SPECIFICATION_MAX",
+        "RESULT_VALUE",
+        "PASS_FAIL",
+        "OOS_FLAG",
+        "TEST_DATE"
+      ]
+    },
+    {
+      "entity_type": "drug_product",
+      "metric_category": "recall_impact",
+      "description": "Recall impact analysis with root cause, affected lots, patients exposed, and trace-back time metrics",
+      "source_system": "Snowflake",
+      "object_type": "table",
+      "object_name": "JNJ.DRUG_SUPPLY_CHAIN.MV_RECALL_IMPACT_ANALYSIS",
+      "join_key": "RECALL_ID",
+      "refresh_frequency": "daily",
+      "example_fields": [
+        "RECALL_ID",
+        "RECALL_NAME",
+        "RECALL_CLASS",
+        "ROOT_CAUSE",
+        "AFFECTED_PRODUCT_ID",
+        "AFFECTED_LOT_IDS",
+        "UNITS_AFFECTED",
+        "PATIENTS_POTENTIALLY_EXPOSED",
+        "FINANCIAL_IMPACT_USD",
+        "TRACE_BACK_TIME_HOURS"
+      ]
+    },
+    {
+      "entity_type": "drug_product",
+      "metric_category": "recall_trace_back_view",
+      "description": "Recall trace-back view with efficiency rating showing Context Graph vs manual process speed",
+      "source_system": "Snowflake",
+      "object_type": "view",
+      "object_name": "JNJ.DRUG_SUPPLY_CHAIN.V_RECALL_TRACE_BACK",
+      "join_key": "RECALL_ID",
+      "refresh_frequency": "daily",
+      "example_fields": [
+        "RECALL_ID",
+        "PRODUCT",
+        "AFFECTED_LOT_IDS",
+        "UNITS_AFFECTED",
+        "TRACE_BACK_TIME_HOURS",
+        "TRACE_BACK_EFFICIENCY",
+        "RECALL_DURATION_DAYS",
+        "SEVERITY_DESCRIPTION"
+      ]
+    },
+    {
+      "entity_type": "api_supplier",
+      "metric_category": "master",
+      "description": "API supplier master with tier, country, FDA registration, FEOC and sanctions flags",
+      "source_system": "Snowflake",
+      "object_type": "table",
+      "object_name": "JNJ.DRUG_SUPPLY_CHAIN.DIM_API_SUPPLIER",
+      "join_key": "SUPPLIER_ID",
+      "refresh_frequency": "daily",
+      "example_fields": [
+        "SUPPLIER_ID",
+        "SUPPLIER_NAME",
+        "TIER",
+        "CATEGORY",
+        "COUNTRY",
+        "REGION",
+        "FEOC_FLAG",
+        "SANCTIONED_FLAG",
+        "FDA_REGISTERED"
+      ]
+    },
+    {
+      "entity_type": "api_supplier",
+      "metric_category": "quality_risk",
+      "description": "Supplier quality risk metrics including FDA warning letters, import alerts, OOS incidents, and CAPA counts",
+      "source_system": "Snowflake",
+      "object_type": "table",
+      "object_name": "JNJ.DRUG_SUPPLY_CHAIN.MV_SUPPLIER_QUALITY_RISK",
+      "join_key": "SUPPLIER_ID",
+      "refresh_frequency": "weekly",
+      "example_fields": [
+        "SUPPLIER_ID",
+        "SUPPLIER_NAME",
+        "COUNTRY",
+        "FDA_WARNING_LETTERS",
+        "IMPORT_ALERTS_ACTIVE",
+        "OOS_INCIDENTS_12M",
+        "DEVIATION_COUNT_12M",
+        "CAPA_OPEN_COUNT",
+        "QUALITY_SCORE",
+        "OVERALL_RISK_RATING"
+      ]
+    },
+    {
+      "entity_type": "api_supplier",
+      "metric_category": "combined_risk",
+      "description": "Combined supplier risk view aggregating quality score, FDA actions, FEOC status, and audit findings",
+      "source_system": "Snowflake",
+      "object_type": "view",
+      "object_name": "JNJ.DRUG_SUPPLY_CHAIN.V_SUPPLIER_COMBINED_RISK",
+      "join_key": "SUPPLIER_ID",
+      "refresh_frequency": "daily",
+      "example_fields": [
+        "SUPPLIER_ID",
+        "SUPPLIER_NAME",
+        "TIER",
+        "QUALITY_SCORE",
+        "FDA_WARNING_LETTERS",
+        "COMBINED_RISK_SCORE",
+        "RISK_CATEGORY",
+        "FEOC_FLAG",
+        "SANCTIONED_FLAG",
+        "FDA_REGISTERED"
+      ]
+    },
+    {
+      "entity_type": "api_supplier",
+      "metric_category": "audit_results",
+      "description": "GMP and quality system audit results with critical, major, minor findings and CAPA status",
+      "source_system": "Snowflake",
+      "object_type": "table",
+      "object_name": "JNJ.DRUG_SUPPLY_CHAIN.MV_SUPPLIER_AUDIT_RESULTS",
+      "join_key": "SUPPLIER_ID",
+      "refresh_frequency": "monthly",
+      "example_fields": [
+        "AUDIT_ID",
+        "SUPPLIER_ID",
+        "AUDIT_TYPE",
+        "AUDIT_DATE",
+        "CRITICAL_FINDINGS",
+        "MAJOR_FINDINGS",
+        "MINOR_FINDINGS",
+        "AUDIT_SCORE",
+        "OUTCOME",
+        "NEXT_AUDIT_DATE",
+        "CAPA_REQUIRED"
+      ]
+    },
+    {
+      "entity_type": "api_supplier",
+      "metric_category": "sourcing_concentration",
+      "description": "API sourcing concentration risk \u2014 single source flags, China dependency, lead times, safety stock days",
+      "source_system": "Snowflake",
+      "object_type": "table",
+      "object_name": "JNJ.DRUG_SUPPLY_CHAIN.MV_API_SOURCING_CONCENTRATION",
+      "join_key": "PRODUCT_ID",
+      "refresh_frequency": "weekly",
+      "example_fields": [
+        "PRODUCT_ID",
+        "API_INGREDIENT",
+        "SUPPLIER_ID",
+        "SOURCE_COUNTRY",
+        "SUPPLY_SHARE_PCT",
+        "SINGLE_SOURCE_FLAG",
+        "CHINA_DEPENDENCY_FLAG",
+        "ALTERNATE_SUPPLIER_QUALIFIED",
+        "LEAD_TIME_DAYS",
+        "SAFETY_STOCK_DAYS",
+        "CONCENTRATION_RISK"
+      ]
+    },
+    {
+      "entity_type": "api_supplier",
+      "metric_category": "carbon_emissions",
+      "description": "Supplier scope 1 and scope 2 carbon emissions for sustainability reporting",
+      "source_system": "Snowflake",
+      "object_type": "table",
+      "object_name": "JNJ.DRUG_SUPPLY_CHAIN.MV_SUPPLIER_CARBON_EMISSIONS",
+      "join_key": "SUPPLIER_ID",
+      "refresh_frequency": "quarterly",
+      "example_fields": [
+        "SUPPLIER_ID",
+        "SUPPLIER_NAME",
+        "COUNTRY",
+        "SCOPE1_CO2_TONNES",
+        "SCOPE2_CO2_TONNES",
+        "CARBON_INTENSITY",
+        "RENEWABLE_ENERGY_PCT",
+        "VERIFIED_FLAG"
+      ]
+    },
+    {
+      "entity_type": "manufacturing_site",
+      "metric_category": "master",
+      "description": "Manufacturing site master data with GMP, FDA, EMA certification status and capacity utilization",
+      "source_system": "Snowflake",
+      "object_type": "table",
+      "object_name": "JNJ.DRUG_SUPPLY_CHAIN.DIM_MANUFACTURING_SITE",
+      "join_key": "SITE_ID",
+      "refresh_frequency": "weekly",
+      "example_fields": [
+        "SITE_ID",
+        "SITE_NAME",
+        "SITE_TYPE",
+        "COUNTRY",
+        "GMP_CERTIFIED",
+        "FDA_REGISTERED",
+        "EMA_APPROVED",
+        "ANNUAL_CAPACITY_UNITS",
+        "CURRENT_UTILIZATION_PCT",
+        "IS_CMO"
+      ]
+    },
+    {
+      "entity_type": "drug_product",
+      "metric_category": "cold_chain_monitoring",
+      "description": "Cold chain temperature monitoring events with excursion detection and corrective actions",
+      "source_system": "Snowflake",
+      "object_type": "table",
+      "object_name": "JNJ.DRUG_SUPPLY_CHAIN.MV_COLD_CHAIN_MONITORING",
+      "join_key": "LOT_ID",
+      "refresh_frequency": "real-time",
+      "example_fields": [
+        "EVENT_ID",
+        "LOT_ID",
+        "PRODUCT_ID",
+        "CHAIN_NODE",
+        "LOCATION",
+        "RECORDED_TEMP_C",
+        "REQUIRED_TEMP_MIN_C",
+        "REQUIRED_TEMP_MAX_C",
+        "EXCURSION_FLAG",
+        "EXCURSION_DURATION_MINUTES",
+        "ALERT_TRIGGERED",
+        "CORRECTIVE_ACTION"
+      ]
+    },
+    {
+      "entity_type": "drug_product",
+      "metric_category": "cold_chain_excursions_view",
+      "description": "Cold chain excursion summary per lot with disposition recommendation (quarantine vs. stable)",
+      "source_system": "Snowflake",
+      "object_type": "view",
+      "object_name": "JNJ.DRUG_SUPPLY_CHAIN.V_COLD_CHAIN_EXCURSIONS",
+      "join_key": "LOT_ID",
+      "refresh_frequency": "daily",
+      "example_fields": [
+        "LOT_ID",
+        "BATCH_NUMBER",
+        "BRAND_NAME",
+        "EXCURSION_COUNT",
+        "EXCURSION_RATE_PCT",
+        "MAX_EXCURSION_DURATION_MIN",
+        "ALERTS_TRIGGERED",
+        "COLD_CHAIN_DISPOSITION",
+        "LOT_STATUS"
+      ]
+    },
+    {
+      "entity_type": "distributor",
+      "metric_category": "distribution_tracking",
+      "description": "Shipment-level distribution tracking with on-time delivery and cold chain maintenance flags",
+      "source_system": "Snowflake",
+      "object_type": "table",
+      "object_name": "JNJ.DRUG_SUPPLY_CHAIN.MV_DISTRIBUTION_TRACKING",
+      "join_key": "LOT_ID",
+      "refresh_frequency": "daily",
+      "example_fields": [
+        "SHIPMENT_ID",
+        "LOT_ID",
+        "PRODUCT_ID",
+        "ORIGIN_SITE_ID",
+        "DESTINATION_DISTRIBUTOR_ID",
+        "UNITS_SHIPPED",
+        "SHIP_DATE",
+        "ON_TIME_FLAG",
+        "COLD_CHAIN_MAINTAINED",
+        "SHIPMENT_STATUS"
+      ]
+    },
+    {
+      "entity_type": "regulatory_market",
+      "metric_category": "regulatory_filing_status",
+      "description": "Product regulatory filing status (NDA/BLA/MAA) by market with pending changes tracking",
+      "source_system": "Snowflake",
+      "object_type": "table",
+      "object_name": "JNJ.DRUG_SUPPLY_CHAIN.MV_REGULATORY_FILING_STATUS",
+      "join_key": "PRODUCT_ID",
+      "refresh_frequency": "monthly",
+      "example_fields": [
+        "FILING_ID",
+        "PRODUCT_ID",
+        "MARKET_ID",
+        "FILING_TYPE",
+        "FILING_STATUS",
+        "APPROVAL_DATE",
+        "EXPIRY_DATE",
+        "PENDING_CHANGES"
       ]
     }
   ]
